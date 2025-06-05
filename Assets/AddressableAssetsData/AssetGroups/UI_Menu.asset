@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: UI_Menu
+  m_EditorClassIdentifier: 
+  m_GroupName: UI_Menu
+  m_GUID: a4113e6542593b24797b333b9d2e241f
+  m_SerializeEntries:
+  - m_GUID: 6ed113b99edaf9d46b683731a7213636
+    m_Address: UI_Menu/DifficultySelectionWindow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MenuPreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6fa04b424fc9b9a44acc21c249686ca7
+    m_Address: UI_Menu/SaveSlotButton
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MenuPreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 82b788cba3c8bc140abe2e222ad5377c
+    m_Address: UI_Menu/SaveSelectionWindow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MenuPreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4fca4881bb24af43b96ad7422907d68
+    m_Address: UI_Menu/MainWindow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MenuPreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da5c35af7e43e9e40af85f0abf606f00
+    m_Address: UI_Menu/Background
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MenuPreload
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 1365f6cf93b86064c8a35644b412ad29, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 78e757fe5f874244c91feba0edd4e956, type: 2}
+    - {fileID: 11400000, guid: 8e5b5f63cc144c94fb7a3bc2e5acb1c2, type: 2}

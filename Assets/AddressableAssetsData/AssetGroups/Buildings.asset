@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Buildings
+  m_EditorClassIdentifier: 
+  m_GroupName: Buildings
+  m_GUID: e957c04945e007c4d938918c057da504
+  m_SerializeEntries:
+  - m_GUID: 277e0f71c79d6d3439346bf02ffb2025
+    m_Address: Buildings/MainHouse
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4d71a6466f00ed0499bcb379ba9ad85e
+    m_Address: Buildings/GeothermalGenerator
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4f7ee6d3190a3f14799557719e00c4a7
+    m_Address: Buildings/Farm
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 685e03407814b8749941c26ceba93c0a
+    m_Address: Buildings/HomeColonists
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7aa43073af5df1b4a9b0c5760db6f460
+    m_Address: Buildings/Preview
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9156625afbe44d04a9e81ced802dc31a
+    m_Address: Buildings/Reactor
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ea60b09109ca00548983d0252e1cb177
+    m_Address: Models
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f1336bd04dc01a14c8a8bf39ccdf18bd
+    m_Address: Buildings/Mine
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa4434b74ccb7e7438b334533fb46778
+    m_Address: Buildings/Spaceport
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 1365f6cf93b86064c8a35644b412ad29, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: e08a6863cf85d864e86de07de8ec8697, type: 2}
+    - {fileID: 11400000, guid: b62478843061fb7419d8855f1bd87b80, type: 2}

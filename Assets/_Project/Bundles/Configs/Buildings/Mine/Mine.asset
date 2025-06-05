@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1104316e1c2049689a939f3febfcca46, type: 3}
+  m_Name: Mine
+  m_EditorClassIdentifier: 
+  Type: 6
+  Category: 2
+  BuildingsModules: []
+  PrefabReference:
+    m_AssetGUID: f1336bd04dc01a14c8a8bf39ccdf18bd
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_EditorAssetChanged: 0
+  MeshReference:
+    m_AssetGUID: e95b1eef66c3f44499d8ed6e35a7554d
+    m_SubObjectName: drill_structure
+    m_SubObjectGUID: 
+    m_SubObjectType: UnityEngine.Mesh, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    m_EditorAssetChanged: 1
+  SizeInCells: {x: 2, y: 2}
+  Price:
+    Resource: {fileID: 11400000, guid: 559755409bbd2e440a78702142a9e2c8, type: 2}
+    Amount: 20
+  Title: Mine
+  Icon: {fileID: 21300000, guid: 0231837a57d1c944c9db7d6a5292e58b, type: 3}
+  StartLevel: 1
+  MaxLevel: 1
+  PlacementFilter:
+    MustHave: 4
+    MustBeEmpty: 10

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: VFX
+  m_EditorClassIdentifier: 
+  m_GroupName: VFX
+  m_GUID: ad54dd212264c4b4daa3410d02113071
+  m_SerializeEntries:
+  - m_GUID: 3f14661d986bd5b4d87c186c3513cd68
+    m_Address: VFX/Meteorite
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - VFX
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 1365f6cf93b86064c8a35644b412ad29, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 925feda49b3ef24418db6b5f0f46b90a, type: 2}
+    - {fileID: 11400000, guid: d644e72680b37704a96f14f10687eea0, type: 2}

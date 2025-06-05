@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1104316e1c2049689a939f3febfcca46, type: 3}
+  m_Name: Spaceport
+  m_EditorClassIdentifier: 
+  Type: 5
+  Category: 1
+  BuildingsModules:
+  - {fileID: 11400000, guid: ade350d67ac21e04cba9074efaf8c43a, type: 2}
+  - {fileID: 11400000, guid: 8980fff43c0f4794db6a4023b9eaeb1a, type: 2}
+  - {fileID: 11400000, guid: d1d22cf59fe17864f981b0d451ea243a, type: 2}
+  - {fileID: 11400000, guid: d33398bfc62efb64a8c2b26c642c50e7, type: 2}
+  PrefabReference:
+    m_AssetGUID: fa4434b74ccb7e7438b334533fb46778
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  MeshReference:
+    m_AssetGUID: 32e37562bcc4ec44f90621fd4b0129f6
+    m_SubObjectName: Runway strip
+    m_SubObjectGUID: 
+    m_SubObjectType: UnityEngine.Mesh, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    m_EditorAssetChanged: 1
+  SizeInCells: {x: 5, y: 2}
+  Price:
+    Resource: {fileID: 11400000, guid: f6634689ee5966b4daa3837dd9366151, type: 2}
+    Amount: 50
+  Title: Space Port
+  Icon: {fileID: 21300000, guid: 14307819fe5a373459845944068b9d4b, type: 3}
+  StartLevel: 1
+  MaxLevel: 1
+  PlacementFilter:
+    MustHave: 2
+    MustBeEmpty: 8

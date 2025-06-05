@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9436a30048b4cd1a1c074697d5674bd, type: 3}
+  m_Name: MeteoriteVFX
+  m_EditorClassIdentifier: 
+  MeteoriteVFX:
+  - Type: 1
+    ExplosionPrefab:
+      m_AssetGUID: 2e1e9506f5904a64b81744324fb7cd50
+      m_SubObjectName: 
+      m_SubObjectGUID: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    ExplosionScale: 0.4
+    TrailPrefab:
+      m_AssetGUID: f52f6aef23c15dc49aac297b48f3e6fb
+      m_SubObjectName: 
+      m_SubObjectGUID: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+    TrailScale: 1
+    CameraShakePreset:
+      Duration: 0.5
+      Strength: 1
+      Vibrato: 20
