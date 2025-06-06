@@ -2,6 +2,8 @@
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
 using Cysharp.Threading.Tasks;
+using Firebase;
+using UnityEngine;
 
 namespace _Project.CodeBase.Infrastructure.StateMachine.States
 {
@@ -23,6 +25,16 @@ namespace _Project.CodeBase.Infrastructure.StateMachine.States
 
     public async void Enter()
     {
+      DependencyStatus status = await FirebaseApp.CheckAndFixDependenciesAsync().ConfigureAwait(true);
+
+      if (status == DependencyStatus.Available)
+      {
+        Debug.Log($"[Firebase] Ready: {FirebaseApp.DefaultInstance.Name}");
+      }
+      else
+      {
+        Debug.LogError($"[Firebase] Missing libs: {status}");
+      }
       await InitializeServices();
       LoadMenuScene();
     }
