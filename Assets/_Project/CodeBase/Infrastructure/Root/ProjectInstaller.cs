@@ -1,10 +1,11 @@
 ﻿using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Infrastructure.UI;
 using _Project.CodeBase.Services.LogService;
-using _Project.CodeBase.Services.Timer;
+using _Project.CodeBase.Services.TimeCounter;
 using Zenject;
 
 namespace _Project.CodeBase.Infrastructure.Root

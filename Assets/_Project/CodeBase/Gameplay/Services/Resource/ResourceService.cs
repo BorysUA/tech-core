@@ -10,6 +10,7 @@ using _Project.CodeBase.Gameplay.Services.Resource.Results;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using ObservableCollections;
 using R3;

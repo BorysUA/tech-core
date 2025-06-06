@@ -3,7 +3,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.CodeBase.Menu.UI.Window
+namespace _Project.CodeBase.Menu.UI.Menu
 {
   public class MenuWindow : BaseWindow<MenuViewModel>
   {

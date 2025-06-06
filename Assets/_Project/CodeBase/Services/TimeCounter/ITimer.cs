@@ -1,7 +1,7 @@
 ﻿using System;
 using R3;
 
-namespace _Project.CodeBase.Services.Timer
+namespace _Project.CodeBase.Services.TimeCounter
 {
   public interface ITimer : IDisposable
   {

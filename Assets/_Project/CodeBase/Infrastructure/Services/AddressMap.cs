@@ -7,8 +7,8 @@ using _Project.CodeBase.Gameplay.UI.Windows.Shop.Windows;
 using _Project.CodeBase.Gameplay.UI.Windows.Trade;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Menu.UI.DifficultySelection;
-using _Project.CodeBase.Menu.UI.SaveBrowser;
-using _Project.CodeBase.Menu.UI.Window;
+using _Project.CodeBase.Menu.UI.Menu;
+using _Project.CodeBase.Menu.UI.SaveSelection;
 using _Project.CodeBase.Services.LogService;
 
 namespace _Project.CodeBase.Infrastructure.Services

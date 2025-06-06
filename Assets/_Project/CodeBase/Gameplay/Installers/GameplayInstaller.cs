@@ -21,6 +21,7 @@ using _Project.CodeBase.Gameplay.UI.Spawner;
 using _Project.CodeBase.Gameplay.UI.Windows.Settings;
 using _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.InputService;
 using _Project.CodeBase.UI.Services;
@@ -113,6 +114,7 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.BindInterfacesTo<BuildingService>().AsSingle();
       Container.BindInterfacesTo<GameSaveService>().AsSingle();
       Container.BindInterfacesTo<SessionTimer>().AsSingle();
+      Container.BindInterfacesTo<StartingResourceProvider>().AsSingle();
       Container.BindInterfacesTo<WindowsService>().AsSingle();
       Container.BindInterfacesTo<GridService>().AsSingle();
       Container.BindInterfacesTo<PopUpService>().AsSingle();

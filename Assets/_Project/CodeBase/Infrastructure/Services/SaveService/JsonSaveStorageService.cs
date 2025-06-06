@@ -16,7 +16,7 @@ using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace _Project.CodeBase.Infrastructure.Services
+namespace _Project.CodeBase.Infrastructure.Services.SaveService
 {
   public class JsonSaveStorageService : ISaveStorageService
   {

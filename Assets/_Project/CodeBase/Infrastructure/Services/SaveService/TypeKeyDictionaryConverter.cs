@@ -4,7 +4,7 @@ using _Project.CodeBase.Services.LogService;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace _Project.CodeBase.Infrastructure.Services
+namespace _Project.CodeBase.Infrastructure.Services.SaveService
 {
   public class TypeKeyDictionaryConverter<TValue> : JsonConverter<Dictionary<Type, TValue>>
   {

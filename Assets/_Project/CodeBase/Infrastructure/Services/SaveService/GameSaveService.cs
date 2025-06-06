@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using _Project.CodeBase.Data.Progress.Meta;
-using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using R3;
 
-namespace _Project.CodeBase.Infrastructure.Services
+namespace _Project.CodeBase.Infrastructure.Services.SaveService
 {
   public class GameSaveService : IGameSaveService, IOnLoadInitializable, IDisposable
   {

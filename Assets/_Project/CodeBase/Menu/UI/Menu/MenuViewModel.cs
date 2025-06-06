@@ -1,9 +1,9 @@
 ﻿using _Project.CodeBase.Menu.UI.DifficultySelection;
-using _Project.CodeBase.Menu.UI.SaveBrowser;
+using _Project.CodeBase.Menu.UI.SaveSelection;
 using _Project.CodeBase.UI.Common;
 using _Project.CodeBase.UI.Services;
 
-namespace _Project.CodeBase.Menu.UI.Window
+namespace _Project.CodeBase.Menu.UI.Menu
 {
   public class MenuViewModel : BaseWindowViewModel
   {

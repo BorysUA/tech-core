@@ -1,11 +1,11 @@
 ﻿using System;
-using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.SaveService;
 using R3;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.CodeBase.Menu.UI.SaveBrowser
+namespace _Project.CodeBase.Menu.UI.SaveSelection
 {
   public class SaveSlotItem : MonoBehaviour
   {

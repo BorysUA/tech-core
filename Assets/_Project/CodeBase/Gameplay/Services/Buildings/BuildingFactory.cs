@@ -13,6 +13,7 @@ using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

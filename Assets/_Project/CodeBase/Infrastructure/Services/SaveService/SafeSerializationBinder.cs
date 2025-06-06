@@ -5,7 +5,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace _Project.CodeBase.Infrastructure.Services
+namespace _Project.CodeBase.Infrastructure.Services.SaveService
 {
   public class SafeSerializationBinder : ISerializationBinder
   {

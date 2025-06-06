@@ -3,11 +3,12 @@ using _Project.CodeBase.Data.Settings;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Infrastructure.StateMachine;
+using _Project.CodeBase.Menu.Services;
 using _Project.CodeBase.Menu.Signals;
 using _Project.CodeBase.Menu.UI.DifficultySelection;
 using _Project.CodeBase.Menu.UI.Factories;
-using _Project.CodeBase.Menu.UI.SaveBrowser;
-using _Project.CodeBase.Menu.UI.Window;
+using _Project.CodeBase.Menu.UI.Menu;
+using _Project.CodeBase.Menu.UI.SaveSelection;
 using _Project.CodeBase.UI.Services;
 using UnityEngine;
 using Zenject;
@@ -25,7 +26,6 @@ namespace _Project.CodeBase.Menu
       BindEntryPoint();
       BindViewModels();
       BindSignalBus();
-      BindModels();
     }
 
     private void BindUI()
@@ -49,16 +49,12 @@ namespace _Project.CodeBase.Menu
       Container.BindInterfacesAndSelfTo<SaveSelectionViewModel>().AsSingle();
     }
 
-    private void BindModels()
-    {
-      Container.Bind<GameplaySettings>().AsSingle();
-    }
-
     private void BindServices()
     {
-      Container.BindInterfacesAndSelfTo<GameStatesFactory>().AsSingle();
-      Container.BindInterfacesAndSelfTo<WindowsService>().AsSingle();
-      Container.BindInterfacesAndSelfTo<MenuUiFactory>().AsSingle();
+      Container.Bind<GameStatesFactory>().AsSingle();
+      Container.BindInterfacesTo<WindowsService>().AsSingle();
+      Container.BindInterfacesTo<MenuUiFactory>().AsSingle();
+      Container.BindInterfacesTo<GameplaySettingsBuilder>().AsSingle();
     }
 
     private void BindEntryPoint()

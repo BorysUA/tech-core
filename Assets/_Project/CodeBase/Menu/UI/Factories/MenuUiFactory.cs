@@ -1,10 +1,9 @@
 ﻿using _Project.CodeBase.Data.Progress.Meta;
-using _Project.CodeBase.Gameplay.UI.Indicators;
 using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Menu.UI.SaveBrowser;
+using _Project.CodeBase.Menu.UI.SaveSelection;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;

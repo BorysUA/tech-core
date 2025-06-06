@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.CodeBase.Menu.UI.SaveBrowser
+namespace _Project.CodeBase.Menu.UI.SaveSelection
 {
   public class SaveSelectionWindow : BaseWindow<SaveSelectionViewModel>
   {

@@ -1,4 +1,4 @@
-﻿namespace _Project.CodeBase.Infrastructure.Services
+﻿namespace _Project.CodeBase.Infrastructure.Services.SaveService
 {
   public enum SaveSlot
   {

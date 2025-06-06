@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using _Project.CodeBase.Data.Progress.Meta;
-using _Project.CodeBase.Menu.UI.SaveBrowser;
+using _Project.CodeBase.Menu.UI.SaveSelection;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 

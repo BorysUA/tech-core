@@ -2,7 +2,7 @@
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
-using _Project.CodeBase.Menu.UI.Window;
+using _Project.CodeBase.Menu.UI.Menu;
 using _Project.CodeBase.UI.Services;
 
 namespace _Project.CodeBase.Menu.States

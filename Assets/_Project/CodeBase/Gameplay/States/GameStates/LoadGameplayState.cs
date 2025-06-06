@@ -13,6 +13,7 @@ using _Project.CodeBase.Gameplay.States.GameplayStates.Placement;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
 using _Project.CodeBase.Menu.UI.DifficultySelection;
@@ -29,17 +30,18 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
     private readonly GameplayStateMachine _gameplayStateMachine;
     private readonly GameStatesFactory _gameStatesFactory;
     private readonly ISaveStorageService _saveStorageService;
+    private readonly IStartingResourcesProvider _startingResourcesProvider;
     private readonly ILogService _logService;
 
-    private readonly IStaticDataProvider _staticDataProvider;
     private readonly IProgressService _progressService;
 
     private readonly List<IOnLoadInitializable> _onLoadInitializables;
 
     public LoadGameplayState(IDataTransferService dataTransferService, IGameplayUiFactory gameplayUiFactory,
       GameStateMachine gameStateMachine, GameplayStateMachine gameplayStateMachine, GameStatesFactory gameStatesFactory,
-      List<IOnLoadInitializable> onLoadInitializables, IStaticDataProvider staticDataProvider,
-      IProgressService progressService, ISaveStorageService saveStorageService, ILogService logService)
+      List<IOnLoadInitializable> onLoadInitializables,
+      IProgressService progressService, ISaveStorageService saveStorageService, ILogService logService,
+      IStartingResourcesProvider startingResourcesProvider)
     {
       _dataTransferService = dataTransferService;
       _gameplayUiFactory = gameplayUiFactory;
@@ -47,10 +49,11 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
       _gameplayStateMachine = gameplayStateMachine;
       _gameStatesFactory = gameStatesFactory;
       _onLoadInitializables = onLoadInitializables;
-      _staticDataProvider = staticDataProvider;
+
       _progressService = progressService;
       _saveStorageService = saveStorageService;
       _logService = logService;
+      _startingResourcesProvider = startingResourcesProvider;
     }
 
     public async void Enter()
@@ -61,7 +64,7 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
         _logService.LogError(GetType(), "Gameplay settings not found", new NullReferenceException());
       }
 
-      await InitializeGameState(settings.SaveSlot);
+      await InitializeGameState(settings);
       InitializeServices();
       await _gameplayUiFactory.CreateHud();
       InitializeGameplayStates();
@@ -73,11 +76,11 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
     {
     }
 
-    private async UniTask InitializeGameState(SaveSlot saveSlot)
+    private async UniTask InitializeGameState(GameplaySettings settings)
     {
-      if (saveSlot != SaveSlot.None)
+      if (settings.SaveSlot != SaveSlot.None)
       {
-        LoadResult result = await _saveStorageService.LoadGameAsync(saveSlot);
+        LoadResult result = await _saveStorageService.LoadGameAsync(settings.SaveSlot);
 
         if (result.LoadStatus == LoadStatus.Success)
         {
@@ -86,20 +89,18 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
         }
       }
 
-      CreateNewGameState();
+      CreateNewGameState(settings);
     }
 
-    private void CreateNewGameState()
+    private void CreateNewGameState(GameplaySettings settings)
     {
-      IEnumerable<ResourceConfig> resourcesData = _staticDataProvider.GetAllResources();
+      SessionInfo sessionInfo = new SessionInfo(settings.SessionName, settings.GameDifficulty);
 
-      SessionInfo sessionInfo = new SessionInfo("Mars colony", GameDifficulty.Easy);
+      Dictionary<ResourceKind, GameResourceData> initialResources = _startingResourcesProvider
+        .GetInitialResources(settings.GameDifficulty)
+        .ToDictionary(x => x.Kind, x => x);
 
-      Dictionary<ResourceKind, GameResourceData> gameResources = resourcesData
-        .ToDictionary(resource => resource.Kind,
-          resource => new GameResourceData(resource.Kind, 300, resource.Capacity));
-
-      _progressService.GameStateProxy.Initialize(new GameStateData(sessionInfo, gameResources));
+      _progressService.GameStateProxy.Initialize(new GameStateData(sessionInfo, initialResources));
     }
 
 

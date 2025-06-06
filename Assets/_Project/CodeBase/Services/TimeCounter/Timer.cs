@@ -1,9 +1,7 @@
-﻿using System;
-using R3;
+﻿using R3;
 using UnityEngine;
-using Zenject;
 
-namespace _Project.CodeBase.Services.Timer
+namespace _Project.CodeBase.Services.TimeCounter
 {
   public class Timer : ITimer
   {

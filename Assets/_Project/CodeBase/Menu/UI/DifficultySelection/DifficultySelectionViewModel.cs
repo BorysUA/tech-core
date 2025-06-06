@@ -1,7 +1,8 @@
 ﻿using _Project.CodeBase.Data.Settings;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Menu.Services;
 using _Project.CodeBase.Menu.Signals;
-using _Project.CodeBase.Menu.UI.Window;
+using _Project.CodeBase.Menu.UI.Menu;
 using _Project.CodeBase.UI.Common;
 using _Project.CodeBase.UI.Services;
 using Zenject;
@@ -10,23 +11,23 @@ namespace _Project.CodeBase.Menu.UI.DifficultySelection
 {
   public class DifficultySelectionViewModel : BaseWindowViewModel
   {
-    private readonly GameplaySettings _gameplaySettings;
     private readonly SignalBus _signalBus;
     private readonly IWindowsService _windowsService;
+    private readonly IGameplaySettingsBuilder _gameplaySettingsBuilder;
 
-    public DifficultySelectionViewModel(GameplaySettings gameplaySettings, SignalBus signalBus,
-      IWindowsService windowsService)
+    public DifficultySelectionViewModel(SignalBus signalBus,
+      IWindowsService windowsService, IGameplaySettingsBuilder gameplaySettingsBuilder)
     {
-      _gameplaySettings = gameplaySettings;
       _signalBus = signalBus;
       _windowsService = windowsService;
+      _gameplaySettingsBuilder = gameplaySettingsBuilder;
     }
 
     public void ApplyDifficultySelection(GameDifficulty difficulty)
     {
-      _gameplaySettings.GameDifficulty = difficulty;
-      _gameplaySettings.SaveSlot = SaveSlot.None;
-      _signalBus.Fire(new LoadGameplaySignal(_gameplaySettings));
+      _gameplaySettingsBuilder.SetGameDifficulty(difficulty);
+      GameplaySettings gameplaySettings = _gameplaySettingsBuilder.Build();
+      _signalBus.Fire(new LoadGameplaySignal(gameplaySettings));
     }
 
     public void BackToMenu()

@@ -1,4 +1,4 @@
-﻿namespace _Project.CodeBase.Services.Timer
+﻿namespace _Project.CodeBase.Services.TimeCounter
 {
   public interface ITimerFactory
   {

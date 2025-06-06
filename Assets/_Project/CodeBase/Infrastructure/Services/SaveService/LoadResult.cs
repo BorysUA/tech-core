@@ -1,6 +1,6 @@
 ﻿using _Project.CodeBase.Data.Progress;
 
-namespace _Project.CodeBase.Infrastructure.Services
+namespace _Project.CodeBase.Infrastructure.Services.SaveService
 {
   public readonly struct LoadResult
   {

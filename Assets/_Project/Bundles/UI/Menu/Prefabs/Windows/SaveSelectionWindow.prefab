@@ -94,7 +94,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 31.8
+  m_fontSize: 31.2
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -149,7 +149,6 @@ GameObject:
   - component: {fileID: 2376412150037462467}
   - component: {fileID: 4616321697324767743}
   - component: {fileID: 5695791260322148155}
-  - component: {fileID: 6541286697467327503}
   m_Layer: 0
   m_Name: SaveSelectionWindow
   m_TagString: Untagged
@@ -200,18 +199,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _saveSlotsContainer: {fileID: 7537189536861991550}
   _backToMenuButton: {fileID: 7266527373259980854}
---- !u!114 &6541286697467327503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4391229233837731973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3195f65bd2994200a6c5b1cc6d437f89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4957111355605571559
 GameObject:
   m_ObjectHideFlags: 0

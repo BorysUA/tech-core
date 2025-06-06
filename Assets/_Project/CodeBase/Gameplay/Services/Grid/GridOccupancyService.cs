@@ -6,6 +6,7 @@ using _Project.CodeBase.Gameplay.Data;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using ObservableCollections;
 using R3;
 using UnityEngine;

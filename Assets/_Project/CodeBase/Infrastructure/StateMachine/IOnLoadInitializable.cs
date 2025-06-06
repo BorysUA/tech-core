@@ -1,6 +1,4 @@
-﻿using Zenject;
-
-namespace _Project.CodeBase.Gameplay.States
+﻿namespace _Project.CodeBase.Infrastructure.StateMachine
 {
   public interface IOnLoadInitializable
   {

@@ -9,6 +9,7 @@ using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Gameplay.UI.Indicators;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.UI.Services;
 using R3;
 using UnityEngine;
