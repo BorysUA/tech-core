@@ -1,4 +1,4 @@
-﻿using System;
+﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Gameplay.Resource.Spots;
@@ -7,7 +7,6 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-#if UNITY_EDITOR
 namespace _Project.CodeBase.EditorTools
 {
   public static class ResourceSpotBaker
@@ -35,7 +34,7 @@ namespace _Project.CodeBase.EditorTools
       map.Spots = spots.ToArray();
       EditorUtility.SetDirty(map);
       AssetDatabase.SaveAssets();
-      
+
       Debug.Log($"ResourceSpotBaker: Baked {spots.Count} spots to {map.name}");
     }
   }

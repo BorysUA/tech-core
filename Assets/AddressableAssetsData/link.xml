@@ -1,0 +1,153 @@
+<linker>
+  <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.BuildingConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Conditions.EnoughResourceConditionConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Conditions.LowHealthConditionConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Conditions.ResourceReservationConditionConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.ConstructionPlotConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.InteractionButtons.BuildingActionButtonConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.HealthModuleConditionsConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.ResourceCapacityModuleConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.ResourceConsumerModuleConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.ResourceProductionModuleConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.ResourceReservationModuleConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.SelfDestructionModuleConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.TradeModuleConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.StatusItems.BuildingIndicatorConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Meteorite.MeteoriteConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Meteorite.MeteoriteSpawnerConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Meteorite.MeteoriteVFXConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Resource.ResourceConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Resource.ResourceDropConfig" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Resource.ResourceSpotMap" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.Building.BuildingPreview" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.Building.BuildingView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.ConstructionPlot.ConstructionPlotPreview" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.ConstructionPlot.ConstructionPlotView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.Meteorite.MeteoriteView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.Meteorite.VFX.ExplosionEffect" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.Meteorite.VFX.TrailEffect" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.Resource.ResourceDropView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.HUD.BuildingAction.BuildingActionBar" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.HUD.BuildingAction.BuildingActionButton" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.HUD.HudView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.HUD.Notification.NotificationMessage" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.HUD.Notification.NotificationView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.HUD.ResourceBar.ResourceBarView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Indicators.FlyText" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus.BuildingIndicatorsPopUp" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus.BuildingIndicatorView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.PopUps.ConfirmPlace.ConfirmPlacePopUp" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Windows.Settings.SettingsWindow" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Windows.Shop.Buttons.BuyButton" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Windows.Shop.Windows.ShopWindow" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Windows.Trade.OfferView" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Windows.Trade.PaymentItem" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Windows.Trade.ResourceAmountItem" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Windows.Trade.TradeWindow" preserve="all" />
+    <type fullname="_Project.CodeBase.Gameplay.UI.Windows.Trade.WaitingView" preserve="all" />
+    <type fullname="_Project.CodeBase.Menu.UI.DifficultySelection.DifficultySelectionWindow" preserve="all" />
+    <type fullname="_Project.CodeBase.Menu.UI.DifficultySelection.SelectDifficultyButton" preserve="all" />
+    <type fullname="_Project.CodeBase.Menu.UI.Menu.MenuWindow" preserve="all" />
+    <type fullname="_Project.CodeBase.Menu.UI.SaveSelection.SaveSelectionWindow" preserve="all" />
+    <type fullname="_Project.CodeBase.Menu.UI.SaveSelection.SaveSlotItem" preserve="all" />
+    <type fullname="_Project.CodeBase.UI.Common.PointerDownListener" preserve="all" />
+    <type fullname="_Project.CodeBase.Data.Progress.ResourceData.ResourceAmountData" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.CapacityEffect" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.HealthConfig" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.ResourceRange" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.Modules.TradeConfig" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Building.PlacementFilter" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Common.Range" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Meteorite.MeteoriteVFX" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Meteorite.ShakePreset" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Resource.ResourceCostConfig" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Resource.ResourceFlowConfig" preserve="nothing" serialized="true" />
+    <type fullname="_Project.CodeBase.Data.StaticData.Resource.ResourceSpotEntry" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+    <type fullname="UnityEngine.AddressableAssets.AssetReferenceGameObject" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.AddressableAssets.AssetReferenceT`1" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="TMPro.TextMeshProUGUI" preserve="all" />
+    <type fullname="TMPro.TMP_FontAsset" preserve="all" />
+    <type fullname="TMPro.FaceInfo_Legacy" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.FontAssetCreationSettings" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.KerningTable" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.TMP_Character" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.TMP_FontFeatureTable" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.TMP_FontWeightPair" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.VertexGradient" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.Material" preserve="all" />
+    <type fullname="UnityEngine.Mesh" preserve="all" />
+    <type fullname="UnityEngine.MeshFilter" preserve="all" />
+    <type fullname="UnityEngine.MeshRenderer" preserve="all" />
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.RectTransform" preserve="all" />
+    <type fullname="UnityEngine.Shader" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+    <type fullname="UnityEngine.Events.PersistentCallGroup" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.RectOffset" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.ParticleSystem" preserve="all" />
+    <type fullname="UnityEngine.ParticleSystemRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.BoxCollider" preserve="all" />
+    <type fullname="UnityEngine.MeshCollider" preserve="all" />
+    <type fullname="UnityEngine.Rigidbody" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Font" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.UI.AspectRatioFitter" preserve="all" />
+    <type fullname="UnityEngine.UI.Button" preserve="all" />
+    <type fullname="UnityEngine.UI.CanvasScaler" preserve="all" />
+    <type fullname="UnityEngine.UI.ContentSizeFitter" preserve="all" />
+    <type fullname="UnityEngine.UI.GraphicRaycaster" preserve="all" />
+    <type fullname="UnityEngine.UI.GridLayoutGroup" preserve="all" />
+    <type fullname="UnityEngine.UI.HorizontalLayoutGroup" preserve="all" />
+    <type fullname="UnityEngine.UI.Image" preserve="all" />
+    <type fullname="UnityEngine.UI.LayoutElement" preserve="all" />
+    <type fullname="UnityEngine.UI.Mask" preserve="all" />
+    <type fullname="UnityEngine.UI.RectMask2D" preserve="all" />
+    <type fullname="UnityEngine.UI.ScrollRect" preserve="all" />
+    <type fullname="UnityEngine.UI.VerticalLayoutGroup" preserve="all" />
+    <type fullname="UnityEngine.UI.AnimationTriggers" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UI.Button/ButtonClickedEvent" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UI.ColorBlock" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UI.MaskableGraphic/CullStateChangedEvent" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UI.Navigation" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UI.ScrollRect/ScrollRectEvent" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UI.SpriteState" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Canvas" preserve="all" />
+    <type fullname="UnityEngine.CanvasGroup" preserve="all" />
+    <type fullname="UnityEngine.CanvasRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.TextCoreFontEngineModule">
+    <type fullname="UnityEngine.TextCore.FaceInfo" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.Glyph" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.GlyphMetrics" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.GlyphRect" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.LowLevel.GlyphAdjustmentRecord" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.LowLevel.GlyphPairAdjustmentRecord" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.LowLevel.GlyphValueRecord" preserve="nothing" serialized="true" />
+  </assembly>
+</linker>

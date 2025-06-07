@@ -4,6 +4,7 @@ using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Infrastructure.UI;
+using _Project.CodeBase.Services.AnalyticsService;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Services.TimeCounter;
 using Zenject;
@@ -21,10 +22,18 @@ namespace _Project.CodeBase.Infrastructure.Root
       BindGameFactory();
       BindServices();
       BindUI();
+      BindAnalytics();
     }
 
     private void BindUI() =>
       Container.Bind<LoadScreen>().FromInstance(LoadScreen).AsSingle();
+
+    private void BindAnalytics()
+    {
+      Container.BindInterfacesTo<AnalyticsServiceProxy>().AsSingle();
+      Container.Bind<FirebaseAnalyticsService>().AsSingle();
+      Container.Bind<NoneAnalyticsService>().AsSingle();
+    }
 
     private void BindServices()
     {
