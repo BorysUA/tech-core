@@ -93,6 +93,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
     public void Dispose()
     {
+      _disposable?.Dispose();
     }
 
     private async void CreateView(BuildingDataProxy buildingData)
