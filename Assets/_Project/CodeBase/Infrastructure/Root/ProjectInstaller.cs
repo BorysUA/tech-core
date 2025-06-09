@@ -1,4 +1,5 @@
-﻿using _Project.CodeBase.Gameplay.Constants;
+﻿using System;
+using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
@@ -7,6 +8,7 @@ using _Project.CodeBase.Infrastructure.UI;
 using _Project.CodeBase.Services.AnalyticsService;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Services.TimeCounter;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.CodeBase.Infrastructure.Root
@@ -25,6 +27,11 @@ namespace _Project.CodeBase.Infrastructure.Root
       BindAnalytics();
     }
 
+    private void OnDestroy()
+    {
+      Debug.Log($"{name} DESTROYED");
+    }
+
     private void BindUI() =>
       Container.Bind<LoadScreen>().FromInstance(LoadScreen).AsSingle();
 
@@ -37,8 +44,8 @@ namespace _Project.CodeBase.Infrastructure.Root
 
     private void BindServices()
     {
-      Container.BindInterfacesTo<CoroutineRunner>().FromNewComponentOnNewGameObject()
-        .WithGameObjectName("COROUTINE RUNNER").AsSingle();
+      Container.BindInterfacesAndSelfTo<CoroutineRunner>().FromNewComponentOnNewGameObject()
+        .WithGameObjectName("COROUTINE RUNNER").UnderTransform(transform).AsSingle();
 
       Container.BindInterfacesTo<SceneLoader>().AsSingle();
       Container.BindInterfacesTo<TweenFactory>().AsSingle();

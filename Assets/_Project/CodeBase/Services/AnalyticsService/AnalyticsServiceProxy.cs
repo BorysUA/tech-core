@@ -24,7 +24,7 @@ namespace _Project.CodeBase.Services.AnalyticsService
     public async UniTask InitializeAsync()
     {
       DependencyStatus status = await _firebaseAnalytics.InitializeAsync();
-
+      
       if (status == DependencyStatus.Available)
         _current = _firebaseAnalytics;
       else
