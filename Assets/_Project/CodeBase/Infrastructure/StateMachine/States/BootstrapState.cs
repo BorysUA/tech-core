@@ -30,7 +30,7 @@ namespace _Project.CodeBase.Infrastructure.StateMachine.States
 
     private async UniTask InitializeServices()
     {
-      foreach (IOnLoadInitializableAsync service in _onLoadInitializables)
+      foreach (IOnLoadInitializableAsync service in _onLoadInitializables) 
         await service.InitializeAsync();
     }
 
