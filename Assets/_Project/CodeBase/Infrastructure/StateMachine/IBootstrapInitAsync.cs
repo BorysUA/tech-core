@@ -2,7 +2,7 @@
 
 namespace _Project.CodeBase.Infrastructure.StateMachine
 {
-  public interface IOnLoadInitializableAsync
+  public interface IBootstrapInitAsync
   {
     public UniTask InitializeAsync();
   }

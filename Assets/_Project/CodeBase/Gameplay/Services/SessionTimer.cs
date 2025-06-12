@@ -8,7 +8,7 @@ using R3;
 
 namespace _Project.CodeBase.Gameplay.Services
 {
-  public class SessionTimer : ISessionTimer, IDisposable, IOnLoadInitializable
+  public class SessionTimer : ISessionTimer, IDisposable, IGameplayInit
   {
     private readonly ITimerFactory _timerFactory;
     private readonly IProgressService _progressService;

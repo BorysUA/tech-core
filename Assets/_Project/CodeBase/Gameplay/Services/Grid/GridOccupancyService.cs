@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Services.Grid
 {
-  public class GridOccupancyService : IGridOccupancyService, IDisposable, IOnLoadInitializable
+  public class GridOccupancyService : IGridOccupancyService, IDisposable, IGameplayInit
   {
     private readonly IProgressService _progressService;
 
@@ -35,6 +35,23 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
       FillOccupiedCellsFromProgress();
       ObserveConstructionPlotsCollection();
       ObserveBuildingsCollection();
+    }
+
+    public bool TryGetCell(Vector2Int position, out ICellStatus cellStatus)
+    {
+      if (OccupiedCells.TryGetValue(position, out CellData cellData))
+      {
+        cellStatus = cellData;
+        return true;
+      }
+
+      cellStatus = null;
+      return false;
+    }
+
+    public void Dispose()
+    {
+      _disposable?.Dispose();
     }
 
     private void FillOccupiedCellsFromProgress()
@@ -76,23 +93,6 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
         .ObserveRemove()
         .Subscribe(removeEvent => { UnregisterConstructionPlotInGrid(removeEvent.Value); })
         .AddTo(_disposable);
-    }
-
-    public bool TryGetCell(Vector2Int position, out ICellStatus cellStatus)
-    {
-      if (OccupiedCells.TryGetValue(position, out CellData cellData))
-      {
-        cellStatus = cellData;
-        return true;
-      }
-
-      cellStatus = null;
-      return false;
-    }
-
-    public void Dispose()
-    {
-      _disposable?.Dispose();
     }
 
     private CellData GetOrCreate(Vector2Int position)

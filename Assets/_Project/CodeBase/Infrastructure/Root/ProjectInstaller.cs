@@ -1,14 +1,13 @@
-﻿using System;
-using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Services;
+﻿using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Signals.System;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Infrastructure.UI;
 using _Project.CodeBase.Services.AnalyticsService;
+using _Project.CodeBase.Services.AnalyticsService.Trackers;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Services.TimeCounter;
-using UnityEngine;
 using Zenject;
 
 namespace _Project.CodeBase.Infrastructure.Root
@@ -25,12 +24,21 @@ namespace _Project.CodeBase.Infrastructure.Root
       BindServices();
       BindUI();
       BindAnalytics();
+      BindSignals();
+      BindTrackers();
     }
 
-    private void OnDestroy()
+    private void BindSignals()
     {
-      Debug.Log($"{name} DESTROYED");
+      SignalBusInstaller.Install(Container);
+
+      Container.DeclareSignal<GameSessionStarted>();
+      Container.DeclareSignal<GameSessionPaused>();
+      Container.DeclareSignal<GameSessionEnded>();
     }
+
+    private void BindTrackers() =>
+      Container.BindInterfacesAndSelfTo<SessionMetadataTracker>().AsSingle();
 
     private void BindUI() =>
       Container.Bind<LoadScreen>().FromInstance(LoadScreen).AsSingle();
@@ -44,8 +52,18 @@ namespace _Project.CodeBase.Infrastructure.Root
 
     private void BindServices()
     {
-      Container.BindInterfacesAndSelfTo<CoroutineRunner>().FromNewComponentOnNewGameObject()
-        .WithGameObjectName("COROUTINE RUNNER").UnderTransform(transform).AsSingle();
+      Container.BindInterfacesAndSelfTo<CoroutineRunner>()
+        .FromNewComponentOnNewGameObject()
+        .WithGameObjectName("COROUTINE RUNNER")
+        .UnderTransform(transform)
+        .AsSingle();
+
+      Container.Bind<GameLifecycleBroadcaster>()
+        .FromNewComponentOnNewGameObject()
+        .WithGameObjectName("GAME LIFECYCLE")
+        .UnderTransform(transform)
+        .AsSingle()
+        .NonLazy();
 
       Container.BindInterfacesTo<SceneLoader>().AsSingle();
       Container.BindInterfacesTo<TweenFactory>().AsSingle();

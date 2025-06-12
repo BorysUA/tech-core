@@ -19,7 +19,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Project.CodeBase.Infrastructure.Services
 {
-  public class StaticDataProvider : IStaticDataProvider, IOnLoadInitializableAsync
+  public class StaticDataProvider : IStaticDataProvider, IBootstrapInitAsync
   {
     private readonly ILogService _logService;
 

@@ -63,12 +63,9 @@ namespace _Project.CodeBase.Infrastructure.Services
         }
 
         _loadScreen.UpdateProgressBar(normalized);
-        
-        Debug.Log($"[Track] p={asyncOperation.progress:F2} done={asyncOperation.isDone}");
         yield return null;
       }
 
-      Debug.Log($"{GetType().Name} : Call load screen close");
       _loadScreen.Close();
     }
   }

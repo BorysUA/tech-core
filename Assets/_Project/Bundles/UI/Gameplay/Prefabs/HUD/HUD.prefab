@@ -365,6 +365,7 @@ GameObject:
   - component: {fileID: 7991922812646058227}
   - component: {fileID: 3314397387339661667}
   - component: {fileID: 8984012142571567149}
+  - component: {fileID: 1746190057922027113}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -477,6 +478,26 @@ MonoBehaviour:
   _resourceBarView: {fileID: 3539759749289082004}
   _buildingActionBar: {fileID: 4756267331038358878}
   _notificationView: {fileID: 3857878100375374353}
+--- !u!114 &1746190057922027113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2391474719870109069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f63eaa9ab8b45ddb1302b64b59bd981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _civilianBuildingsShopButton: {fileID: 0}
+  _plotsShopButton: {fileID: 0}
+  _extractionBuildingsShopButton: {fileID: 0}
+  _industrialBuildingsShopButton: {fileID: 0}
+  _settingsButton: {fileID: 0}
+  _resourceBarView: {fileID: 0}
+  _buildingActionBar: {fileID: 0}
+  _notificationView: {fileID: 0}
 --- !u!1 &2452579636971469037
 GameObject:
   m_ObjectHideFlags: 0

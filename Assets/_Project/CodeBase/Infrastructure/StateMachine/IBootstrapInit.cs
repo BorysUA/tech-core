@@ -1,6 +1,6 @@
 ﻿namespace _Project.CodeBase.Infrastructure.StateMachine
 {
-  public interface IOnLoadInitializable
+  public interface IBootstrapInit
   {
     void Initialize();
   }

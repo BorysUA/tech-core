@@ -1,5 +1,4 @@
 ﻿using System;
-using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using Firebase;
 using Firebase.Analytics;
@@ -8,19 +7,14 @@ namespace _Project.CodeBase.Services.AnalyticsService
 {
   public class FirebaseAnalyticsService : IAnalyticsService, IDisposable
   {
-    private readonly ILogService _logService;
-
-    public FirebaseAnalyticsService(ILogService logService)
+    public async UniTask<DependencyStatus> InitializeAsync()
     {
-      _logService = logService;
+      return await FirebaseApp.CheckAndFixDependenciesAsync();
     }
 
-    public async UniTask<DependencyStatus> InitializeAsync() =>
-      await FirebaseApp.CheckAndFixDependenciesAsync();
-
-    public void LogEvent(string name, (string key, object value)[] parameters)
+    public void LogEvent(string name, params (string key, object value)[] parameters)
     {
-      if (parameters == null || parameters.Length == 0)
+      if (parameters.Length == 0)
       {
         FirebaseAnalytics.LogEvent(name);
         return;

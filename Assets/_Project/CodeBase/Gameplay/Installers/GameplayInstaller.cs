@@ -10,6 +10,8 @@ using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.Signals;
+using _Project.CodeBase.Gameplay.Signals.Command;
+using _Project.CodeBase.Gameplay.Signals.Domain;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Gameplay.UI.HUD;
 using _Project.CodeBase.Gameplay.UI.HUD.BuildingAction;
@@ -23,6 +25,8 @@ using _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
+using _Project.CodeBase.Services.AnalyticsService;
+using _Project.CodeBase.Services.AnalyticsService.Trackers;
 using _Project.CodeBase.Services.InputService;
 using _Project.CodeBase.UI.Services;
 using UnityEngine;
@@ -45,9 +49,10 @@ namespace _Project.CodeBase.Gameplay.Installers
       BingServices();
       BindUi();
       BingCamera();
-      BindSignalBus();
+      BindSignals();
       BindInputHandlers();
       BindInputService();
+      BindTrackers();
     }
 
     private void BindInputService()
@@ -69,12 +74,15 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.Bind<GameplayStateMachine>().AsSingle();
     }
 
-    private void BindSignalBus()
+    private void BindTrackers() => 
+      Container.BindInterfacesAndSelfTo<ResourceAccumulationTracker>().AsSingle();
+    
+    private void BindSignals()
     {
-      SignalBusInstaller.Install(Container);
-
       Container.DeclareSignal<BuildingPurchaseRequested>();
       Container.DeclareSignal<ConstructionPlotPurchaseRequested>();
+      Container.DeclareSignal<ResourceAmountChanged>();
+      Container.DeclareSignal<ResourceDropCollected>();
     }
 
     private void BingCamera()
@@ -120,7 +128,6 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.BindInterfacesTo<PopUpService>().AsSingle();
       Container.BindInterfacesTo<ConstructionPlotService>().AsSingle();
       Container.BindInterfacesTo<GridOccupancyService>().AsSingle();
-
       Container.BindInterfacesTo<ResourceService>().AsSingle();
       Container.Bind<ResourceBehaviourMap>().AsSingle();
     }

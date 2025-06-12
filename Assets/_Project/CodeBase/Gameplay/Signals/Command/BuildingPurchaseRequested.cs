@@ -1,6 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.Constants;
 
-namespace _Project.CodeBase.Gameplay.Signals
+namespace _Project.CodeBase.Gameplay.Signals.Command
 {
   public class BuildingPurchaseRequested
   {

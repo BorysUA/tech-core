@@ -2,6 +2,7 @@
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services.BuildingPlots;
 using _Project.CodeBase.Gameplay.Signals;
+using _Project.CodeBase.Gameplay.Signals.Command;
 using _Project.CodeBase.Gameplay.UI.Windows.Shop.Item;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;

@@ -15,10 +15,11 @@ using _Project.CodeBase.Services.LogService;
 using ObservableCollections;
 using R3;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.CodeBase.Gameplay.Services.Resource
 {
-  public class ResourceService : IResourceService, IOnLoadInitializable
+  public class ResourceService : IResourceService, IGameplayInit
   {
     private readonly Dictionary<string, ResourceDropViewModel> _resourceDrops = new();
     private readonly ResourceBehaviourMap _resourceBehaviourMap;

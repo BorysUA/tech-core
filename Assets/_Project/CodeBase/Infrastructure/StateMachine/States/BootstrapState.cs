@@ -2,17 +2,15 @@
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
 using Cysharp.Threading.Tasks;
-using Firebase;
-using UnityEngine;
 
 namespace _Project.CodeBase.Infrastructure.StateMachine.States
 {
   public class BootstrapState : IState
   {
     private readonly GameStateMachine _gameStateMachine;
-    private readonly List<IOnLoadInitializableAsync> _onLoadInitializables;
+    private readonly List<IBootstrapInitAsync> _onLoadInitializables;
 
-    public BootstrapState(GameStateMachine gameStateMachine, List<IOnLoadInitializableAsync> onLoadInitializables)
+    public BootstrapState(GameStateMachine gameStateMachine, List<IBootstrapInitAsync> onLoadInitializables)
     {
       _gameStateMachine = gameStateMachine;
       _onLoadInitializables = onLoadInitializables;
@@ -30,7 +28,7 @@ namespace _Project.CodeBase.Infrastructure.StateMachine.States
 
     private async UniTask InitializeServices()
     {
-      foreach (IOnLoadInitializableAsync service in _onLoadInitializables) 
+      foreach (IBootstrapInitAsync service in _onLoadInitializables)
         await service.InitializeAsync();
     }
 

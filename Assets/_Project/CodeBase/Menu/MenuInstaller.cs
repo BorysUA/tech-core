@@ -1,6 +1,4 @@
-﻿using _Project.CodeBase.Data;
-using _Project.CodeBase.Data.Settings;
-using _Project.CodeBase.Gameplay.UI.Factory;
+﻿using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Menu.Services;
@@ -25,7 +23,7 @@ namespace _Project.CodeBase.Menu
       BindServices();
       BindEntryPoint();
       BindViewModels();
-      BindSignalBus();
+      BindSignals();
     }
 
     private void BindUI()
@@ -35,10 +33,8 @@ namespace _Project.CodeBase.Menu
       Container.BindInterfacesAndSelfTo<WindowsFactory>().AsSingle();
     }
 
-    private void BindSignalBus()
+    private void BindSignals()
     {
-      SignalBusInstaller.Install(Container);
-
       Container.DeclareSignal<LoadGameplaySignal>();
     }
 

@@ -2,8 +2,11 @@
 using _Project.CodeBase.Gameplay.Data;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Resource.Commands;
+using _Project.CodeBase.Gameplay.Signals;
+using _Project.CodeBase.Gameplay.Signals.Domain;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
+using Zenject;
 
 namespace _Project.CodeBase.Gameplay.Services.Resource.Handlers
 {
@@ -11,11 +14,13 @@ namespace _Project.CodeBase.Gameplay.Services.Resource.Handlers
   {
     private readonly IProgressService _progressService;
     private readonly ILogService _logService;
+    private readonly SignalBus _signalBus;
 
-    public SpendResourcesHandler(IProgressService progressService, ILogService logService)
+    public SpendResourcesHandler(IProgressService progressService, ILogService logService, SignalBus signalBus)
     {
       _progressService = progressService;
       _logService = logService;
+      _signalBus = signalBus;
     }
 
     public bool Execute(SpendResourcesCommand command)
@@ -41,6 +46,9 @@ namespace _Project.CodeBase.Gameplay.Services.Resource.Handlers
       {
         ResourceProxy resource = _progressService.GameStateProxy.Resources[resourceToSpend.Kind];
         resource.Amount.OnNext(resource.Amount.CurrentValue - resourceToSpend.Amount);
+
+        _signalBus.Fire(
+          new ResourceAmountChanged(resourceToSpend.Kind, -resourceToSpend.Amount, resource.Amount.CurrentValue));
       }
 
       return true;

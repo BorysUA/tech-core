@@ -1,7 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Services.BuildingPlots;
 
-namespace _Project.CodeBase.Gameplay.Signals
+namespace _Project.CodeBase.Gameplay.Signals.Command
 {
   public class ConstructionPlotPurchaseRequested
   {

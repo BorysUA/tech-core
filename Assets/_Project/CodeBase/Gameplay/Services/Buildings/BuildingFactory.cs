@@ -24,7 +24,7 @@ using Object = UnityEngine.Object;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings
 {
-  public class BuildingFactory : IBuildingFactory, IOnLoadInitializable
+  public class BuildingFactory : IBuildingFactory, IGameplayInit
   {
     private const string RootName = "BuildingsRoot";
 
@@ -49,8 +49,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
     public void Initialize() =>
       CreateRoot();
-
-
+    
     public async UniTask<BuildingViewModel> CreateBuilding(BuildingType buildingType, Vector3 position)
     {
       BuildingConfig buildingConfig = _staticDataProvider.GetBuildingConfig(buildingType);

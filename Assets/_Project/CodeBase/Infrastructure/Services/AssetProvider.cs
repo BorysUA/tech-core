@@ -11,7 +11,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Project.CodeBase.Infrastructure.Services
 {
-  public class AssetProvider : IAssetProvider, IOnLoadInitializableAsync
+  public class AssetProvider : IAssetProvider, IBootstrapInitAsync
   {
     private readonly ILogService _logService;
     private readonly Dictionary<string, List<AsyncOperationHandle>> _handles = new();

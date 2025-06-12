@@ -1,4 +1,6 @@
-﻿namespace _Project.CodeBase.Services.AnalyticsService
+﻿using R3;
+
+namespace _Project.CodeBase.Services.AnalyticsService
 {
   public class NoneAnalyticsService : IAnalyticsService
   {
@@ -13,5 +15,6 @@
     public void SetEnabled(bool enabled)
     {
     }
+    
   }
 }

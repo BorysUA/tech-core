@@ -12,14 +12,6 @@ namespace _Project.CodeBase.Infrastructure.UI
     [SerializeField] private CanvasGroup _screen;
     [SerializeField] private Slider _slider;
 
-    private ILogService _logService;
-
-    [Inject]
-    public void Construct(ILogService logService)
-    {
-      _logService = logService;
-    }
-
     public void Open()
     {
       _slider.value = 0f;
@@ -39,14 +31,12 @@ namespace _Project.CodeBase.Infrastructure.UI
 
     private IEnumerator FadeIn()
     {
-      _logService.LogInfo(GetType(),"Starting screen fade in");
       while (_screen.alpha > 0f)
       {
         _screen.alpha -= Time.deltaTime;
         yield return null;
       }
 
-      _logService.LogInfo(GetType(),"Loading screen was closed");
       gameObject.SetActive(false);
     }
   }
