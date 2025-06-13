@@ -8,6 +8,7 @@ using _Project.CodeBase.Services.AnalyticsService;
 using _Project.CodeBase.Services.AnalyticsService.Trackers;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Services.TimeCounter;
+using _Project.CodeBase.UI.Services;
 using Zenject;
 
 namespace _Project.CodeBase.Infrastructure.Root

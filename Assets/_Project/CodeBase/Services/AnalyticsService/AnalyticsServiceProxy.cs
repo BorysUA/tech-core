@@ -4,7 +4,6 @@ using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using Firebase;
-using R3;
 
 namespace _Project.CodeBase.Services.AnalyticsService
 {
@@ -33,7 +32,7 @@ namespace _Project.CodeBase.Services.AnalyticsService
     public async UniTask InitializeAsync()
     {
       DependencyStatus status = await _firebaseAnalytics.InitializeAsync();
-
+#if !UNITY_EDITOR
       if (status == DependencyStatus.Available)
       {
         _current = _firebaseAnalytics;
@@ -43,7 +42,11 @@ namespace _Project.CodeBase.Services.AnalyticsService
       {
         _logService.LogError(GetType(), $"Could not resolve all FirebaseApp dependencies: {status}");
       }
+#endif
     }
+
+    public void Dispose() => 
+      _current.Dispose();
 
     public void LogEvent(string name, params (string key, object value)[] parameters)
       => ForwardOrBuffer(service => service.LogEvent(name, parameters));

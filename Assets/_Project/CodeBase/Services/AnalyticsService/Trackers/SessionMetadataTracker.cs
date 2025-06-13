@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using _Project.CodeBase.Gameplay.Signals.System;
 using _Project.CodeBase.Services.AnalyticsService.Constants;
 using UnityEngine;
@@ -35,6 +36,8 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
 
     private void OnStart()
     {
+      _analyticsService.SetUserProperty(UserProperties.Language, Application.systemLanguage.ToString());
+      _analyticsService.SetUserProperty(UserProperties.Region, RegionInfo.CurrentRegion.Name);
       _analyticsService.LogEvent(EventNames.GameStarted);
     }
 

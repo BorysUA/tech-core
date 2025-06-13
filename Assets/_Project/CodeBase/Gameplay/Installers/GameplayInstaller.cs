@@ -74,9 +74,9 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.Bind<GameplayStateMachine>().AsSingle();
     }
 
-    private void BindTrackers() => 
+    private void BindTrackers() =>
       Container.BindInterfacesAndSelfTo<ResourceAccumulationTracker>().AsSingle();
-    
+
     private void BindSignals()
     {
       Container.DeclareSignal<BuildingPurchaseRequested>();

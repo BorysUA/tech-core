@@ -15,6 +15,9 @@ namespace _Project.CodeBase.Services.AnalyticsService
     public void SetEnabled(bool enabled)
     {
     }
-    
+
+    public void Dispose()
+    {
+    }
   }
 }
