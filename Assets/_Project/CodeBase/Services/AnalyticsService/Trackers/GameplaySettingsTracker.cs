@@ -17,15 +17,16 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
     }
 
     public void Initialize() =>
-      _signalBus.Subscribe<LoadGameplaySignal>(OnLoadGameplay);
+      _signalBus.Subscribe<GameplaySceneLoadRequested>(OnLoadGameplay);
 
     public void Dispose() =>
-      _signalBus.Unsubscribe<LoadGameplaySignal>(OnLoadGameplay);
+      _signalBus.Unsubscribe<GameplaySceneLoadRequested>(OnLoadGameplay);
 
-    private void OnLoadGameplay(LoadGameplaySignal signal)
+    private void OnLoadGameplay(GameplaySceneLoadRequested request)
     {
-      _analyticsService.SetUserProperty(UserProperties.Difficulty, signal.GameplaySettings.GameDifficulty.ToString());
-      _analyticsService.LogEvent(EventNames.DifficultySelected, (ParameterKeys.Difficulty, signal.GameplaySettings.GameDifficulty));
+      _analyticsService.SetUserProperty(UserProperties.Difficulty, request.GameplaySettings.GameDifficulty.ToString());
+      _analyticsService.LogEvent(EventNames.DifficultySelected,
+        (ParameterKeys.Difficulty, request.GameplaySettings.GameDifficulty));
     }
   }
 }

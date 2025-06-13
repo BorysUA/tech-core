@@ -5,7 +5,7 @@ using Firebase.Analytics;
 
 namespace _Project.CodeBase.Services.AnalyticsService
 {
-  public class FirebaseAnalyticsService : IAnalyticsService, IDisposable
+  public class FirebaseAnalyticsService : IAnalyticsService
   {
     public async UniTask<DependencyStatus> InitializeAsync()
     {

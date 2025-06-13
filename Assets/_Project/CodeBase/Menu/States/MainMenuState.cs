@@ -26,10 +26,10 @@ namespace _Project.CodeBase.Menu.States
 
     public void Enter()
     {
-      _signalBus.Subscribe<LoadGameplaySignal>(OnLoadGameplayState);
+      _signalBus.Subscribe<GameplaySceneLoadRequested>(OnLoadGameplayState);
     }
 
-    private void OnLoadGameplayState(LoadGameplaySignal args)
+    private void OnLoadGameplayState(GameplaySceneLoadRequested args)
     {
       _dataTransferService.SetData(args.GameplaySettings);
       _assetProvider.CleanUp();
@@ -38,7 +38,7 @@ namespace _Project.CodeBase.Menu.States
 
     public void Exit()
     {
-      _signalBus.Unsubscribe<LoadGameplaySignal>(OnLoadGameplayState);
+      _signalBus.Unsubscribe<GameplaySceneLoadRequested>(OnLoadGameplayState);
     }
   }
 }

@@ -37,7 +37,7 @@ namespace _Project.CodeBase.Menu
 
     private void BindSignals()
     {
-      Container.DeclareSignal<LoadGameplaySignal>();
+      Container.DeclareSignal<GameplaySceneLoadRequested>();
     }
 
     private void BindViewModels()
