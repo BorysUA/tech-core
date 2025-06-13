@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.UI;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace _Project.CodeBase.Infrastructure.UI
 {

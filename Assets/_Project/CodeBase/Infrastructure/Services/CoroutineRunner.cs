@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
 using UnityEngine;
@@ -38,5 +39,6 @@ namespace _Project.CodeBase.Infrastructure.Services
 
       StopCoroutine(coroutine);
     }
+    
   }
 }

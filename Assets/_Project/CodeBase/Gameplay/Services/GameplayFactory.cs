@@ -16,7 +16,7 @@ using IAssetProvider = _Project.CodeBase.Infrastructure.Services.Interfaces.IAss
 
 namespace _Project.CodeBase.Gameplay.Services
 {
-  public class GameplayFactory : IGameplayFactory, IOnLoadInitializable
+  public class GameplayFactory : IGameplayFactory, IGameplayInit
   {
     private const string MeteoritesRootName = "CelestialBodies";
     private const string ResourcesRootName = "Resources";

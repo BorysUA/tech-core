@@ -29,7 +29,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       _popUpsCanvas = popUpsCanvas;
       _popUpRepository = popUpRepository;
     }
-    
+
     public async UniTask<TViewModel> CreatePopUp<TPopUp, TViewModel>(bool isFromCache)
       where TPopUp : BasePopUp<TViewModel> where TViewModel : BasePopUpViewModel
     {

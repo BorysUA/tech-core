@@ -35,11 +35,11 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
 
     private readonly IProgressService _progressService;
 
-    private readonly List<IOnLoadInitializable> _onLoadInitializables;
+    private readonly List<IGameplayInit> _onLoadInitializables;
 
     public LoadGameplayState(IDataTransferService dataTransferService, IGameplayUiFactory gameplayUiFactory,
       GameStateMachine gameStateMachine, GameplayStateMachine gameplayStateMachine, GameStatesFactory gameStatesFactory,
-      List<IOnLoadInitializable> onLoadInitializables,
+      List<IGameplayInit> onLoadInitializables,
       IProgressService progressService, ISaveStorageService saveStorageService, ILogService logService,
       IStartingResourcesProvider startingResourcesProvider)
     {
@@ -113,7 +113,7 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
 
     private void InitializeServices()
     {
-      foreach (IOnLoadInitializable initializable in _onLoadInitializables)
+      foreach (IGameplayInit initializable in _onLoadInitializables)
         initializable.Initialize();
     }
   }

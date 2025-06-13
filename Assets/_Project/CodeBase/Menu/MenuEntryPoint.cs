@@ -19,7 +19,7 @@ namespace _Project.CodeBase.Menu
     {
       _stateMachine.RegisterSceneState(_gameStatesFactory.CreateState<LoadMainMenuState>());
       _stateMachine.RegisterSceneState(_gameStatesFactory.CreateState<MainMenuState>());
-
+      
       _stateMachine.Enter<LoadMainMenuState>();
     }
   }

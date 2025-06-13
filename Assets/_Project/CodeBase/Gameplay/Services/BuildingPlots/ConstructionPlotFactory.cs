@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 
 namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 {
-  public class ConstructionPlotFactory : IConstructionPlotFactory, IOnLoadInitializable
+  public class ConstructionPlotFactory : IConstructionPlotFactory, IGameplayInit
   {
     private const string RootName = "ConstructionPlotsRoot";
 

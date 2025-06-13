@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.StateMachine;
@@ -12,12 +13,11 @@ using UnityEngine.InputSystem;
 
 namespace _Project.CodeBase.Services.InputService
 {
-  public class InputService : IInputService, IDisposable, IOnLoadInitializable
+  public class InputService : IInputService, IDisposable, IGameplayInit
   {
     private readonly InputSystemActions _inputActions;
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly ILogService _logService;
-    private readonly WaitForEndOfFrame _waitForEndOfFrame = new();
     private readonly IDisposable _disposable;
 
     private readonly Dictionary<Type, PlayerInputHandler> _playerInputHandlers = new();

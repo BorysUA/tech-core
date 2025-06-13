@@ -11,6 +11,7 @@ using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
@@ -18,7 +19,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Project.CodeBase.Infrastructure.Services
 {
-  public class StaticDataProvider : IStaticDataProvider
+  public class StaticDataProvider : IStaticDataProvider, IBootstrapInitAsync
   {
     private readonly ILogService _logService;
 

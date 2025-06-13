@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
+using _Project.CodeBase.Services.LogService;
 
 namespace _Project.CodeBase.Infrastructure.StateMachine
 {
@@ -27,7 +28,7 @@ namespace _Project.CodeBase.Infrastructure.StateMachine
     {
       States.Add(typeof(TState), gameState);
 
-      if (gameState is IInitializableState state) 
+      if (gameState is IInitializableState state)
         state.Initialize();
     }
 
@@ -36,10 +37,24 @@ namespace _Project.CodeBase.Infrastructure.StateMachine
       _currentState?.Exit();
     }
 
-    private void ChangeState(IExitState gameState)
+    protected virtual void OnStateEnter(IExitState state)
     {
-      _currentState?.Exit();
-      _currentState = gameState;
+    }
+
+    protected virtual void OnStateExit(IExitState state)
+    {
+    }
+
+    private void ChangeState(IExitState nextState)
+    {
+      if (_currentState != null)
+      {
+        _currentState.Exit();
+        OnStateExit(_currentState);
+      }
+
+      _currentState = nextState;
+      OnStateEnter(_currentState);
     }
 
     private TState GetState<TState>() where TState : class, IExitState =>

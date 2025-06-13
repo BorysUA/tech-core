@@ -21,6 +21,7 @@ using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.UI;
+using _Project.CodeBase.UI.Layout;
 using _Project.CodeBase.UI.Services;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -84,7 +85,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       GameObject buttonPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.BuildingActionButton);
 
       BuildingActionButton actionButton =
-        Object.Instantiate(buttonPrefab, container).GetComponent<BuildingActionButton>();
+        _instantiator.InstantiatePrefabForComponent<BuildingActionButton>(buttonPrefab, container);
 
       actionButton.Setup(config.Title, config.Icon);
       _actionButtonPool.Add(actionType, actionButton);
@@ -100,8 +101,8 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       GameObject itemPrefab =
         await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.BuildingIndicatorItem);
 
-      BuildingIndicatorView item = Object.Instantiate(itemPrefab, itemsContainer)
-        .GetComponent<BuildingIndicatorView>();
+      BuildingIndicatorView item =
+        _instantiator.InstantiatePrefabForComponent<BuildingIndicatorView>(itemPrefab, itemsContainer);
 
       item.Setup(itemConfig.Icon);
 
@@ -121,7 +122,8 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
 
       GameObject itemPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.TradeResourceItem);
 
-      ResourceAmountItem item = Object.Instantiate(itemPrefab, itemsContainer).GetComponent<ResourceAmountItem>();
+      ResourceAmountItem item =
+        _instantiator.InstantiatePrefabForComponent<ResourceAmountItem>(itemPrefab, itemsContainer);
 
       item.Setup(resourceConfig.Icon, amount);
       _resourceItemPool.Add(item);
@@ -143,7 +145,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
 
       GameObject itemPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.PaymentItem);
 
-      PaymentItem item = Object.Instantiate(itemPrefab, paymentsContainer).GetComponent<PaymentItem>();
+      PaymentItem item = _instantiator.InstantiatePrefabForComponent<PaymentItem>(itemPrefab, paymentsContainer);
 
       item.Setup(resourceConfig.Icon, amount);
       _cachedPaymentItem = item;
@@ -156,7 +158,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       GameObject notificationPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.NotificationMessage);
       NotificationMessage message =
         _instantiator.InstantiatePrefabForComponent<NotificationMessage>(notificationPrefab, container);
-      
+
       message.Setup(data);
       return message;
     }
@@ -166,8 +168,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       GameObject buttonPrefab =
         await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.BuyButton);
 
-      BuyButton buyButton = Object.Instantiate(buttonPrefab, buyButtonsContainer)
-        .GetComponent<BuyButton>();
+      BuyButton buyButton = _instantiator.InstantiatePrefabForComponent<BuyButton>(buttonPrefab, buyButtonsContainer);
 
       buyButton.Setup(shopItem.Title, shopItem.ItemIcon, shopItem.Price, shopItem.PriceIcon);
 

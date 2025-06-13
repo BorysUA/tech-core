@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.UI.Spawner
 {
-  public class ResourceFlyTextSpawner : IDisposable, IOnLoadInitializable
+  public class ResourceFlyTextSpawner : IDisposable, IGameplayInit
   {
     private readonly IResourceService _resourceService;
     private readonly CompositeDisposable _disposable = new();

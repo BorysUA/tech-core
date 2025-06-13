@@ -28,15 +28,15 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
 
     private readonly Dictionary<(Type, Type), UniTaskCompletionSource<BaseWindowViewModel>> _cachedTasks = new();
 
-    public WindowsFactory(IInstantiator instantiator, AddressMap addressMap, IAssetProvider assetProvider,
-      WindowsCanvas windowsCanvas, WindowsRepository windowsRepository, ILogService logService)
+    public WindowsFactory(AddressMap addressMap, IAssetProvider assetProvider, WindowsCanvas windowsCanvas,
+      WindowsRepository windowsRepository, ILogService logService, IInstantiator instantiator)
     {
-      _instantiator = instantiator;
       _addressMap = addressMap;
       _assetProvider = assetProvider;
       _windowsCanvas = windowsCanvas;
       _windowsRepository = windowsRepository;
       _logService = logService;
+      _instantiator = instantiator;
     }
 
     public async UniTask<TViewModel> CreateWindow<TWindow, TViewModel>(CancellationToken token, bool useCache = true)

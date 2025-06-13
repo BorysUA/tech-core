@@ -42,7 +42,7 @@ namespace _Project.CodeBase.Menu.UI.SaveSelection
       _gameplaySettingsBuilder.SetSaveSlot(saveMetaData.SaveSlot);
       _gameplaySettingsBuilder.SetGameDifficulty(saveMetaData.Difficulty);
       GameplaySettings gameplaySettings = _gameplaySettingsBuilder.Build();
-      _signalBus.Fire(new LoadGameplaySignal(gameplaySettings));
+      _signalBus.Fire(new GameplaySceneLoadRequested(gameplaySettings));
     }
 
     public void DeleteSave(SaveMetaData saveMetaData)

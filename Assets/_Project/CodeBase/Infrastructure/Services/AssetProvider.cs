@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using _Project.CodeBase.Infrastructure.Exceptions;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
-using NUnit.Framework.Constraints;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using Zenject;
-using Progress = UnityEditor.Progress;
 
 namespace _Project.CodeBase.Infrastructure.Services
 {
-  public class AssetProvider : IAssetProvider
+  public class AssetProvider : IAssetProvider, IBootstrapInitAsync
   {
     private readonly ILogService _logService;
     private readonly Dictionary<string, List<AsyncOperationHandle>> _handles = new();

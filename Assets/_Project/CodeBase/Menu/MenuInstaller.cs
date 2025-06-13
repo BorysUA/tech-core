@@ -1,6 +1,4 @@
-﻿using _Project.CodeBase.Data;
-using _Project.CodeBase.Data.Settings;
-using _Project.CodeBase.Gameplay.UI.Factory;
+﻿using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Menu.Services;
@@ -10,6 +8,7 @@ using _Project.CodeBase.Menu.UI.Factories;
 using _Project.CodeBase.Menu.UI.Menu;
 using _Project.CodeBase.Menu.UI.SaveSelection;
 using _Project.CodeBase.UI.Services;
+using _Project.CodeBase.Services.AnalyticsService.Trackers;
 using UnityEngine;
 using Zenject;
 
@@ -25,7 +24,8 @@ namespace _Project.CodeBase.Menu
       BindServices();
       BindEntryPoint();
       BindViewModels();
-      BindSignalBus();
+      BindSignals();
+      BindTrackers();
     }
 
     private void BindUI()
@@ -35,11 +35,9 @@ namespace _Project.CodeBase.Menu
       Container.BindInterfacesAndSelfTo<WindowsFactory>().AsSingle();
     }
 
-    private void BindSignalBus()
+    private void BindSignals()
     {
-      SignalBusInstaller.Install(Container);
-
-      Container.DeclareSignal<LoadGameplaySignal>();
+      Container.DeclareSignal<GameplaySceneLoadRequested>();
     }
 
     private void BindViewModels()
@@ -61,5 +59,8 @@ namespace _Project.CodeBase.Menu
     {
       Container.BindInterfacesAndSelfTo<MenuEntryPoint>().AsSingle().NonLazy();
     }
+
+    private void BindTrackers() =>
+      Container.BindInterfacesAndSelfTo<GameplaySettingsTracker>().AsSingle();
   }
 }

@@ -27,7 +27,7 @@ namespace _Project.CodeBase.Menu.UI.DifficultySelection
     {
       _gameplaySettingsBuilder.SetGameDifficulty(difficulty);
       GameplaySettings gameplaySettings = _gameplaySettingsBuilder.Build();
-      _signalBus.Fire(new LoadGameplaySignal(gameplaySettings));
+      _signalBus.Fire(new GameplaySceneLoadRequested(gameplaySettings));
     }
 
     public void BackToMenu()

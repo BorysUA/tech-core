@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "586618303677",
+    "project_id": "tech-core-a3cf9",
+    "storage_bucket": "tech-core-a3cf9.firebasestorage.app",
+    "firebase_url": "https://dummy.firebaseio.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586618303677:android:4b83978456d4053af473d4",
+        "android_client_info": {
+          "package_name": "com.UnityTechnologies.TechCore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzkmAoyQC-kLiNmicyvYZ_BEiOWWg0S0g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

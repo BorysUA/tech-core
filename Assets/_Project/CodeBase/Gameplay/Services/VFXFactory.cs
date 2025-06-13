@@ -14,7 +14,7 @@ using Zenject;
 
 namespace _Project.CodeBase.Gameplay.Services
 {
-  public class VFXFactory : IVFXFactory, IOnLoadInitializable
+  public class VFXFactory : IVFXFactory, IGameplayInit
   {
     private const string VFXRoot = "VFXRoot";
 
