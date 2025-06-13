@@ -38,6 +38,7 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
     {
       _analyticsService.SetUserProperty(UserProperties.Language, Application.systemLanguage.ToString());
       _analyticsService.SetUserProperty(UserProperties.Region, RegionInfo.CurrentRegion.Name);
+      _analyticsService.SetUserProperty(UserProperties.AppVersion, Application.version);
       _analyticsService.LogEvent(EventNames.GameStarted);
     }
 
