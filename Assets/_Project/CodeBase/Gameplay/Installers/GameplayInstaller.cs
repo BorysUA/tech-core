@@ -74,8 +74,12 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.Bind<GameplayStateMachine>().AsSingle();
     }
 
-    private void BindTrackers() =>
+    private void BindTrackers()
+    {
       Container.BindInterfacesAndSelfTo<ResourceAccumulationTracker>().AsSingle();
+      Container.BindInterfacesAndSelfTo<BuildingPurchaseTracker>().AsSingle();
+      Container.BindInterfacesAndSelfTo<BuildingLifecycleTracker>().AsSingle();
+    }
 
     private void BindSignals()
     {
@@ -83,6 +87,9 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.DeclareSignal<ConstructionPlotPurchaseRequested>();
       Container.DeclareSignal<ResourceAmountChanged>();
       Container.DeclareSignal<ResourceDropCollected>();
+      Container.DeclareSignal<BuildingPlaced>();
+      Container.DeclareSignal<ConstructionPlotPlaced>();
+      Container.DeclareSignal<BuildingDestroyed>();
     }
 
     private void BingCamera()
