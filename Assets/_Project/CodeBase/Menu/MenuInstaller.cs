@@ -8,6 +8,7 @@ using _Project.CodeBase.Menu.UI.Factories;
 using _Project.CodeBase.Menu.UI.Menu;
 using _Project.CodeBase.Menu.UI.SaveSelection;
 using _Project.CodeBase.UI.Services;
+using _Project.CodeBase.Services.AnalyticsService.Trackers;
 using UnityEngine;
 using Zenject;
 
@@ -24,6 +25,7 @@ namespace _Project.CodeBase.Menu
       BindEntryPoint();
       BindViewModels();
       BindSignals();
+      BindTrackers();
     }
 
     private void BindUI()
@@ -57,5 +59,8 @@ namespace _Project.CodeBase.Menu
     {
       Container.BindInterfacesAndSelfTo<MenuEntryPoint>().AsSingle().NonLazy();
     }
+
+    private void BindTrackers() =>
+      Container.BindInterfacesAndSelfTo<GameplaySettingsTracker>().AsSingle();
   }
 }
