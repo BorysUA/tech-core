@@ -13,6 +13,7 @@ using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
+using _Project.CodeBase.Services.RemoteConfigsService;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -22,6 +23,7 @@ namespace _Project.CodeBase.Infrastructure.Services
   public class StaticDataProvider : IStaticDataProvider, IBootstrapInitAsync
   {
     private readonly ILogService _logService;
+    private readonly RemoteConfigPatcher _patcher;
 
     private Dictionary<BuildingType, BuildingConfig> _buildings = new();
     private Dictionary<ResourceKind, ResourceConfig> _resources = new();
@@ -37,8 +39,11 @@ namespace _Project.CodeBase.Infrastructure.Services
 
     private readonly List<AsyncOperationHandle> _handles = new();
 
-    public StaticDataProvider(ILogService logService) =>
+    public StaticDataProvider(ILogService logService, RemoteConfigPatcher patcher)
+    {
       _logService = logService;
+      _patcher = patcher;
+    }
 
     public async UniTask InitializeAsync()
     {
@@ -71,7 +76,9 @@ namespace _Project.CodeBase.Infrastructure.Services
         await LoadConfigAsync<MeteoriteVFXConfig>(StaticDataAddress.MeteoriteVFXs);
       _meteoriteVFXs = meteoriteVFXConfig.MeteoriteVFX.ToDictionary(x => x.Type, x => x);
 
-      _meteoriteSpawner = await LoadConfigAsync<MeteoriteSpawnerConfig>(StaticDataAddress.MeteoriteSpawner);
+      MeteoriteSpawnerConfig config = await LoadConfigAsync<MeteoriteSpawnerConfig>(StaticDataAddress.MeteoriteSpawner);
+      _meteoriteSpawner = _patcher.CreatePatchedProxy(config);
+      
       _resourceSpots = await LoadConfigAsync<ResourceSpotMap>(StaticDataAddress.ResourceSpots);
     }
 

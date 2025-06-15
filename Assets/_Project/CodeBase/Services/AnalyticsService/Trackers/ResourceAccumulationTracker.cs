@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Signals;
 using _Project.CodeBase.Gameplay.Signals.Domain;
 using _Project.CodeBase.Gameplay.Signals.System;
 using _Project.CodeBase.Services.AnalyticsService.Constants;

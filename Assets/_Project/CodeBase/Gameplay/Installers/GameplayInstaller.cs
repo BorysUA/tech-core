@@ -25,7 +25,6 @@ using _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
-using _Project.CodeBase.Services.AnalyticsService;
 using _Project.CodeBase.Services.AnalyticsService.Trackers;
 using _Project.CodeBase.Services.InputService;
 using _Project.CodeBase.UI.Services;

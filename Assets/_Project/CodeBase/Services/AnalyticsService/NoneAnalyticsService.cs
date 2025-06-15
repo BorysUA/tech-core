@@ -1,6 +1,4 @@
-﻿using R3;
-
-namespace _Project.CodeBase.Services.AnalyticsService
+﻿namespace _Project.CodeBase.Services.AnalyticsService
 {
   public class NoneAnalyticsService : IAnalyticsService
   {

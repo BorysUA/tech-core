@@ -1,5 +1,4 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Firebase;
 using Firebase.Analytics;
 
@@ -7,9 +6,23 @@ namespace _Project.CodeBase.Services.AnalyticsService
 {
   public class FirebaseAnalyticsService : IAnalyticsService
   {
-    public async UniTask<DependencyStatus> InitializeAsync()
+    private readonly IFirebaseBootstrap _firebaseBootstrap;
+
+    public FirebaseAnalyticsService(IFirebaseBootstrap firebaseBootstrap)
     {
-      return await FirebaseApp.CheckAndFixDependenciesAsync();
+      _firebaseBootstrap = firebaseBootstrap;
+    }
+
+    public async UniTask<ServiceInitializationStatus> InitializeAsync()
+    {
+      DependencyStatus dependencyStatus = await _firebaseBootstrap.IsReady;
+
+      if (dependencyStatus == DependencyStatus.Available)
+        SetEnabled(true);
+
+      return dependencyStatus == DependencyStatus.Available
+        ? ServiceInitializationStatus.Succeeded
+        : ServiceInitializationStatus.Failed;
     }
 
     public void LogEvent(string name, params (string key, object value)[] parameters)

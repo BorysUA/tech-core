@@ -16,5 +16,7 @@ namespace _Project.CodeBase.Infrastructure.Services.Interfaces
 
     UniTask<T> LoadAssetAsync<T>(AssetReference assetReference, CancellationToken token = default, int retryCount = 1)
       where T : class;
+
+    UniTask<T> LoadAssetAsyncFromResources<T>(string path) where T : Object;
   }
 }
