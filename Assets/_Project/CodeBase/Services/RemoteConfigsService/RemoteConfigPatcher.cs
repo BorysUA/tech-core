@@ -1,16 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using _Project.CodeBase.Infrastructure;
+using _Project.CodeBase.Infrastructure.Guards;
+using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.CodeBase.Services.RemoteConfigsService
 {
-  public class RemoteConfigPatcher
+  public class RemoteConfigPatcher : IServiceReadyAwaiter
   {
     private readonly IRemoteConfigService _remoteConfigService;
     private readonly ILogService _logService;
     private readonly ObjectFactory _objectFactory;
+
+    private readonly Dictionary<Type, MemberInfo[]> _cachedMembers = new();
+    public UniTask WhenReady => _remoteConfigService.WhenReady.WithCycleGuard(this);
 
     public RemoteConfigPatcher(ILogService logService, IRemoteConfigService remoteConfigService,
       ObjectFactory objectFactory)
@@ -23,11 +31,8 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
     public T CreatePatchedProxy<T>(T config) where T : ScriptableObject
     {
       T configClone = _objectFactory.Instantiate(config);
-      Type configType = typeof(T);
 
-      BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
-      foreach (MemberInfo memberInfo in configType.GetMembers(bindingFlags))
+      foreach (MemberInfo memberInfo in GetPatchedConfigMembers(typeof(T)))
       {
         RemoteKeyAttribute attribute = memberInfo.GetCustomAttribute<RemoteKeyAttribute>();
 
@@ -70,6 +75,26 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
       }
 
       return configClone;
+    }
+
+    private IEnumerable<MemberInfo> GetPatchedConfigMembers(Type configType)
+    {
+      if (_cachedMembers.TryGetValue(configType, out MemberInfo[] cachedMembers))
+        return cachedMembers;
+
+      BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+      List<MemberInfo> members = new List<MemberInfo>();
+
+      members.AddRange(configType.GetFields(bindingFlags)
+        .Where(member => member.IsDefined(typeof(RemoteKeyAttribute))));
+
+      members.AddRange(configType.GetProperties(bindingFlags)
+        .Where(member => member.CanWrite && member.IsDefined(typeof(RemoteKeyAttribute))));
+
+      _cachedMembers.Add(configType, members.ToArray());
+
+      return members;
     }
   }
 }

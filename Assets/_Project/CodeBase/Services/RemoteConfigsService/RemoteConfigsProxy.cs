@@ -1,4 +1,5 @@
 ﻿using System;
+using _Project.CodeBase.Infrastructure.Guards;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using Cysharp.Threading.Tasks;
 
@@ -8,8 +9,11 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
   {
     private readonly FirebaseRemoteConfigService _firebase;
     private readonly NoneRemoteConfigService _none;
+    private readonly UniTaskCompletionSource _whenReadyTcs = new();
 
-    private IRemoteConfigService _current;
+    public UniTask WhenReady => _whenReadyTcs.Task.WithCycleGuard(this);
+
+    private IRemoteConfigServiceInternal _current;
 
     public RemoteConfigsProxy(FirebaseRemoteConfigService firebase, NoneRemoteConfigService noneRemoteConfigService)
     {
@@ -25,6 +29,8 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
 
       if (status == ServiceInitializationStatus.Succeeded)
         _current = _firebase;
+
+      _whenReadyTcs.TrySetResult();
     }
 
     public object GetValue(string key, Type targetType) =>

@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Services.RemoteConfigsService
 {
-  public class FirebaseRemoteConfigService : IRemoteConfigService
+  public class FirebaseRemoteConfigService : IRemoteConfigServiceInternal
   {
     private readonly IFirebaseBootstrap _firebaseBootstrap;
     private readonly IAssetProvider _assetProvider;
@@ -19,11 +19,11 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
     private readonly Dictionary<Type, Func<ConfigValue, object>> _supportedTypes = new()
     {
       { typeof(string), configValue => configValue.StringValue },
-      { typeof(int), configValue => configValue.LongValue },
+      { typeof(int), configValue => (int)configValue.LongValue },
       { typeof(long), configValue => configValue.LongValue },
       { typeof(bool), configValue => configValue.BooleanValue },
       { typeof(double), configValue => configValue.DoubleValue },
-      { typeof(float), configValue => configValue.DoubleValue },
+      { typeof(float), configValue => (float)configValue.DoubleValue },
     };
 
     public FirebaseRemoteConfigService(IFirebaseBootstrap firebaseBootstrap, IAssetProvider assetProvider)
@@ -34,7 +34,7 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
 
     public async UniTask<ServiceInitializationStatus> InitializeAsync()
     {
-      DependencyStatus status = await _firebaseBootstrap.IsReady;
+      DependencyStatus status = await _firebaseBootstrap.WhenReady;
 
       if (status == DependencyStatus.Available)
       {

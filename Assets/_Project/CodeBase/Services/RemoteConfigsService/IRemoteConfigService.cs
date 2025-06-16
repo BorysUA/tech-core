@@ -1,10 +1,8 @@
-﻿using System;
+﻿using _Project.CodeBase.Infrastructure.Services.Interfaces;
 
 namespace _Project.CodeBase.Services.RemoteConfigsService
 {
-  public interface IRemoteConfigService
+  public interface IRemoteConfigService : IServiceReadyAwaiter, IRemoteConfigServiceInternal
   {
-    public T GetValue<T>(string key);
-    public object GetValue(string key, Type targetType);
   }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
@@ -9,8 +10,8 @@ namespace _Project.CodeBase.Services
   public class FirebaseBootstrap : IFirebaseBootstrap, IBootstrapInitAsync
   {
     private readonly ILogService _logService;
-    private readonly TaskCompletionSource<DependencyStatus> _isReadyTcs = new();
-    public UniTask<DependencyStatus> IsReady => _isReadyTcs.Task.AsUniTask();
+    private readonly UniTaskCompletionSource<DependencyStatus> _whenReadyTcs = new();
+    public UniTask<DependencyStatus> WhenReady => _whenReadyTcs.Task;
 
     public FirebaseBootstrap(ILogService logService)
     {
@@ -24,7 +25,7 @@ namespace _Project.CodeBase.Services
       if (status != DependencyStatus.Available)
         _logService.LogError(GetType(), $"Could not resolve all FirebaseApp dependencies: {status}");
 
-      _isReadyTcs.SetResult(status);
+      _whenReadyTcs.TrySetResult(status);
     }
   }
 }

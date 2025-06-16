@@ -15,7 +15,7 @@ namespace _Project.CodeBase.Services.AnalyticsService
 
     public async UniTask<ServiceInitializationStatus> InitializeAsync()
     {
-      DependencyStatus dependencyStatus = await _firebaseBootstrap.IsReady;
+      DependencyStatus dependencyStatus = await _firebaseBootstrap.WhenReady;
 
       if (dependencyStatus == DependencyStatus.Available)
         SetEnabled(true);
