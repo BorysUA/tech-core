@@ -2,7 +2,6 @@
 using _Project.CodeBase.Gameplay.Data;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.TimeCounter;
 using R3;
 

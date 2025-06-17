@@ -14,7 +14,9 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
   {
     private readonly IFirebaseBootstrap _firebaseBootstrap;
     private readonly IAssetProvider _assetProvider;
-    private readonly FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+    private FirebaseRemoteConfig _remoteConfig;
+
+    public DateTime LastFetchTime => FirebaseRemoteConfig.DefaultInstance.Info.FetchTime;
 
     private readonly Dictionary<Type, Func<ConfigValue, object>> _supportedTypes = new()
     {
@@ -38,6 +40,7 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
 
       if (status == DependencyStatus.Available)
       {
+        _remoteConfig = FirebaseRemoteConfig.DefaultInstance;
         TextAsset asset = await _assetProvider.LoadAssetAsyncFromResources<TextAsset>(AssetPath.RemoteConfigDefaults);
         Dictionary<string, object> defaults = JsonConvert.DeserializeObject<Dictionary<string, object>>(asset.text);
 

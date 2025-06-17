@@ -11,9 +11,9 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
     private readonly NoneRemoteConfigService _none;
     private readonly UniTaskCompletionSource _whenReadyTcs = new();
 
-    public UniTask WhenReady => _whenReadyTcs.Task.WithCycleGuard(this);
-
     private IRemoteConfigServiceInternal _current;
+    public UniTask WhenReady => _whenReadyTcs.Task.WithCycleGuard(this);
+    public DateTime LastFetchTime => _current.LastFetchTime;
 
     public RemoteConfigsProxy(FirebaseRemoteConfigService firebase, NoneRemoteConfigService noneRemoteConfigService)
     {
