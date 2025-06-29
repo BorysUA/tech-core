@@ -1,4 +1,4 @@
-﻿using _Project.CodeBase.Gameplay.Data;
+﻿using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Pool;
 using _Project.CodeBase.Utility;
 using R3;
@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Resource
 {
-  public class ResourceDropViewModel : IResettablePoolItem
+  public class ResourceDropViewModel : IResettablePoolItem<PoolUnit>
   {
     private ResourceDropProxy _resourceDropProxy;
     private readonly ReactiveProperty<Vector3> _position = new();
@@ -18,6 +18,7 @@ namespace _Project.CodeBase.Gameplay.Resource
     public ReadOnlyReactiveProperty<Vector3> Position => _position;
     public ReadOnlyReactiveProperty<Vector3> SpawnPoint => _spawnPoint;
     public Observable<Unit> Deactivated => _deactivated;
+
     public Observable<Unit> Activated => _activated;
 
     public void Setup(ResourceDropProxy resourceDropProxy)
@@ -33,13 +34,13 @@ namespace _Project.CodeBase.Gameplay.Resource
     public void SetToSpawnPoint(Vector3 position) =>
       _spawnPoint.OnNext(position);
 
-    public void Activate() =>
+    public void Activate(PoolUnit param) =>
       _activated.OnNext(Unit.Default);
 
-    public void Deactivate() => 
+    public void Deactivate() =>
       _deactivated.OnNext(Unit.Default);
 
-    public void Reset() => 
+    public void Reset() =>
       _resourceDropProxy = null;
 
     public void OnMovementCompleted()

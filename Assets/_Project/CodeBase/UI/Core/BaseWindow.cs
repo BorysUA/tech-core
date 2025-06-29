@@ -1,8 +1,7 @@
 ﻿using R3;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace _Project.CodeBase.UI.Common
+namespace _Project.CodeBase.UI.Core
 {
   public abstract class BaseWindow<TViewModel> : MonoBehaviour, IWindow where TViewModel : BaseWindowViewModel
   {

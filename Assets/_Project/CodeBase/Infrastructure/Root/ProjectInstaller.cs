@@ -1,4 +1,5 @@
 ﻿using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.Signals.System;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
@@ -7,6 +8,7 @@ using _Project.CodeBase.Infrastructure.UI;
 using _Project.CodeBase.Services;
 using _Project.CodeBase.Services.AnalyticsService;
 using _Project.CodeBase.Services.AnalyticsService.Trackers;
+using _Project.CodeBase.Services.DateTimeService;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Services.RemoteConfigsService;
 using _Project.CodeBase.Services.TimeCounter;
@@ -86,6 +88,7 @@ namespace _Project.CodeBase.Infrastructure.Root
       Container.BindInterfacesTo<ProgressService>().AsSingle();
       Container.BindInterfacesTo<JsonSaveStorageService>().AsSingle();
       Container.BindInterfacesTo<FirebaseBootstrap>().AsSingle();
+      Container.BindInterfacesTo<DateTimeService>().AsSingle();
       Container.Bind<InputSystemActions>().AsSingle();
       Container.Bind<RemoteConfigPatcher>().AsSingle();
       Container.Bind<AddressMap>().AsSingle();

@@ -1,5 +1,4 @@
 ﻿using System;
-using _Project.CodeBase.Data.Progress;
 using _Project.CodeBase.Data.Progress.Building;
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using _Project.CodeBase.Gameplay.Constants;
@@ -7,7 +6,7 @@ using ObservableCollections;
 using R3;
 using UnityEngine;
 
-namespace _Project.CodeBase.Gameplay.Data
+namespace _Project.CodeBase.Gameplay.DataProxy
 {
   public class BuildingDataProxy
   {

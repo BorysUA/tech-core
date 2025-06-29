@@ -1,6 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.Constants;
 
-namespace _Project.CodeBase.Gameplay.Data
+namespace _Project.CodeBase.Gameplay.DataProxy
 {
   public class CellData : ICellStatus
   {

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
-using System.Threading.Tasks;
 using _Project.CodeBase.Gameplay.Meteorite.VFX;
-using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.Factories;
 using R3;
 using UnityEngine;
 using Zenject;

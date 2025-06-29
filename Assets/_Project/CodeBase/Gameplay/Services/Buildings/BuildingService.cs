@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.UI.Services;
@@ -29,9 +28,9 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     private readonly IPopUpService _popUpService;
     private readonly CompositeDisposable _disposable = new();
 
-    private readonly Dictionary<string, BuildingViewModel> _buildings = new();
-    private readonly ObservableList<BuildingType> _availableBuildings = new();
-    public IObservableCollection<BuildingType> AvailableBuildings => _availableBuildings;
+    private readonly Dictionary<string, BuildingViewModel> _currentBuildings = new();
+    private readonly ObservableList<BuildingInfo> _availableBuildings = new();
+    public IObservableCollection<BuildingInfo> AvailableBuildings => _availableBuildings;
 
     public BuildingService(ICommandBroker commandBroker, IProgressService progressService,
       IBuildingFactory buildingFactory, IStaticDataProvider staticDataProvider,
@@ -48,8 +47,8 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
       foreach (var buildingEntity in progressService.GameStateProxy.BuildingsCollection)
         CreateView(buildingEntity.Value);
 
-      foreach (BuildingConfig buildingConfig in _staticDataProvider.GetAllBuildings()) 
-        _availableBuildings.Add(buildingConfig.Type);
+      foreach (BuildingConfig config in _staticDataProvider.GetAllBuildings())
+        _availableBuildings.Add(new BuildingInfo(config.Type, config.Category, config.SizeInCells));
 
       progressService.GameStateProxy.BuildingsCollection
         .ObserveAdd()
@@ -84,10 +83,10 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
     public BuildingViewModel GetBuildingById(string id)
     {
-      if (_buildings.TryGetValue(id, out BuildingViewModel viewModel))
+      if (_currentBuildings.TryGetValue(id, out BuildingViewModel viewModel))
         return viewModel;
 
-      _logService.LogError(GetType(), $"Building with ID '{id}' not found in '{nameof(_buildings)} ");
+      _logService.LogError(GetType(), $"Building with ID '{id}' not found in '{nameof(_currentBuildings)} ");
       return null;
     }
 
@@ -103,14 +102,15 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
       BuildingViewModel viewModel = await _buildingFactory.CreateBuilding(buildingData.Type, worldBuildingPosition);
       viewModel.Initialize(buildingData);
 
-      _popUpService.ShowPopUp<BuildingIndicatorsPopUp, BuildingIndicatorsViewModel, BuildingViewModel>(viewModel,false);
+      _popUpService
+        .ShowPopUp<BuildingIndicatorsPopUp, BuildingIndicatorsViewModel, BuildingViewModel>(viewModel, false);
 
-      _buildings.Add(buildingData.Id, viewModel);
+      _currentBuildings.Add(buildingData.Id, viewModel);
     }
 
     private void DestroyView(BuildingDataProxy buildingData)
     {
-      if (_buildings.Remove(buildingData.Id, out BuildingViewModel buildingViewModel))
+      if (_currentBuildings.Remove(buildingData.Id, out BuildingViewModel buildingViewModel))
         buildingViewModel.Destroy();
     }
   }

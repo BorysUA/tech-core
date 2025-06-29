@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using _Project.CodeBase.Data.Progress;
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
-using _Project.CodeBase.Gameplay.Building.Conditions;
 using _Project.CodeBase.Gameplay.Building.Modules;
-using _Project.CodeBase.Gameplay.Building.Modules.Health;
-using _Project.CodeBase.Gameplay.Building.Modules.Spaceport;
-using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Services.LogService;
-using ObservableCollections;
 using R3;
 using UnityEngine;
 
@@ -146,10 +139,10 @@ namespace _Project.CodeBase.Gameplay.Building
       foreach (BuildingModule module in _modules.Values)
       {
         module.Setup(Id);
-        
+
         if (module is IProgressModule progressModule)
           AttachProgressData(progressModule);
-        
+
         module.Initialize();
 
         if (module is IBuildingIndicatorsProvider statusesProvider)

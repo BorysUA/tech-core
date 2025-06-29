@@ -1,6 +1,5 @@
-﻿using _Project.CodeBase.Gameplay.Data;
+﻿using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Command;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Gameplay.Signals.Domain;

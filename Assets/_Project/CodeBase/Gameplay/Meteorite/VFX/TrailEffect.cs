@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Meteorite.VFX
 {
-  public class TrailEffect : MonoBehaviour, ITrailEffect, IPoolItem
+  public class TrailEffect : MonoBehaviour, ITrailEffect, IPoolItem<Transform>
   {
     [SerializeField] private ParticleSystem _flames;
     private readonly Subject<Unit> _deactivated = new();
@@ -17,20 +17,12 @@ namespace _Project.CodeBase.Gameplay.Meteorite.VFX
       _vfxContainer = vfxRoot;
     }
 
-    public void Setup(Transform parent)
+    public void Activate(Transform parent)
     {
       transform.SetParent(parent, false);
       transform.localPosition = Vector3.zero;
-    }
-
-    private void OnParticleSystemStopped()
-    {
-      gameObject.SetActive(false);
-      _deactivated.OnNext(Unit.Default);
-    }
-
-    public void Activate() =>
       gameObject.SetActive(true);
+    }
 
     public void Play() =>
       _flames.Play();
@@ -45,6 +37,12 @@ namespace _Project.CodeBase.Gameplay.Meteorite.VFX
     {
       if (direction.sqrMagnitude > 0.001f)
         transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    private void OnParticleSystemStopped()
+    {
+      gameObject.SetActive(false);
+      _deactivated.OnNext(Unit.Default);
     }
   }
 }

@@ -1,4 +1,4 @@
-﻿using _Project.CodeBase.UI.Common;
+﻿using _Project.CodeBase.UI.Core;
 using R3;
 using UnityEngine;
 using UnityEngine.UI;

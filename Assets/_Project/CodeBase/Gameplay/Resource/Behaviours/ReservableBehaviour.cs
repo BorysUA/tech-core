@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Utility;
 using R3;
 using UnityEngine;

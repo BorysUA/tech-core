@@ -1,64 +1,47 @@
-﻿using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Gameplay.Constants;
+﻿using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services.Buildings;
-using _Project.CodeBase.Gameplay.Signals;
 using _Project.CodeBase.Gameplay.Signals.Command;
-using _Project.CodeBase.Gameplay.UI.Windows.Shop.Item;
-using _Project.CodeBase.Infrastructure.Services;
-using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Services.LogService;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
+using ObservableCollections;
 using Zenject;
 
 namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels
 {
-  public class BuildingsShopViewModel : ShopViewModel, IParameterizedWindow<BuildingCategory>
+  public class BuildingsShopViewModel : BaseWindowViewModel, IParameterizedWindow<BuildingCategory>
   {
-    private readonly ILogService _logService;
     private readonly SignalBus _signalBus;
     private readonly IBuildingService _buildingService;
-    private readonly IStaticDataProvider _staticDataProvider;
+    private readonly ObservableList<BuildingType> _itemsToShow = new();
 
-    public BuildingsShopViewModel(IBuildingService buildingService, ILogService logService,
-      IStaticDataProvider staticDataProvider, SignalBus signalBus)
+    private BuildingCategory _currentCategory;
+
+    public IObservableCollection<BuildingType> ItemsToShow => _itemsToShow;
+
+    public BuildingsShopViewModel(IBuildingService buildingService, SignalBus signalBus)
     {
       _buildingService = buildingService;
-      _logService = logService;
-      _staticDataProvider = staticDataProvider;
       _signalBus = signalBus;
     }
 
     public void Initialize(BuildingCategory category)
     {
-      foreach (BuildingType type in _buildingService.AvailableBuildings)
-      {
-        BuildingConfig config = _staticDataProvider.GetBuildingConfig(type);
+      _currentCategory = category;
 
-        if (config.Category == category)
-        {
-          BuildingShopItem shopItem = new BuildingShopItem(
-            config.Type,
-            config.Title,
-            config.Icon,
-            config.Price.Amount,
-            config.Price.Resource.Icon);
-
-          _items.Add(shopItem);
-        }
-      }
+      foreach (BuildingInfo building in _buildingService.AvailableBuildings)
+        if (building.Category == _currentCategory)
+          _itemsToShow.Add(building.Type);
     }
 
-    public override void BuyItem(IShopItem shopItem)
+    public bool Matches(BuildingCategory param) =>
+      _currentCategory == param;
+
+    public void Reset() =>
+      _itemsToShow.Clear();
+
+    public void BuyItem(BuildingType buildingType)
     {
-      if (shopItem is not BuildingShopItem buildingShopItem)
-      {
-        _logService.LogError(GetType(), $"Invalid ShopItem type: {shopItem.GetType()}");
-        return;
-      }
-
       Close();
-
-      _signalBus.Fire(new BuildingPurchaseRequested(buildingShopItem.ItemType));
+      _signalBus.Fire(new BuildingPurchaseRequested(buildingType));
     }
   }
 }

@@ -15,7 +15,7 @@ using static UnityEngine.Random;
 
 namespace _Project.CodeBase.Gameplay.Meteorite
 {
-  public class MeteoriteViewModel : IResettablePoolItem
+  public class MeteoriteViewModel : IResettablePoolItem<PoolUnit>
   {
     private const float Tolerance = 0.1f;
 
@@ -41,6 +41,7 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     public Observable<Unit> Initialized => _initialized;
     public Observable<Unit> Activated => _activated;
     public Observable<Unit> Deactivated => _deactivated;
+
     public Observable<Unit> Exploded => _exploded;
 
     public MeteoriteViewModel(IResourceService resourceService, IBuildingService buildingService)
@@ -58,6 +59,21 @@ namespace _Project.CodeBase.Gameplay.Meteorite
       _randomRotationAxis = onUnitSphere;
 
       _initialized.OnNext(Unit.Default);
+    }
+
+    public void Activate(PoolUnit param)
+    {
+      _activated.OnNext(Unit.Default);
+    }
+
+    public void Deactivate() =>
+      _deactivated.OnNext(Unit.Default);
+
+    public void Reset()
+    {
+      _position.OnNext(Vector3.zero);
+      _target = Vector3.zero;
+      _meteoriteConfig = null;
     }
 
     public void Update(float deltaTime)
@@ -83,19 +99,6 @@ namespace _Project.CodeBase.Gameplay.Meteorite
 
         Explode();
       }
-    }
-
-    public void Activate() =>
-      _activated.OnNext(Unit.Default);
-
-    public void Deactivate() =>
-      _deactivated.OnNext(Unit.Default);
-
-    public void Reset()
-    {
-      _position.OnNext(Vector3.zero);
-      _target = Vector3.zero;
-      _meteoriteConfig = null;
     }
 
     private void MoveToTarget(float deltaTime)

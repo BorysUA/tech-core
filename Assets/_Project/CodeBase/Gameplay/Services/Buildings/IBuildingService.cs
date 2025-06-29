@@ -8,7 +8,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 {
   public interface IBuildingService
   {
-    IObservableCollection<BuildingType> AvailableBuildings { get; }
+    IObservableCollection<BuildingInfo> AvailableBuildings { get; }
     void PlaceBuilding(BuildingType buildingType, List<Vector2Int> position);
     BuildingViewModel GetBuildingById(string id);
     void DestroyBuilding(string buildingId);

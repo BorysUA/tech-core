@@ -1,5 +1,5 @@
 ﻿using _Project.CodeBase.Gameplay.Services;
-using _Project.CodeBase.Gameplay.Services.CameraService;
+using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Services.InputService;
 using R3;
 using UnityEngine;

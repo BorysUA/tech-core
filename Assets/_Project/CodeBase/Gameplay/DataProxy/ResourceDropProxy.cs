@@ -3,7 +3,7 @@ using _Project.CodeBase.Gameplay.Constants;
 using R3;
 using UnityEngine;
 
-namespace _Project.CodeBase.Gameplay.Data
+namespace _Project.CodeBase.Gameplay.DataProxy
 {
   public class ResourceDropProxy
   {

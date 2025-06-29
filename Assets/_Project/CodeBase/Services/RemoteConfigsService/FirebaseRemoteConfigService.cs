@@ -16,8 +16,6 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
     private readonly IAssetProvider _assetProvider;
     private FirebaseRemoteConfig _remoteConfig;
 
-    public DateTime LastFetchTime => FirebaseRemoteConfig.DefaultInstance.Info.FetchTime;
-
     private readonly Dictionary<Type, Func<ConfigValue, object>> _supportedTypes = new()
     {
       { typeof(string), configValue => configValue.StringValue },
@@ -27,6 +25,8 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
       { typeof(double), configValue => configValue.DoubleValue },
       { typeof(float), configValue => (float)configValue.DoubleValue },
     };
+
+    public DateTime LastFetchTime => FirebaseRemoteConfig.DefaultInstance.Info.FetchTime;
 
     public FirebaseRemoteConfigService(IFirebaseBootstrap firebaseBootstrap, IAssetProvider assetProvider)
     {

@@ -1,17 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using _Project.CodeBase.Data.Progress;
 using _Project.CodeBase.Data.Progress.Building;
-using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Gameplay.Building.Modules;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Grid;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
-using _Project.CodeBase.Gameplay.Signals.Domain;
 using Zenject;
 using UnityEngine;
 using static _Project.CodeBase.Utility.UniqueIdGenerator;
@@ -47,7 +41,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
       BuildingDataProxy buildingDataProxy = new BuildingDataProxy(buildingData);
       _progressService.GameStateProxy.BuildingsCollection.Add(buildingDataProxy.Id, buildingDataProxy);
-      _signalBus.Fire(new _Project.CodeBase.Gameplay.Signals.Domain.BuildingPlaced(command.Type, command.Level));
+      _signalBus.Fire(new Signals.Domain.BuildingPlaced(command.Type, command.Level));
     }
 
     private bool IsCellsOccupied(List<Vector2Int> cells)

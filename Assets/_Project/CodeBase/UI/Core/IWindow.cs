@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace _Project.CodeBase.UI.Common
+﻿namespace _Project.CodeBase.UI.Core
 {
   public interface IWindow
   {

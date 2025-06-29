@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - InGamePreload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 372eee1295229064b93f194b1be8c0a8
+    m_Address: UI_InGame/BuildingsShopWindow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3e01d71bd714e794dbdeb5af61476ee4
     m_Address: UI_InGame/ConfirmBuildingPlacePopUp
     m_ReadOnly: 0
@@ -45,8 +51,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - InGamePreload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 81b2bdc4771a792428fd073f1974adb9
+    m_Address: UI_InGame/MeteorShowerEventIndicator
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9b79033e0ec0ef9419e0d8366b7e329f
     m_Address: UI_InGame/TradeResourceItem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9d2d1774c6983934bbb98dd5ced88dbd
+    m_Address: UI_InGame/PlotsShopWindow
     m_ReadOnly: 0
     m_SerializedLabels:
     - InGamePreload
@@ -63,14 +81,14 @@ MonoBehaviour:
     m_SerializedLabels:
     - InGamePreload
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c4253250b3c25f14aaefdbe0aaf036d8
-    m_Address: UI_InGame/ShopWindow
+  - m_GUID: d75ed54bdefb47244a8688dc68ab8417
+    m_Address: UI_InGame/TradeWindow
     m_ReadOnly: 0
     m_SerializedLabels:
     - InGamePreload
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d75ed54bdefb47244a8688dc68ab8417
-    m_Address: UI_InGame/TradeWindow
+  - m_GUID: de5bbc8cc1d10df439a8784782f3beb0
+    m_Address: UI_InGame/ProductionBoostEventIndicator
     m_ReadOnly: 0
     m_SerializedLabels:
     - InGamePreload

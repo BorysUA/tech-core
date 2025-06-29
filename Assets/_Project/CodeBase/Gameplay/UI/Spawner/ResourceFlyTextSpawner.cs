@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Gameplay.UI.Factory;

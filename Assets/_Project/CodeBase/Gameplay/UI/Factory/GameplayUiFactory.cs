@@ -1,28 +1,23 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.InteractionButtons;
 using _Project.CodeBase.Data.StaticData.Building.StatusItems;
 using _Project.CodeBase.Data.StaticData.Resource;
-using _Project.CodeBase.Gameplay.Building.Actions;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Services.BuildingPlots;
+using _Project.CodeBase.Gameplay.LiveEvents;
 using _Project.CodeBase.Gameplay.Services.Pool;
 using _Project.CodeBase.Gameplay.UI.HUD;
 using _Project.CodeBase.Gameplay.UI.HUD.BuildingAction;
+using _Project.CodeBase.Gameplay.UI.HUD.GameEvent;
 using _Project.CodeBase.Gameplay.UI.HUD.Notification;
 using _Project.CodeBase.Gameplay.UI.Indicators;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Gameplay.UI.Windows.Shop.Buttons;
-using _Project.CodeBase.Gameplay.UI.Windows.Shop.Item;
 using _Project.CodeBase.Gameplay.UI.Windows.Trade;
 using _Project.CodeBase.Infrastructure.Constants;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.UI;
-using _Project.CodeBase.UI.Layout;
-using _Project.CodeBase.UI.Services;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -35,25 +30,28 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
     private readonly IAssetProvider _assetProvider;
     private readonly IInstantiator _instantiator;
     private readonly IStaticDataProvider _staticDataProvider;
+    private readonly GameEventsAddressMap _gameEventsAddressMap;
 
     private readonly Transform _uiRoot;
     private readonly PopUpsCanvas _popUpsCanvas;
 
     private readonly ObjectPool<FlyText> _flyTextPool = new();
     private readonly ObjectPool<ResourceAmountItem> _resourceItemPool = new();
+    private readonly ObjectPool<BuyButton, Transform> _buyButtonPool = new();
     private readonly ActionButtonPool _actionButtonPool = new();
 
     private PaymentItem _cachedPaymentItem;
 
     public GameplayUiFactory(IAssetProvider assetProvider, IInstantiator instantiator,
       IStaticDataProvider staticDataProvider, Transform uiRoot,
-      PopUpsCanvas popUpsContainer)
+      PopUpsCanvas popUpsContainer, GameEventsAddressMap gameEventsAddressMap)
     {
       _assetProvider = assetProvider;
       _instantiator = instantiator;
       _staticDataProvider = staticDataProvider;
       _uiRoot = uiRoot;
       _popUpsCanvas = popUpsContainer;
+      _gameEventsAddressMap = gameEventsAddressMap;
     }
 
     public async UniTask<HudView> CreateHud()
@@ -163,15 +161,48 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       return message;
     }
 
-    public async UniTask<BuyButton> CreateBuyButton(IShopItem shopItem, Transform buyButtonsContainer)
+    public async UniTask<GameEventIndicator> CreateGameEventIndicator(GameEventType gameEventType, Transform container)
     {
+      string address = _gameEventsAddressMap.GetAddress(gameEventType);
+      GameObject gameEventPrefab = await _assetProvider.LoadAssetAsync<GameObject>(address);
+      GameEventIndicator indicator =
+        _instantiator.InstantiatePrefabForComponent<GameEventIndicator>(gameEventPrefab, container);
+
+      return indicator;
+    }
+
+    public async UniTask<BuyButton> CreateBuyButton(BuildingType buildingType, Transform container)
+    {
+      BuildingConfig config = _staticDataProvider.GetBuildingConfig(buildingType);
+
+      return await CreateBuyButtonInternal(
+        buyButton => buyButton.Setup(config.Title, config.Icon, config.Price.Amount, config.Price.Resource.Icon),
+        container);
+    }
+
+    public async UniTask<BuyButton> CreateBuyButton(ConstructionPlotType plotType, Transform container)
+    {
+      ConstructionPlotConfig config = _staticDataProvider.GetConstructionPlotConfig(plotType);
+
+      return await CreateBuyButtonInternal(
+        buyButton => buyButton.Setup(config.Title, config.Icon, config.Price.Amount, config.Price.Resource.Icon),
+        container);
+    }
+
+    private async UniTask<BuyButton> CreateBuyButtonInternal(Action<BuyButton> setupButton, Transform container)
+    {
+      if (_buyButtonPool.TryGet(container, out BuyButton cachedBuyButton))
+      {
+        setupButton.Invoke(cachedBuyButton);
+        return cachedBuyButton;
+      }
+
       GameObject buttonPrefab =
         await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.BuyButton);
 
-      BuyButton buyButton = _instantiator.InstantiatePrefabForComponent<BuyButton>(buttonPrefab, buyButtonsContainer);
-
-      buyButton.Setup(shopItem.Title, shopItem.ItemIcon, shopItem.Price, shopItem.PriceIcon);
-
+      BuyButton buyButton = _instantiator.InstantiatePrefabForComponent<BuyButton>(buttonPrefab, container);
+      setupButton.Invoke(buyButton);
+      _buyButtonPool.Add(buyButton);
       return buyButton;
     }
   }

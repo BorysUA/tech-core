@@ -1,5 +1,5 @@
 ﻿using _Project.CodeBase.Data.Progress.ResourceData;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Resource.Commands;
 using _Project.CodeBase.Gameplay.Signals;

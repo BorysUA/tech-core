@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.CodeBase.Gameplay.UI.PopUps.Common;
+using _Project.CodeBase.UI.Core;
 
 namespace _Project.CodeBase.UI.Services
 {

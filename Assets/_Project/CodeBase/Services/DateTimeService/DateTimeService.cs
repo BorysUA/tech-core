@@ -11,14 +11,13 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Services.DateTimeService
 {
-  public class DateTimeService : IBootstrapInitAsync, IDateTimeService, IDisposable
+  public class DateTimeService : IDateTimeService, IBootstrapInitAsync, IDisposable
   {
-    private readonly FirebaseBootstrap _firebaseBootstrap;
+    private readonly IFirebaseBootstrap _firebaseBootstrap;
     private readonly ILogService _logService;
     private readonly UniTaskCompletionSource _whenReadyTcs = new();
     private readonly ReactiveProperty<DateTime> _serverTime = new();
     private readonly ReactiveProperty<DateTime> _localTime = new();
-    private readonly CompositeDisposable _disposable = new();
 
     private FirebaseFunctions _firebaseFunctions;
 
@@ -26,11 +25,20 @@ namespace _Project.CodeBase.Services.DateTimeService
     private DateTime _serverTimeWhenSync;
 
     public UniTask WhenReady => _whenReadyTcs.Task;
-    public ReadOnlyReactiveProperty<DateTime> ServerTime => _serverTime;
-    public ReadOnlyReactiveProperty<DateTime> LocalTime => _localTime;
+    
+    public ReadOnlyReactiveProperty<DateTime> CurrentTime => Observable
+      .Interval(TimeSpan.FromSeconds(1))
+      .Select(_ =>
+        IsServerTimeAvailable
+          ? _serverTimeWhenSync + TimeSpan.FromSeconds(Time.realtimeSinceStartup - _secondsUntilSync)
+          : DateTime.Now)
+      .Publish()
+      .RefCount()
+      .ToReadOnlyReactiveProperty();
+    
     public bool IsServerTimeAvailable => !_serverTimeWhenSync.Equals(default);
 
-    public DateTimeService(FirebaseBootstrap firebaseBootstrap, ILogService logService)
+    public DateTimeService(IFirebaseBootstrap firebaseBootstrap, ILogService logService)
     {
       _firebaseBootstrap = firebaseBootstrap;
       _logService = logService;
@@ -38,7 +46,6 @@ namespace _Project.CodeBase.Services.DateTimeService
 
     public async UniTask InitializeAsync()
     {
-      SetupLocalTime();
       await SetupServerTime();
       _whenReadyTcs.TrySetResult();
     }
@@ -47,7 +54,6 @@ namespace _Project.CodeBase.Services.DateTimeService
     {
       _serverTime?.Dispose();
       _localTime?.Dispose();
-      _disposable?.Dispose();
     }
 
     private async UniTask SetupServerTime()
@@ -61,19 +67,14 @@ namespace _Project.CodeBase.Services.DateTimeService
         {
           HttpsCallableResult result = await _firebaseFunctions.GetHttpsCallable("getServerTime").CallAsync();
 
-          if (result.Data is Dictionary<string, object> data &&
-              data.TryGetValue("serverUtc", out object serverUtcRaw) &&
+          if (result.Data is Dictionary<object, object> data &&
+              data.TryGetValue("serverUtc", out var serverUtcRaw) &&
               serverUtcRaw is string isoTime)
           {
             _serverTimeWhenSync = DateTimeOffset.Parse(isoTime).UtcDateTime;
             _secondsUntilSync = Time.realtimeSinceStartup;
-
-            Observable
-              .EveryUpdate()
-              .Subscribe(_ => UpdateServerTime())
-              .AddTo(_disposable);
-
-            _logService.LogInfo(GetType(), $" Server UTC time: {ServerTime}");
+            
+            _logService.LogInfo(GetType(), $" Server UTC time: {_serverTimeWhenSync}");
           }
         }
         catch (Exception exception)
@@ -82,19 +83,5 @@ namespace _Project.CodeBase.Services.DateTimeService
         }
       }
     }
-
-    private void SetupLocalTime()
-    {
-      Observable
-        .EveryUpdate()
-        .Subscribe(_ => UpdateLocalTime())
-        .AddTo(_disposable);
-    }
-
-    private void UpdateServerTime() => 
-      _serverTime.Value = _serverTimeWhenSync + TimeSpan.FromSeconds(Time.realtimeSinceStartup - _secondsUntilSync);
-
-    private void UpdateLocalTime() =>
-      _localTime.Value = DateTime.Now;
   }
 }

@@ -4,7 +4,7 @@ using _Project.CodeBase.Gameplay.Constants;
 using ObservableCollections;
 using R3;
 
-namespace _Project.CodeBase.Gameplay.Data
+namespace _Project.CodeBase.Gameplay.DataProxy
 {
   public class GameStateProxy
   {

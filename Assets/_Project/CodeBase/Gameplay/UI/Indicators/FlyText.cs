@@ -1,4 +1,5 @@
 ﻿using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.Services.Pool;
 using DG.Tweening;
 using R3;
@@ -10,7 +11,7 @@ using static DG.Tweening.DOTween;
 
 namespace _Project.CodeBase.Gameplay.UI.Indicators
 {
-  public class FlyText : MonoBehaviour, IResettablePoolItem
+  public class FlyText : MonoBehaviour, IResettablePoolItem<PoolUnit>
   {
     private ITweenFactory _tweenFactory;
     private Sequence _contentSequence;
@@ -23,8 +24,8 @@ namespace _Project.CodeBase.Gameplay.UI.Indicators
     [SerializeField] private Image _icon;
     [SerializeField] private RectTransform _content;
 
-    [Header("Animation Settings")] 
-    [SerializeField] private float _contentVerticalOffset = 50f;
+    [Header("Animation Settings")] [SerializeField]
+    private float _contentVerticalOffset = 50f;
 
     [SerializeField] private float _contentTransitionDuration = 1f;
 
@@ -32,6 +33,7 @@ namespace _Project.CodeBase.Gameplay.UI.Indicators
     [SerializeField] private float _fadeTransitionDuration = 1f;
 
     public Observable<Unit> Deactivated => _deactivated;
+
     public Vector3 WorldSpawnPoint { get; private set; }
 
     private void Awake() =>
@@ -41,7 +43,6 @@ namespace _Project.CodeBase.Gameplay.UI.Indicators
     public void Construct(ITweenFactory tweenFactory)
     {
       _tweenFactory = tweenFactory;
-
       SetupContentSequence();
     }
 
@@ -50,24 +51,24 @@ namespace _Project.CodeBase.Gameplay.UI.Indicators
       WorldSpawnPoint = worldPosition;
       _title.text = amount.ToString("+#;-#;0");
       _icon.sprite = icon;
-      
+
       _contentSequence.Play();
     }
 
-    public void SetPosition(Vector2 position) =>
-      _rectTransform.anchoredPosition = position;
-
-    public void Activate() => 
+    public void Activate(PoolUnit param) =>
       gameObject.SetActive(true);
-
-    public void Reset() =>
-      _contentSequence.Rewind();
 
     private void Deactivate()
     {
       gameObject.SetActive(false);
       _deactivated.OnNext(Unit.Default);
     }
+
+    public void SetPosition(Vector2 position) =>
+      _rectTransform.anchoredPosition = position;
+
+    public void Reset() =>
+      _contentSequence.Rewind();
 
     private void SetupContentSequence()
     {

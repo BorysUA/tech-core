@@ -2,7 +2,7 @@
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using R3;
 
-namespace _Project.CodeBase.Gameplay.Data.Modules
+namespace _Project.CodeBase.Gameplay.DataProxy.Modules
 {
   public class TradeDataProxy : IDisposable
   {

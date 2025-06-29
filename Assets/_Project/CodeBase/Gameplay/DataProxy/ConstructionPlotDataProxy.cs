@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using _Project.CodeBase.Data.Progress;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Services.BuildingPlots;
 using UnityEngine;
 
-namespace _Project.CodeBase.Gameplay.Data
+namespace _Project.CodeBase.Gameplay.DataProxy
 {
   public class ConstructionPlotDataProxy
   {

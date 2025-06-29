@@ -1,5 +1,5 @@
 ﻿using _Project.CodeBase.Gameplay.Services;
-using Cysharp.Threading.Tasks;
+using _Project.CodeBase.Gameplay.Services.Factories;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;

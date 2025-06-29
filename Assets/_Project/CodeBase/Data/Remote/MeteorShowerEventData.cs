@@ -1,9 +1,7 @@
 ﻿namespace _Project.CodeBase.Data.Remote
 {
-  public class MeteorShowerEventData
+  public class MeteorShowerEventData : BaseEventData
   {
-    public bool Enabled;
-    public string StartUtc;
-    public string EndUtc;
+    public float Multiplier;
   }
 }

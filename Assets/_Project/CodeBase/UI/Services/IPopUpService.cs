@@ -1,5 +1,4 @@
-﻿using _Project.CodeBase.Gameplay.UI.PopUps.Common;
-using _Project.CodeBase.UI.Common;
+﻿using _Project.CodeBase.UI.Core;
 using UnityEngine;
 
 namespace _Project.CodeBase.UI.Services

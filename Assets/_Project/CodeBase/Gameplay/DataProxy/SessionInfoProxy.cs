@@ -2,7 +2,7 @@
 using _Project.CodeBase.Menu.UI.DifficultySelection;
 using R3;
 
-namespace _Project.CodeBase.Gameplay.Data
+namespace _Project.CodeBase.Gameplay.DataProxy
 {
   public class SessionInfoProxy
   {

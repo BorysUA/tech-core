@@ -1,9 +1,8 @@
-﻿using System;
-using R3;
+﻿using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace _Project.CodeBase.UI.Common
+namespace _Project.CodeBase.UI.Helpers
 {
   public class PointerDownListener : MonoBehaviour, IPointerDownHandler
   {

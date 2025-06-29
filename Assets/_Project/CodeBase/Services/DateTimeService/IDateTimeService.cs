@@ -6,8 +6,7 @@ namespace _Project.CodeBase.Services.DateTimeService
 {
   public interface IDateTimeService : IServiceReadyAwaiter
   {
-    ReadOnlyReactiveProperty<DateTime> ServerTime { get; }
-    ReadOnlyReactiveProperty<DateTime> LocalTime { get; }
     public bool IsServerTimeAvailable { get; }
+    ReadOnlyReactiveProperty<DateTime> CurrentTime { get; }
   }
 }

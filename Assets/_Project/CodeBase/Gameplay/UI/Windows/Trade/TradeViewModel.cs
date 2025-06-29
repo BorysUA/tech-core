@@ -4,7 +4,7 @@ using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Gameplay.Building.Modules.Spaceport;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Services.LogService;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
@@ -38,11 +38,43 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
     public void Initialize(SpaceportTradeModule tradeModule) =>
       _tradeModule = tradeModule;
 
+    public bool Matches(SpaceportTradeModule param) =>
+      _tradeModule.Equals(param);
+
     public override void Open()
     {
       if (!_tradeModule.IsActive.CurrentValue)
         return;
 
+      Activate();
+      base.Open();
+    }
+
+    public override void Close()
+    {
+      Deactivate();
+      base.Close();
+    }
+
+    public void Reset()
+    {
+      Deactivate();
+      _tradeModule = null;
+    }
+
+    public void SellItems()
+    {
+      if (!_tradeModule.IsActive.CurrentValue)
+      {
+        _logService.LogError(GetType(), "Attempted to fulfill trade offer while trade module is inactive.");
+        return;
+      }
+
+      _tradeModule.FulfillOffer();
+    }
+
+    private void Activate()
+    {
       _tradeModule.IsActive
         .Where(value => !value)
         .Subscribe(_ => Close())
@@ -55,11 +87,9 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
         OnTradeOfferOpened();
       else
         OnTradeOfferClosed();
-
-      base.Open();
     }
 
-    public override void Close()
+    private void Deactivate()
     {
       _resourceTrackSubscription.Clear();
       _inactiveSubscription.Clear();
@@ -67,19 +97,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
       _tradeModule.TradeOfferOpened -= OnTradeOfferOpened;
       _tradeModule.TradeOfferClosed -= OnTradeOfferClosed;
 
-      _tradeModule = null;
-      base.Close();
-    }
-
-    public void SellItems()
-    {
-      if (!_tradeModule.IsActive.CurrentValue)
-      {
-        _logService.LogError(GetType(), "Attempted to fulfill trade offer while trade module is inactive.");
-        return;
-      }
-
-      _tradeModule.FulfillOffer();
+      _isOfferFulfillable.Value = false;
     }
 
     private void OnTradeOfferOpened()

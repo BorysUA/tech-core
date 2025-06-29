@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.CodeBase.Services.LogService;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 
 namespace _Project.CodeBase.UI.Services
 {
