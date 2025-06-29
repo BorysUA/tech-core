@@ -26,13 +26,13 @@ namespace _Project.CodeBase.Gameplay.UI.HUD
 
     public void OpenBuildingsShopWindow(BuildingCategory category)
     {
-      _windowsService.OpenWindow<ShopWindow, BuildingsShopViewModel, BuildingCategory>(category, false,
-        CancellationToken.None);
+      _windowsService.OpenWindow<BuildingsShopWindow, BuildingsShopViewModel, BuildingCategory>(category,
+        token: CancellationToken.None);
     }
 
     public void OpenConstructionPlotsShopWindow()
     {
-      _windowsService.OpenWindow<ShopWindow, ConstructionPlotsShopViewModel>();
+      _windowsService.OpenWindow<PlotsShopWindow, PlotsShopViewModel>();
     }
 
     public void ShowBuildingActionPanel(BuildingViewModel building) =>

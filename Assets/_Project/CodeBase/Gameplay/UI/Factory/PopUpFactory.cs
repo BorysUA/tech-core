@@ -1,9 +1,8 @@
-﻿using _Project.CodeBase.Gameplay.UI.PopUps.Common;
-using _Project.CodeBase.Gameplay.UI.Root;
+﻿using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.UI;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 using _Project.CodeBase.UI.Services;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

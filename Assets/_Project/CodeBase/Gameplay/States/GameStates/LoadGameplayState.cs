@@ -8,9 +8,11 @@ using _Project.CodeBase.Data.Settings;
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.States.GameplayStates;
 using _Project.CodeBase.Gameplay.States.GameplayStates.Placement;
 using _Project.CodeBase.Gameplay.UI.Factory;
+using _Project.CodeBase.Gameplay.UI.HUD;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
@@ -35,25 +37,27 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
 
     private readonly IProgressService _progressService;
 
-    private readonly List<IGameplayInit> _onLoadInitializables;
+    private readonly List<IGameplayInit> _onLoadInit;
+    private readonly List<IGameplayInitAsync> _onLoadInitAsync;
 
     public LoadGameplayState(IDataTransferService dataTransferService, IGameplayUiFactory gameplayUiFactory,
       GameStateMachine gameStateMachine, GameplayStateMachine gameplayStateMachine, GameStatesFactory gameStatesFactory,
-      List<IGameplayInit> onLoadInitializables,
-      IProgressService progressService, ISaveStorageService saveStorageService, ILogService logService,
-      IStartingResourcesProvider startingResourcesProvider)
+      List<IGameplayInit> onLoadInit, IProgressService progressService, ISaveStorageService saveStorageService,
+      ILogService logService, IStartingResourcesProvider startingResourcesProvider,
+      List<IGameplayInitAsync> onLoadInitAsync)
     {
       _dataTransferService = dataTransferService;
       _gameplayUiFactory = gameplayUiFactory;
       _gameStateMachine = gameStateMachine;
       _gameplayStateMachine = gameplayStateMachine;
       _gameStatesFactory = gameStatesFactory;
-      _onLoadInitializables = onLoadInitializables;
+      _onLoadInit = onLoadInit;
 
       _progressService = progressService;
       _saveStorageService = saveStorageService;
       _logService = logService;
       _startingResourcesProvider = startingResourcesProvider;
+      _onLoadInitAsync = onLoadInitAsync;
     }
 
     public async void Enter()
@@ -65,8 +69,8 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
       }
 
       await InitializeGameState(settings);
-      InitializeServices();
-      await _gameplayUiFactory.CreateHud();
+      await InitializeServices();
+      await InitializeUI();
       InitializeGameplayStates();
 
       _gameStateMachine.Enter<GameplayState>();
@@ -104,6 +108,9 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
     }
 
 
+    private UniTask InitializeUI() =>
+      _gameplayUiFactory.CreateHud();
+
     private void InitializeGameplayStates()
     {
       _gameplayStateMachine.RegisterState(_gameStatesFactory.CreateState<PlaceBuildingState>());
@@ -111,10 +118,17 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
       _gameplayStateMachine.RegisterState(_gameStatesFactory.CreateState<PlaceConstructionPlotState>());
     }
 
-    private void InitializeServices()
+    private async UniTask InitializeServices()
     {
-      foreach (IGameplayInit initializable in _onLoadInitializables)
+      List<UniTask> initializationTasks = new List<UniTask>();
+
+      foreach (IGameplayInit initializable in _onLoadInit)
         initializable.Initialize();
+
+      foreach (IGameplayInitAsync initializable in _onLoadInitAsync)
+        initializationTasks.Add(initializable.InitializeAsync());
+
+      await UniTask.WhenAll(initializationTasks);
     }
   }
 }

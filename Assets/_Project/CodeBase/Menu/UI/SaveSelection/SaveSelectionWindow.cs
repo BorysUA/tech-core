@@ -1,6 +1,6 @@
 ﻿using _Project.CodeBase.Data.Progress.Meta;
 using _Project.CodeBase.Menu.UI.Factories;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 using ObservableCollections;
 using R3;
 using UnityEngine;

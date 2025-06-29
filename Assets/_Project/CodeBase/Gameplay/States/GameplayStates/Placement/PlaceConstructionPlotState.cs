@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.ConstructionPlot;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.Services.BuildingPlots;
+using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Grid;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.InputService;
 using _Project.CodeBase.UI.Services;

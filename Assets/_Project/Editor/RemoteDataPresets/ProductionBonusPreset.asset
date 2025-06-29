@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03464f143a864ccbbe01819a165e82b3, type: 3}
+  m_Name: ProductionBonusPreset
+  m_EditorClassIdentifier: 
+  Enabled: 1
+  StartUtc: 06/25/2025 18:30:33
+  EndUtc: 06/25/2025 18:59:33
+  Resource: 3
+  Multiplier: 2.5

@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Meteorite;
-using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.Services.Grid;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
 using UnityEngine;
@@ -13,23 +12,30 @@ namespace _Project.CodeBase.Gameplay.Meteorite
   public class MeteoriteSpawner
   {
     private readonly IGameplayFactory _gameplayFactory;
+    private readonly IStaticDataProvider _staticDataProvider;
     private readonly ICoroutineRunner _coroutineRunner;
-    private readonly WaitForSeconds _waitSpawnInterval;
     private readonly IGridService _gridService;
     private readonly ILogService _logService;
 
-    private readonly MeteoriteSpawnerConfig _config;
+    private WaitForSeconds _waitSpawnInterval;
+    private MeteoriteSpawnerConfig _config;
+    private float _multiplier;
     private Coroutine _spawnMeteoritesCoroutine;
 
     public MeteoriteSpawner(IGameplayFactory gameplayFactory, IStaticDataProvider staticDataProvider,
       ICoroutineRunner coroutineRunner, IGridService gridService, ILogService logService)
     {
       _gameplayFactory = gameplayFactory;
+      _staticDataProvider = staticDataProvider;
       _coroutineRunner = coroutineRunner;
       _gridService = gridService;
       _logService = logService;
+    }
 
-      _config = staticDataProvider.GetMeteoriteSpawnerConfig();
+    public void Initialize(float multiplier)
+    {
+      _multiplier = multiplier;
+      _config = _staticDataProvider.GetMeteoriteSpawnerConfig();
       _waitSpawnInterval = new WaitForSeconds(_config.SpawnInterval);
     }
 

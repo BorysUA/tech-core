@@ -1,12 +1,16 @@
 ﻿using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.Signals.System;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Infrastructure.UI;
+using _Project.CodeBase.Services;
 using _Project.CodeBase.Services.AnalyticsService;
 using _Project.CodeBase.Services.AnalyticsService.Trackers;
+using _Project.CodeBase.Services.DateTimeService;
 using _Project.CodeBase.Services.LogService;
+using _Project.CodeBase.Services.RemoteConfigsService;
 using _Project.CodeBase.Services.TimeCounter;
 using _Project.CodeBase.UI.Services;
 using Zenject;
@@ -25,6 +29,7 @@ namespace _Project.CodeBase.Infrastructure.Root
       BindServices();
       BindUI();
       BindAnalytics();
+      BindRemoteConfigs();
       BindSignals();
       BindTrackers();
     }
@@ -51,6 +56,13 @@ namespace _Project.CodeBase.Infrastructure.Root
       Container.Bind<NoneAnalyticsService>().AsSingle();
     }
 
+    private void BindRemoteConfigs()
+    {
+      Container.BindInterfacesTo<RemoteConfigsProxy>().AsSingle();
+      Container.Bind<FirebaseRemoteConfigService>().AsSingle();
+      Container.Bind<NoneRemoteConfigService>().AsSingle();
+    }
+
     private void BindServices()
     {
       Container.BindInterfacesAndSelfTo<CoroutineRunner>()
@@ -75,8 +87,12 @@ namespace _Project.CodeBase.Infrastructure.Root
       Container.BindInterfacesTo<LogService>().AsSingle();
       Container.BindInterfacesTo<ProgressService>().AsSingle();
       Container.BindInterfacesTo<JsonSaveStorageService>().AsSingle();
+      Container.BindInterfacesTo<FirebaseBootstrap>().AsSingle();
+      Container.BindInterfacesTo<DateTimeService>().AsSingle();
       Container.Bind<InputSystemActions>().AsSingle();
+      Container.Bind<RemoteConfigPatcher>().AsSingle();
       Container.Bind<AddressMap>().AsSingle();
+      Container.Bind<ObjectFactory>().AsSingle();
     }
 
     private void BindEntryPoint()

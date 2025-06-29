@@ -21,10 +21,7 @@ namespace _Project.CodeBase.Infrastructure.Services
     public void TerminateCoroutine(IEnumerator enumerator)
     {
       if (enumerator is null)
-      {
-        _logService.LogInfo(GetType(), $"TerminateCoroutine called with null {nameof(enumerator)}");
         return;
-      }
 
       StopCoroutine(enumerator);
     }
@@ -32,10 +29,7 @@ namespace _Project.CodeBase.Infrastructure.Services
     public void TerminateCoroutine(Coroutine coroutine)
     {
       if (coroutine is null)
-      {
-        _logService.LogInfo(GetType(), $"TerminateCoroutine called with null {nameof(coroutine)}");
         return;
-      }
 
       StopCoroutine(coroutine);
     }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading;
+using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Services.LogService;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 using Cysharp.Threading.Tasks;
 using R3;
 
@@ -28,18 +29,28 @@ namespace _Project.CodeBase.UI.Services
       where TWindow : IWindow
       where TViewModel : BaseWindowViewModel
     {
-      await OpenInternal<TWindow, TViewModel>(_ => { }, token, loadFromCache);
+      await OpenInternal<TWindow, TViewModel>((_, _) => { }, token, loadFromCache);
     }
 
-    public async UniTask OpenWindow<TWindow, TViewModel, TData>(TData data, bool loadFromCache = true,
+    public async UniTask OpenWindow<TWindow, TViewModel, TParam>(TParam param, bool loadFromCache = true,
       CancellationToken token = default)
       where TWindow : IWindow
-      where TViewModel : BaseWindowViewModel, IParameterizedWindow<TData>
+      where TViewModel : BaseWindowViewModel, IParameterizedWindow<TParam>
     {
-      await OpenInternal<TWindow, TViewModel>(viewModel => viewModel.Initialize(data), token, loadFromCache);
+      await OpenInternal<TWindow, TViewModel>((viewModel, fromCache) =>
+        {
+          if (fromCache && viewModel.Matches(param))
+            return;
+
+          if (fromCache)
+            viewModel.Reset();
+
+          viewModel.Initialize(param);
+        }
+        , token, loadFromCache);
     }
 
-    private async UniTask OpenInternal<TWindow, TViewModel>(Action<TViewModel> configure, CancellationToken token,
+    private async UniTask OpenInternal<TWindow, TViewModel>(Action<TViewModel, bool> configure, CancellationToken token,
       bool loadFromCache)
       where TWindow : IWindow
       where TViewModel : BaseWindowViewModel
@@ -48,9 +59,12 @@ namespace _Project.CodeBase.UI.Services
 
       try
       {
-        TViewModel viewModel = await _windowsFactory.CreateWindow<TWindow, TViewModel>(token, loadFromCache);
+        WindowCreationResult<TViewModel> result =
+          await _windowsFactory.CreateWindow<TWindow, TViewModel>(token, loadFromCache);
 
-        configure(viewModel);
+        (TViewModel viewModel, bool fromCache) = result;
+
+        configure(viewModel, fromCache);
 
         _currentWindow = viewModel;
         viewModel.WindowClosed

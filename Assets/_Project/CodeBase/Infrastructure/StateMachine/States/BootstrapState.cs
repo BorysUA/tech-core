@@ -28,8 +28,12 @@ namespace _Project.CodeBase.Infrastructure.StateMachine.States
 
     private async UniTask InitializeServices()
     {
+      List<UniTask> loadingTasks = new List<UniTask>();
+
       foreach (IBootstrapInitAsync service in _onLoadInitializables)
-        await service.InitializeAsync();
+        loadingTasks.Add(service.InitializeAsync());
+
+      await UniTask.WhenAll(loadingTasks);
     }
 
     private void LoadMenuScene()

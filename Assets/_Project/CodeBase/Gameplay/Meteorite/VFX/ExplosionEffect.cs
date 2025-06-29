@@ -1,5 +1,5 @@
 ﻿using _Project.CodeBase.Data.StaticData.Meteorite;
-using _Project.CodeBase.Gameplay.Services.CameraService;
+using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Pool;
 using DG.Tweening;
 using R3;
@@ -8,7 +8,7 @@ using Zenject;
 
 namespace _Project.CodeBase.Gameplay.Meteorite.VFX
 {
-  public class ExplosionEffect : MonoBehaviour, IExplosionEffect, IPoolItem
+  public class ExplosionEffect : MonoBehaviour, IExplosionEffect, IPoolItem<PoolUnit>
   {
     [SerializeField] private ParticleSystem _vfx;
 
@@ -19,7 +19,6 @@ namespace _Project.CodeBase.Gameplay.Meteorite.VFX
 
     public float Progress => _vfx.totalTime > 0f ? Mathf.Clamp01(_vfx.time / _vfx.totalTime) : 0f;
     public Observable<Unit> Deactivated => _deactivated;
-
 
     [Inject]
     public void Construct(CameraRigAgent cameraRigAgent)
@@ -34,7 +33,7 @@ namespace _Project.CodeBase.Gameplay.Meteorite.VFX
       _shakePreset = cameraShakePreset;
     }
 
-    public void Activate() =>
+    public void Activate(PoolUnit param) =>
       gameObject.SetActive(true);
 
     public void Play()

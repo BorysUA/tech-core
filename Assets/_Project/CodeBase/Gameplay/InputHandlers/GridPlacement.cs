@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Services.InputService;
 using Cysharp.Threading.Tasks;

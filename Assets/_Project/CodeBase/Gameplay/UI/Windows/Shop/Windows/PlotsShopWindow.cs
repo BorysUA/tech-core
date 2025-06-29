@@ -1,0 +1,76 @@
+﻿using System.Collections.Generic;
+using _Project.CodeBase.Gameplay.Constants;
+using _Project.CodeBase.Gameplay.UI.Factory;
+using _Project.CodeBase.Gameplay.UI.Windows.Shop.Buttons;
+using _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels;
+using _Project.CodeBase.Services.LogService;
+using _Project.CodeBase.UI.Core;
+using Cysharp.Threading.Tasks;
+using ObservableCollections;
+using R3;
+using UnityEngine;
+using UnityEngine.UI;
+using Zenject;
+
+namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.Windows
+{
+  public class PlotsShopWindow : BaseWindow<PlotsShopViewModel>
+  {
+    [SerializeField] private Transform _buyButtonsContainer;
+    [SerializeField] private Button _closeButton;
+
+    private readonly List<BuyButton> _buyButtons = new();
+    private DisposableBag _subscriptions;
+    private IGameplayUiFactory _uiFactory;
+    private ILogService _logService;
+
+    [Inject]
+    public void Construct(IGameplayUiFactory gameplayUiFactory, ILogService logService)
+    {
+      _uiFactory = gameplayUiFactory;
+      _logService = logService;
+    }
+
+    public override void Setup(BaseWindowViewModel viewModel) =>
+      SetupAsync(viewModel).Forget(exception => _logService.LogError(GetType(), "Setup window crashed:", exception));
+
+    private async UniTask SetupAsync(BaseWindowViewModel viewModel)
+    {
+      base.Setup(viewModel);
+
+      foreach (ConstructionPlotType plotType in ViewModel.ItemsToShow)
+        await CreateBuyButton(plotType);
+
+      ViewModel.ItemsToShow
+        .ObserveAdd()
+        .Subscribe(addEvent => CreateBuyButton(addEvent.Value).Forget())
+        .AddTo(this);
+
+      ViewModel.ItemsToShow.ObserveClear()
+        .Subscribe(_ => Clear())
+        .AddTo(this);
+
+      BindCloseActions(_closeButton.OnClickAsObservable());
+    }
+
+    private void Clear()
+    {
+      _subscriptions.Clear();
+
+      _buyButtons.ForEach(button => button.Deactivate());
+      _buyButtons.Clear();
+    }
+
+    private async UniTask CreateBuyButton(ConstructionPlotType plotType)
+    {
+      BuyButton buyButton =
+        await _uiFactory.CreateBuyButton(plotType, _buyButtonsContainer);
+
+      buyButton.OnClick
+        .Subscribe(_ => ViewModel.BuyItem(plotType))
+        .AddTo(ref _subscriptions);
+
+      _buyButtons.Add(buyButton);
+    }
+  }
+}

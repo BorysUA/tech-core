@@ -3,7 +3,7 @@ using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Menu.Services;
 using _Project.CodeBase.Menu.Signals;
 using _Project.CodeBase.Menu.UI.Menu;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 using _Project.CodeBase.UI.Services;
 using Zenject;
 

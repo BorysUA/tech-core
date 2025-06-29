@@ -21,7 +21,8 @@ namespace _Project.CodeBase.Infrastructure.Services
     {
       { typeof(MenuWindow), AssetAddress.MenuMainWindow },
       { typeof(DifficultySelectionWindow), AssetAddress.MenuDifficultySelectionWindow },
-      { typeof(ShopWindow), AssetAddress.ShopWindow },
+      { typeof(BuildingsShopWindow), AssetAddress.BuildingsShopWindow },
+      { typeof(PlotsShopWindow), AssetAddress.PlotsShopWindow },
       { typeof(ConfirmPlacePopUp), AssetAddress.ConfirmBuildingPlacePopUp },
       { typeof(BuildingIndicatorsPopUp), AssetAddress.BuildingIndicatorsPopUp },
       { typeof(TradeWindow), AssetAddress.TradeWindow },

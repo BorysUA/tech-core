@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.CodeBase.UI.Layout
+namespace _Project.CodeBase.UI.Helpers
 {
   public class StaticUiLayout : MonoBehaviour
   {

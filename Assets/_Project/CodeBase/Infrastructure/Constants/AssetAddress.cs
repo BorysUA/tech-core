@@ -6,7 +6,6 @@
     public const string MenuBackground = "UI_Menu/Background";
     public const string MenuMainWindow = "UI_Menu/MainWindow";
     public const string MenuDifficultySelectionWindow = "UI_Menu/DifficultySelectionWindow";
-    public const string ShopWindow = "UI_InGame/ShopWindow";
     public const string BuyButton = "UI_InGame/BuyBuildingButton";
     public const string ConfirmBuildingPlacePopUp = "UI_InGame/ConfirmBuildingPlacePopUp";
     public const string HUD = "UI_InGame/HUD";
@@ -23,5 +22,9 @@
     public const string SaveSlotButton = "UI_Menu/SaveSlotButton";
     public const string SettingsWindow = "UI_InGame/SettingsWindow";
     public const string NotificationMessage = "UI_InGame/NotificationMessage";
+    public const string MeteorShowerEventIndicator = "UI_InGame/MeteorShowerEventIndicator";
+    public const string ProductionBoostEventIndicator = "UI_InGame/ProductionBoostEventIndicator";
+    public const string BuildingsShopWindow = "UI_InGame/BuildingsShopWindow";
+    public const string PlotsShopWindow = "UI_InGame/PlotsShopWindow";
   }
 }

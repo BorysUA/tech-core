@@ -14,20 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 6
   Category: 2
-  BuildingsModules: []
+  BuildingsModules:
+  - {fileID: 11400000, guid: dcb8fb8be4c4dd24987494665256d136, type: 2}
   PrefabReference:
     m_AssetGUID: f1336bd04dc01a14c8a8bf39ccdf18bd
     m_SubObjectName: 
-    m_SubObjectGUID: 
     m_SubObjectType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   MeshReference:
     m_AssetGUID: e95b1eef66c3f44499d8ed6e35a7554d
     m_SubObjectName: drill_structure
-    m_SubObjectGUID: 
     m_SubObjectType: UnityEngine.Mesh, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 1
   SizeInCells: {x: 2, y: 2}
   Price:

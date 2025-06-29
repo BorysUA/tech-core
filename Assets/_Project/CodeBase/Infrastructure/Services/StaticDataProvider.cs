@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.InteractionButtons;
 using _Project.CodeBase.Data.StaticData.Building.StatusItems;
@@ -13,6 +15,7 @@ using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
+using _Project.CodeBase.Services.RemoteConfigsService;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -22,6 +25,7 @@ namespace _Project.CodeBase.Infrastructure.Services
   public class StaticDataProvider : IStaticDataProvider, IBootstrapInitAsync
   {
     private readonly ILogService _logService;
+    private readonly RemoteConfigPatcher _patcher;
 
     private Dictionary<BuildingType, BuildingConfig> _buildings = new();
     private Dictionary<ResourceKind, ResourceConfig> _resources = new();
@@ -37,42 +41,17 @@ namespace _Project.CodeBase.Infrastructure.Services
 
     private readonly List<AsyncOperationHandle> _handles = new();
 
-    public StaticDataProvider(ILogService logService) =>
+    public StaticDataProvider(ILogService logService, RemoteConfigPatcher patcher)
+    {
       _logService = logService;
+      _patcher = patcher;
+    }
 
     public async UniTask InitializeAsync()
     {
-      IList<BuildingConfig> buildingConfigs = await LoadConfigsAsync<BuildingConfig>(StaticDataAddress.Buildings);
-      _buildings = buildingConfigs.ToDictionary(x => x.Type, x => x);
-
-      IList<ResourceConfig> resourceConfigs = await LoadConfigsAsync<ResourceConfig>(StaticDataAddress.Resources);
-      _resources = resourceConfigs.ToDictionary(x => x.Kind, x => x);
-
-      IList<MeteoriteConfig> meteoriteConfigs = await LoadConfigsAsync<MeteoriteConfig>(StaticDataAddress.Meteorites);
-      _meteorites = meteoriteConfigs.ToDictionary(x => x.Type, x => x);
-
-      IList<BuildingActionButtonConfig> buttonsConfig =
-        await LoadConfigsAsync<BuildingActionButtonConfig>(StaticDataAddress.BuildingActionButtons);
-      _buildingActionButtons = buttonsConfig.ToDictionary(x => x.Type, x => x);
-
-      IList<ConstructionPlotConfig> buildingPlotConfigs =
-        await LoadConfigsAsync<ConstructionPlotConfig>(StaticDataAddress.ConstructionPlots);
-      _constructionPlots = buildingPlotConfigs.ToDictionary(x => x.Type, x => x);
-
-      IList<ResourceDropConfig> resourceDropConfigs =
-        await LoadConfigsAsync<ResourceDropConfig>(StaticDataAddress.ResourceDrops);
-      _resourcesDrops = resourceDropConfigs.ToDictionary(x => x.Type, x => x);
-
-      IList<BuildingIndicatorConfig> buildingStatusItemConfigs =
-        await LoadConfigsAsync<BuildingIndicatorConfig>(StaticDataAddress.BuildingIndicators);
-      _buildingStatusItems = buildingStatusItemConfigs.ToDictionary(x => x.Type, x => x);
-
-      MeteoriteVFXConfig meteoriteVFXConfig =
-        await LoadConfigAsync<MeteoriteVFXConfig>(StaticDataAddress.MeteoriteVFXs);
-      _meteoriteVFXs = meteoriteVFXConfig.MeteoriteVFX.ToDictionary(x => x.Type, x => x);
-
-      _meteoriteSpawner = await LoadConfigAsync<MeteoriteSpawnerConfig>(StaticDataAddress.MeteoriteSpawner);
-      _resourceSpots = await LoadConfigAsync<ResourceSpotMap>(StaticDataAddress.ResourceSpots);
+      await DownloadAllConfigsAsync();
+      await _patcher.WhenReady;
+      ApplyRemotePatches();
     }
 
     public BuildingConfig GetBuildingConfig(BuildingType buildingType) =>
@@ -119,6 +98,46 @@ namespace _Project.CodeBase.Infrastructure.Services
 
     public IEnumerable<MeteoriteConfig> GetAllMeteorites() =>
       _meteorites.Values;
+
+    private void ApplyRemotePatches()
+    {
+      _meteoriteSpawner = _patcher.CreatePatchedProxy(_meteoriteSpawner);
+    }
+
+    private async UniTask DownloadAllConfigsAsync()
+    {
+      IList<BuildingConfig> buildingConfigs = await LoadConfigsAsync<BuildingConfig>(StaticDataAddress.Buildings);
+      _buildings = buildingConfigs.ToDictionary(x => x.Type, x => x);
+
+      IList<ResourceConfig> resourceConfigs = await LoadConfigsAsync<ResourceConfig>(StaticDataAddress.Resources);
+      _resources = resourceConfigs.ToDictionary(x => x.Kind, x => x);
+
+      IList<MeteoriteConfig> meteoriteConfigs = await LoadConfigsAsync<MeteoriteConfig>(StaticDataAddress.Meteorites);
+      _meteorites = meteoriteConfigs.ToDictionary(x => x.Type, x => x);
+
+      IList<BuildingActionButtonConfig> buttonsConfig =
+        await LoadConfigsAsync<BuildingActionButtonConfig>(StaticDataAddress.BuildingActionButtons);
+      _buildingActionButtons = buttonsConfig.ToDictionary(x => x.Type, x => x);
+
+      IList<ConstructionPlotConfig> buildingPlotConfigs =
+        await LoadConfigsAsync<ConstructionPlotConfig>(StaticDataAddress.ConstructionPlots);
+      _constructionPlots = buildingPlotConfigs.ToDictionary(x => x.Type, x => x);
+
+      IList<ResourceDropConfig> resourceDropConfigs =
+        await LoadConfigsAsync<ResourceDropConfig>(StaticDataAddress.ResourceDrops);
+      _resourcesDrops = resourceDropConfigs.ToDictionary(x => x.Type, x => x);
+
+      IList<BuildingIndicatorConfig> buildingStatusItemConfigs =
+        await LoadConfigsAsync<BuildingIndicatorConfig>(StaticDataAddress.BuildingIndicators);
+      _buildingStatusItems = buildingStatusItemConfigs.ToDictionary(x => x.Type, x => x);
+
+      MeteoriteVFXConfig meteoriteVFXConfig =
+        await LoadConfigAsync<MeteoriteVFXConfig>(StaticDataAddress.MeteoriteVFXs);
+      _meteoriteVFXs = meteoriteVFXConfig.MeteoriteVFX.ToDictionary(x => x.Type, x => x);
+
+      _resourceSpots = await LoadConfigAsync<ResourceSpotMap>(StaticDataAddress.ResourceSpots);
+      _meteoriteSpawner = await LoadConfigAsync<MeteoriteSpawnerConfig>(StaticDataAddress.MeteoriteSpawner);
+    }
 
     private async UniTask<T> LoadConfigAsync<T>(string address)
     {

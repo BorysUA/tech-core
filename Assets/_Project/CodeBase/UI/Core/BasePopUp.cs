@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-using _Project.CodeBase.Gameplay.UI.PopUps.Common;
-using R3;
+﻿using R3;
 using UnityEngine;
 
-namespace _Project.CodeBase.UI.Common
+namespace _Project.CodeBase.UI.Core
 {
   public class BasePopUp<TViewModel> : MonoBehaviour where TViewModel : BasePopUpViewModel
   {

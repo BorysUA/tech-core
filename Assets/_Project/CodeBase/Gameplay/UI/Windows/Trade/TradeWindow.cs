@@ -1,15 +1,8 @@
-﻿using System.Collections.Generic;
-using _Project.CodeBase.Data.Progress;
-using _Project.CodeBase.Data.Progress.Building.ModuleData;
-using _Project.CodeBase.Data.Progress.ResourceData;
-using _Project.CodeBase.Gameplay.UI.Factory;
-using _Project.CodeBase.UI.Common;
+﻿using _Project.CodeBase.UI.Core;
+using _Project.CodeBase.UI.Helpers;
 using R3;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Zenject;
 
 namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
 {

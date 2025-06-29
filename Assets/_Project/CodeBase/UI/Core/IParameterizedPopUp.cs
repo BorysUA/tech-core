@@ -1,8 +1,6 @@
 ﻿using System;
-using _Project.CodeBase.Gameplay.UI.PopUps.Common;
-using R3;
 
-namespace _Project.CodeBase.UI.Common
+namespace _Project.CodeBase.UI.Core
 {
   public interface IParameterizedPopUp<in TData>
   {

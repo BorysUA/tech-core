@@ -1,20 +1,24 @@
 ﻿using _Project.CodeBase.Gameplay.Building.Actions.Common;
 using _Project.CodeBase.Gameplay.Building.Modules;
 using _Project.CodeBase.Gameplay.InputHandlers;
+using _Project.CodeBase.Gameplay.LiveEvents;
 using _Project.CodeBase.Gameplay.Meteorite;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.Services.BuildingPlots;
 using _Project.CodeBase.Gameplay.Services.Buildings;
-using _Project.CodeBase.Gameplay.Services.CameraService;
+using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Command;
+using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.Services.Resource;
-using _Project.CodeBase.Gameplay.Signals;
+using _Project.CodeBase.Gameplay.Services.Resource.ProductionModifiers;
+using _Project.CodeBase.Gameplay.Services.Timers;
 using _Project.CodeBase.Gameplay.Signals.Command;
 using _Project.CodeBase.Gameplay.Signals.Domain;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Gameplay.UI.HUD;
 using _Project.CodeBase.Gameplay.UI.HUD.BuildingAction;
+using _Project.CodeBase.Gameplay.UI.HUD.GameEvent;
 using _Project.CodeBase.Gameplay.UI.HUD.Notification;
 using _Project.CodeBase.Gameplay.UI.HUD.ResourceBar;
 using _Project.CodeBase.Gameplay.UI.PopUps.ConfirmPlace;
@@ -22,10 +26,8 @@ using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Gameplay.UI.Spawner;
 using _Project.CodeBase.Gameplay.UI.Windows.Settings;
 using _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
-using _Project.CodeBase.Services.AnalyticsService;
 using _Project.CodeBase.Services.AnalyticsService.Trackers;
 using _Project.CodeBase.Services.InputService;
 using _Project.CodeBase.UI.Services;
@@ -53,6 +55,7 @@ namespace _Project.CodeBase.Gameplay.Installers
       BindInputHandlers();
       BindInputService();
       BindTrackers();
+      BindGameEvents();
     }
 
     private void BindInputService()
@@ -67,6 +70,12 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.BindInterfacesAndSelfTo<ResourceCollector>().AsSingle();
       Container.BindInterfacesAndSelfTo<BuildingSelector>().AsSingle();
       Container.BindInterfacesAndSelfTo<CameraMovement>().AsSingle();
+    }
+
+    private void BindGameEvents()
+    {
+      Container.BindInterfacesTo<LiveEventsService>().AsSingle();
+      Container.Bind<EventsFactory>().AsSingle();
     }
 
     private void BindGameplayStateMachine()
@@ -99,19 +108,23 @@ namespace _Project.CodeBase.Gameplay.Installers
 
     private void BindUi()
     {
+      Container.Bind<GameEventsAddressMap>().AsSingle();
+
       Container.BindInterfacesAndSelfTo<ResourceFlyTextSpawner>().AsSingle();
       Container.BindInterfacesAndSelfTo<NotificationViewModel>().AsSingle();
 
       Container.Bind<PopUpsCanvas>().FromInstance(_popUpsCanvas).AsSingle();
       Container.Bind<WindowsCanvas>().FromInstance(_windowsCanvas).AsSingle();
 
-      Container.Bind<ConstructionPlotsShopViewModel>().AsTransient();
+      Container.Bind<PlotsShopViewModel>().AsTransient();
+      Container.Bind<BuildingsShopViewModel>().AsTransient();
       Container.Bind<ConfirmPlaceViewModel>().AsTransient();
       Container.Bind<ResourceBarViewModel>().AsSingle();
       Container.Bind<HudViewModel>().AsSingle();
       Container.Bind<BuildingActionBarViewModel>().AsSingle();
       Container.Bind<SettingsViewModel>().AsSingle();
       Container.Bind<NotificationMessage>().AsSingle();
+      Container.Bind<GameEventViewModel>().AsSingle();
 
       Container.Bind<WindowsRepository>().AsSingle();
       Container.Bind<PopUpRepository>().AsSingle();
@@ -133,6 +146,7 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.BindInterfacesTo<WindowsService>().AsSingle();
       Container.BindInterfacesTo<GridService>().AsSingle();
       Container.BindInterfacesTo<PopUpService>().AsSingle();
+      Container.BindInterfacesTo<ProductionModifierService>().AsSingle();
       Container.BindInterfacesTo<ConstructionPlotService>().AsSingle();
       Container.BindInterfacesTo<GridOccupancyService>().AsSingle();
       Container.BindInterfacesTo<ResourceService>().AsSingle();

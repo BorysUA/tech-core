@@ -1,4 +1,4 @@
-﻿using _Project.CodeBase.Gameplay.Data;
+﻿using _Project.CodeBase.Gameplay.DataProxy;
 
 namespace _Project.CodeBase.Infrastructure.Services.Interfaces
 {

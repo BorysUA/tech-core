@@ -6,8 +6,10 @@ using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Object = UnityEngine.Object;
 
 namespace _Project.CodeBase.Infrastructure.Services
 {
@@ -24,6 +26,9 @@ namespace _Project.CodeBase.Infrastructure.Services
 
     public async UniTask InitializeAsync() =>
       await Addressables.InitializeAsync();
+
+    public async UniTask<T> LoadAssetAsyncFromResources<T>(string path) where T : Object => 
+      await Resources.LoadAsync<T>(path).ToUniTask() as T;
 
     public async UniTask<T> LoadAssetAsync<T>(string address, CancellationToken token, int retryCount = 1)
       where T : class =>

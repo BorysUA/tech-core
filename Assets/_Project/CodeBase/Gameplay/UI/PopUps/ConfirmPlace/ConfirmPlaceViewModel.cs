@@ -1,7 +1,8 @@
 ﻿using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services;
-using _Project.CodeBase.Gameplay.UI.PopUps.Common;
+using _Project.CodeBase.Gameplay.Services.CameraSystem;
+using _Project.CodeBase.UI.Core;
 using _Project.CodeBase.UI.Services;
 using R3;
 using UnityEngine;

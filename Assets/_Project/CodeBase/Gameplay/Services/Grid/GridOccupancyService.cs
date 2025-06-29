@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.States;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Infrastructure.StateMachine;
 using ObservableCollections;
 using R3;
 using UnityEngine;

@@ -1,6 +1,6 @@
 ﻿using _Project.CodeBase.Menu.UI.DifficultySelection;
 using _Project.CodeBase.Menu.UI.SaveSelection;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 using _Project.CodeBase.UI.Services;
 
 namespace _Project.CodeBase.Menu.UI.Menu

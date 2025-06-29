@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace _Project.CodeBase.UI.Common
+﻿namespace _Project.CodeBase.UI.Core
 {
-  public interface IParameterizedWindow<in TData>
+  public interface IParameterizedWindow<in TParam>
   {
-    public void Initialize(TData parameter);
+    public bool Matches(TParam param);
+    public void Initialize(TParam parameter);
+    public void Reset();
   }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.CodeBase.Gameplay.UI.Factory;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 using R3;
 using Unity.VisualScripting;
 using UnityEngine;

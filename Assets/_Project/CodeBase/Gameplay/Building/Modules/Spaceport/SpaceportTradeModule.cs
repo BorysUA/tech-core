@@ -9,7 +9,7 @@ using _Project.CodeBase.Data.StaticData.Building.Modules;
 using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Building.Actions;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
-using _Project.CodeBase.Gameplay.Data.Modules;
+using _Project.CodeBase.Gameplay.DataProxy.Modules;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;

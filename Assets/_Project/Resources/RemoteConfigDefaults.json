@@ -1,0 +1,4 @@
+﻿{
+  "event_meteor_shower.enabled" : true,
+  "event_meteor_shower.duration" : 600
+}

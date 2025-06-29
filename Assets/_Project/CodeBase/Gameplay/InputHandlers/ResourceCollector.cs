@@ -1,6 +1,7 @@
 ﻿using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Resource;
 using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Services.InputService;
 using _Project.CodeBase.Services.LogService;

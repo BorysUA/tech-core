@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.ConstructionPlot;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.Services.Resource;
@@ -25,9 +25,9 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
     private readonly CompositeDisposable _disposable = new();
 
     private readonly Dictionary<string, ConstructionPlotViewModel> _constructionPlots = new();
-    private readonly ObservableList<ConstructionPlotType> _availableBuildingPlots = new();
+    private readonly ObservableList<ConstructionPlotInfo> _availablePlots = new();
 
-    public IObservableCollection<ConstructionPlotType> AvailableConstructionPlots => _availableBuildingPlots;
+    public IObservableCollection<ConstructionPlotInfo> AvailablePlots => _availablePlots;
 
     public ConstructionPlotService(IProgressService progressService, IStaticDataProvider staticDataProvider,
       ICommandBroker commandBroker, IConstructionPlotFactory constructionPlotFactory, IGridService gridService,
@@ -39,8 +39,8 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
       _gridService = gridService;
       _resourceService = resourceService;
 
-      foreach (ConstructionPlotConfig buildingPlotConfig in staticDataProvider.GetAllBuildingPlots())
-        _availableBuildingPlots.Add(buildingPlotConfig.Type);
+      foreach (ConstructionPlotConfig config in staticDataProvider.GetAllBuildingPlots())
+        _availablePlots.Add(new ConstructionPlotInfo(config.Type, config.SizeInCells));
 
       foreach (ConstructionPlotDataProxy data in progressService.GameStateProxy.ConstructionPlotsCollection)
         CreateView(data);

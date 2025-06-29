@@ -7,24 +7,22 @@ using UnityEngine.UI;
 
 namespace _Project.CodeBase.Gameplay.UI.HUD.BuildingAction
 {
-  public class BuildingActionButton : ObservableButton, IPoolItem
+  public class BuildingActionButton : ObservableButton, IPoolItem<PoolUnit>
   {
     [SerializeField] private TextMeshProUGUI _title;
     [SerializeField] private Image _icon;
 
     private readonly Subject<Unit> _deactivated = new();
     public Observable<Unit> Deactivated => _deactivated;
-    
+
     public void Setup(string title, Sprite icon)
     {
       _title.text = title;
       _icon.sprite = icon;
     }
 
-    public void Activate()
-    {
+    public void Activate(PoolUnit param) =>
       gameObject.SetActive(true);
-    }
 
     public void Deactivate()
     {

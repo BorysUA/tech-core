@@ -7,8 +7,8 @@ using _Project.CodeBase.Menu.UI.DifficultySelection;
 using _Project.CodeBase.Menu.UI.Factories;
 using _Project.CodeBase.Menu.UI.Menu;
 using _Project.CodeBase.Menu.UI.SaveSelection;
-using _Project.CodeBase.UI.Services;
 using _Project.CodeBase.Services.AnalyticsService.Trackers;
+using _Project.CodeBase.UI.Services;
 using UnityEngine;
 using Zenject;
 

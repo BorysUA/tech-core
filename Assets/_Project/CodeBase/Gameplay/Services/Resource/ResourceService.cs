@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.Data;
+using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Resource;
 using _Project.CodeBase.Gameplay.Resource.Behaviours;
 using _Project.CodeBase.Gameplay.Services.Command;
+using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.Services.Resource.Commands;
 using _Project.CodeBase.Gameplay.Services.Resource.Results;
 using _Project.CodeBase.Gameplay.States;
@@ -86,8 +87,7 @@ namespace _Project.CodeBase.Gameplay.Services.Resource
 
     public bool DecreaseCapacity(ResourceKind kind, int amount) =>
       TryGetBehaviour(kind, out IResourceBehaviour resource) && resource.DecreaseCapacity(amount);
-
-
+    
     public void AddResource(ResourceKind kind, int amount)
     {
       if (TryGetBehaviour(kind, out IResourceBehaviour resource))

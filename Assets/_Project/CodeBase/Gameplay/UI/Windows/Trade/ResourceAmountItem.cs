@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
 {
-  public class ResourceAmountItem : MonoBehaviour, IResettablePoolItem
+  public class ResourceAmountItem : MonoBehaviour, IResettablePoolItem<PoolUnit>
   {
     [SerializeField] private Image _resourceIcon;
     [SerializeField] private TextMeshProUGUI _amountText;
@@ -20,7 +20,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
       _amountText.text = amount.ToString();
     }
 
-    public void Activate() =>
+    public void Activate(PoolUnit param) =>
       gameObject.SetActive(true);
 
     public void Deactivate()

@@ -1,4 +1,4 @@
-﻿using _Project.CodeBase.Gameplay.Data;
+﻿using _Project.CodeBase.Gameplay.DataProxy;
 using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Services.Grid

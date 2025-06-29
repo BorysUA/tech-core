@@ -7,7 +7,7 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 {
   public interface IConstructionPlotService
   {
-    IObservableCollection<ConstructionPlotType> AvailableConstructionPlots { get; }
+    IObservableCollection<ConstructionPlotInfo> AvailablePlots { get; }
     void PlaceConstructionPlot(ConstructionPlotType type, List<Vector2Int> placementResultCells);
   }
 }

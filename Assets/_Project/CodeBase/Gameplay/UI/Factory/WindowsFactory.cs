@@ -7,7 +7,7 @@ using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.UI;
-using _Project.CodeBase.UI.Common;
+using _Project.CodeBase.UI.Core;
 using _Project.CodeBase.UI.Services;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -26,7 +26,8 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
     private readonly WindowsCanvas _windowsCanvas;
     private readonly ILogService _logService;
 
-    private readonly Dictionary<(Type, Type), UniTaskCompletionSource<BaseWindowViewModel>> _cachedTasks = new();
+    private readonly Dictionary<(Type, Type), UniTaskCompletionSource<IWindowCreationResult<BaseWindowViewModel>>>
+      _cachedTasks = new();
 
     public WindowsFactory(AddressMap addressMap, IAssetProvider assetProvider, WindowsCanvas windowsCanvas,
       WindowsRepository windowsRepository, ILogService logService, IInstantiator instantiator)
@@ -39,23 +40,25 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       _instantiator = instantiator;
     }
 
-    public async UniTask<TViewModel> CreateWindow<TWindow, TViewModel>(CancellationToken token, bool useCache = true)
+    public async UniTask<WindowCreationResult<TViewModel>> CreateWindow<TWindow, TViewModel>(CancellationToken token,
+      bool useCache = true)
       where TWindow : IWindow
       where TViewModel : BaseWindowViewModel
     {
       (Type, Type) key = (typeof(TWindow), typeof(TViewModel));
 
-      if (_cachedTasks.TryGetValue(key, out UniTaskCompletionSource<BaseWindowViewModel> cachedTcs))
-        return (TViewModel)await cachedTcs.Task;
+      if (_cachedTasks.TryGetValue(key,
+            out UniTaskCompletionSource<IWindowCreationResult<BaseWindowViewModel>> cachedTcs))
+        return (WindowCreationResult<TViewModel>)await cachedTcs.Task;
 
-      UniTaskCompletionSource<BaseWindowViewModel> tcs = new UniTaskCompletionSource<BaseWindowViewModel>();
+      UniTaskCompletionSource<IWindowCreationResult<BaseWindowViewModel>> tcs = new();
       _cachedTasks.Add(key, tcs);
 
       try
       {
-        TViewModel viewModel = await CreateWindowInternal<TWindow, TViewModel>(token, useCache);
-        tcs.TrySetResult(viewModel);
-        return viewModel;
+        WindowCreationResult<TViewModel> result = await CreateWindowInternal<TWindow, TViewModel>(token, useCache);
+        tcs.TrySetResult(result);
+        return result;
       }
       catch (Exception ex)
       {
@@ -68,13 +71,14 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       }
     }
 
-    private async UniTask<TViewModel> CreateWindowInternal<TWindow, TViewModel>(CancellationToken token,
+    private async UniTask<WindowCreationResult<TViewModel>> CreateWindowInternal<TWindow, TViewModel>(
+      CancellationToken token,
       bool useCache = true)
       where TWindow : IWindow
       where TViewModel : BaseWindowViewModel
     {
       if (useCache && _windowsRepository.TryGetValue<TViewModel>(out BaseWindowViewModel cachedWindowViewModel))
-        return cachedWindowViewModel as TViewModel;
+        return new WindowCreationResult<TViewModel>(instance: cachedWindowViewModel as TViewModel, fromCache: true);
 
       TViewModel viewModel = _instantiator.Instantiate<TViewModel>();
 
@@ -90,7 +94,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       if (useCache)
         _windowsRepository.Register<TViewModel>(viewModel);
 
-      return viewModel;
+      return new WindowCreationResult<TViewModel>(instance: viewModel, fromCache: false);
     }
   }
 }
