@@ -15,15 +15,35 @@ MonoBehaviour:
   m_GroupName: ConstructionPlots
   m_GUID: e154ba3b800e93a43ab02919295345b1
   m_SerializeEntries:
-  - m_GUID: c890396b1d078024ab519fb54dba418f
-    m_Address: ConstructionPlots/ConstructionPlotPreview
+  - m_GUID: ab5a0d85c237ad04480e208258eeba5c
+    m_Address: ConstructionPlots/Plot4x4
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac3bfbb063697b749852d68eaab20244
+    m_Address: ConstructionPlots/Plot3x6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c890396b1d078024ab519fb54dba418f
+    m_Address: ConstructionPlots/PlotPreview
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: eec837fa78e26074597938a9b6cb16cc
-    m_Address: ConstructionPlots/StandardConstructionPlot
+    m_Address: ConstructionPlots/Plot6x6
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0504c7b8b8b928448feba8cf2bf7e38
+    m_Address: ConstructionPlots/Plot6x3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 1365f6cf93b86064c8a35644b412ad29, type: 2}

@@ -30,6 +30,11 @@ namespace _Project.CodeBase.Gameplay.DataProxy
       AddContentToMask(CellContentType.ResourceSpot);
     }
 
+    public void SetObstacle()
+    {
+      AddContentToMask(CellContentType.Obstacle);
+    }
+
     public void RemoveBuilding()
     {
       BuildingId = null;
@@ -47,7 +52,7 @@ namespace _Project.CodeBase.Gameplay.DataProxy
       ResourceSpotKind = ResourceKind.None;
       RemoveContentFromMask(CellContentType.ResourceSpot);
     }
-    
+
     private void AddContentToMask(CellContentType flag) =>
       ContentMask |= flag;
 

@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using _Project.CodeBase.Data.StaticData.Map;
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.DataProxy;
+using _Project.CodeBase.Gameplay.Markers;
+using _Project.CodeBase.Gameplay.Markers.Baked;
+using _Project.CodeBase.Gameplay.Markers.Baked.Payloads;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using ObservableCollections;
@@ -14,9 +19,7 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
   public class GridOccupancyService : IGridOccupancyService, IDisposable, IGameplayInit
   {
     private readonly IProgressService _progressService;
-
     private readonly IStaticDataProvider _staticDataProvider;
-
     private readonly CompositeDisposable _disposable = new();
 
     private Dictionary<Vector2Int, CellData> OccupiedCells { get; } = new();
@@ -63,8 +66,19 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
 
     private void FillOccupiedCellsFromStaticData()
     {
-      foreach (ResourceSpotEntry spot in _staticDataProvider.GetResourceSpots())
-        RegisterResourceSpotInGrid(spot);
+      IEnumerable<MapEntityData> resourceSpots = _staticDataProvider
+        .GetMapEntities()
+        .Where(entity => entity.Type is MapEntityType.ResourceSpot);
+
+      foreach (MapEntityData entity in resourceSpots)
+        RegisterResourceSpotInGrid(((ResourceSpotData)entity.Payload).Kind, entity.OccupiedCells);
+
+      IEnumerable<MapEntityData> obstacles = _staticDataProvider
+        .GetMapEntities()
+        .Where(entity => entity.Type is MapEntityType.Obstacle);
+
+      foreach (MapEntityData entity in obstacles)
+        RegisterObstacleInGrid(entity.OccupiedCells);
     }
 
     private void ObserveBuildingsCollection()
@@ -103,10 +117,16 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
       return cellData;
     }
 
-    private void RegisterResourceSpotInGrid(ResourceSpotEntry spot)
+    private void RegisterResourceSpotInGrid(ResourceKind kind, IEnumerable<Vector2Int> occupiedCells)
     {
-      foreach (Vector2Int cellPosition in spot.OccupiedCells)
-        GetOrCreate(cellPosition).SetResourceSpot(spot.Kind);
+      foreach (Vector2Int cellPosition in occupiedCells)
+        GetOrCreate(cellPosition).SetResourceSpot(kind);
+    }
+
+    private void RegisterObstacleInGrid(List<Vector2Int> occupiedCells)
+    {
+      foreach (Vector2Int cellPosition in occupiedCells)
+        GetOrCreate(cellPosition).SetObstacle();
     }
 
     private void RegisterConstructionPlotInGrid(ConstructionPlotDataProxy proxy)

@@ -10,7 +10,7 @@
     public const string ConfirmBuildingPlacePopUp = "UI_InGame/ConfirmBuildingPlacePopUp";
     public const string HUD = "UI_InGame/HUD";
     public const string BuildingPreview = "Buildings/Preview";
-    public const string ConstructionPlotPreview = "ConstructionPlots/ConstructionPlotPreview";
+    public const string PlotPreview = "ConstructionPlots/PlotPreview";
     public const string FlyText = "UI_InGame/FlyText";
     public const string BuildingActionButton = "UI_InGame/BuildingActionButton";
     public const string BuildingIndicatorItem = "UI_InGame/BuildingIndicatorItem";

@@ -17,7 +17,6 @@ namespace _Project.CodeBase.Gameplay.Building
   {
     private BuildingDataProxy _buildingDataProxy;
 
-    private readonly IGridService _gridService;
     private readonly ContractToModuleRegistry _contractToModuleRegistry;
     private readonly CompositeDisposable _disposable = new();
     private readonly ILogService _logService;
@@ -35,13 +34,12 @@ namespace _Project.CodeBase.Gameplay.Building
     public Observable<Unit> Selected => _selected;
     public Observable<Unit> Unselected => _unselected;
     public Observable<Unit> Destroyed => _destroyed;
-    public Vector3 WorldPosition => _gridService.GetWorldPivot(_buildingDataProxy.OccupiedCells);
+    public Vector3 WorldPosition => GridUtils.GetWorldPivot(_buildingDataProxy.OccupiedCells);
     public IEnumerable<IBuildingIndicatorSource> Indicators => _indicators;
     public IEnumerable<IBuildingActionsProvider> Actions => _actions;
 
-    public BuildingViewModel(IGridService gridService, ContractToModuleRegistry contractToModuleRegistry)
+    public BuildingViewModel(ContractToModuleRegistry contractToModuleRegistry)
     {
-      _gridService = gridService;
       _contractToModuleRegistry = contractToModuleRegistry;
     }
 

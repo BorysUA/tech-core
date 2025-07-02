@@ -7,7 +7,6 @@ using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.Services.Resource;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using ObservableCollections;
 using R3;
@@ -20,7 +19,6 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
     private readonly IConstructionPlotFactory _constructionPlotFactory;
     private readonly IStaticDataProvider _staticDataProvider;
     private readonly ICommandBroker _commandBroker;
-    private readonly IGridService _gridService;
     private readonly IResourceService _resourceService;
     private readonly CompositeDisposable _disposable = new();
 
@@ -30,13 +28,12 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
     public IObservableCollection<ConstructionPlotInfo> AvailablePlots => _availablePlots;
 
     public ConstructionPlotService(IProgressService progressService, IStaticDataProvider staticDataProvider,
-      ICommandBroker commandBroker, IConstructionPlotFactory constructionPlotFactory, IGridService gridService,
+      ICommandBroker commandBroker, IConstructionPlotFactory constructionPlotFactory,
       IResourceService resourceService)
     {
       _staticDataProvider = staticDataProvider;
       _commandBroker = commandBroker;
       _constructionPlotFactory = constructionPlotFactory;
-      _gridService = gridService;
       _resourceService = resourceService;
 
       foreach (ConstructionPlotConfig config in staticDataProvider.GetAllBuildingPlots())
@@ -69,7 +66,7 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 
     private async void CreateView(ConstructionPlotDataProxy data)
     {
-      Vector3 worldPivot = _gridService.GetWorldPivot(data.OccupiedCells);
+      Vector3 worldPivot = GridUtils.GetWorldPivot(data.OccupiedCells);
       ConstructionPlotViewModel
         viewModel = await _constructionPlotFactory.CreateConstructionPlot(data.Type, worldPivot);
 

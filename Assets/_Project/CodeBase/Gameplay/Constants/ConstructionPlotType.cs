@@ -3,6 +3,9 @@
   public enum ConstructionPlotType
   {
     None = 0,
-    Standard = 1
+    Size6x6 = 1,
+    Size4x4 = 2,
+    Size3x6 = 3,
+    Size6x3 = 4,
   }
 }

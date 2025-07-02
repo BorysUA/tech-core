@@ -22,7 +22,6 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     private readonly ICommandBroker _commandBroker;
     private readonly IBuildingFactory _buildingFactory;
     private readonly IStaticDataProvider _staticDataProvider;
-    private readonly IGridService _gridService;
     private readonly IResourceService _resourceService;
     private readonly ILogService _logService;
     private readonly IPopUpService _popUpService;
@@ -33,13 +32,12 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     public IObservableCollection<BuildingInfo> AvailableBuildings => _availableBuildings;
 
     public BuildingService(ICommandBroker commandBroker, IProgressService progressService,
-      IBuildingFactory buildingFactory, IStaticDataProvider staticDataProvider,
-      IGridService gridService, IResourceService resourceService, ILogService logService, IPopUpService popUpService)
+      IBuildingFactory buildingFactory, IStaticDataProvider staticDataProvider, IResourceService resourceService,
+      ILogService logService, IPopUpService popUpService)
     {
       _commandBroker = commandBroker;
       _buildingFactory = buildingFactory;
       _staticDataProvider = staticDataProvider;
-      _gridService = gridService;
       _resourceService = resourceService;
       _logService = logService;
       _popUpService = popUpService;
@@ -97,7 +95,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
     private async void CreateView(BuildingDataProxy buildingData)
     {
-      Vector3 worldBuildingPosition = _gridService.GetWorldPivot(buildingData.OccupiedCells);
+      Vector3 worldBuildingPosition = GridUtils.GetWorldPivot(buildingData.OccupiedCells);
 
       BuildingViewModel viewModel = await _buildingFactory.CreateBuilding(buildingData.Type, worldBuildingPosition);
       viewModel.Initialize(buildingData);

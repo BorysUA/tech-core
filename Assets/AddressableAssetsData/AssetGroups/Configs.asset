@@ -21,11 +21,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - BuildingActionButtonConfigs
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 03de8e28cd9ea5d4199c9aefb42a4f45
-    m_Address: Configs/ResourceSpots
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2e506dcea822b2b418585890ab08f3be
     m_Address: Configs/Buildings
     m_ReadOnly: 0
@@ -69,6 +64,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: daa9a669b387d0d4b98a8ba4a35e3375
     m_Address: Configs/MeteoriteVFX
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f546408eb26df304c9317d8b5378fa69
+    m_Address: Configs/GameMap
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

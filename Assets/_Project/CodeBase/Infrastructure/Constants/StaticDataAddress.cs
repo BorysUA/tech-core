@@ -10,7 +10,7 @@
     public const string ConstructionPlots = "ConstructionPlotConfigs";
     public const string BuildingActionButtons = "BuildingActionButtonConfigs";
     public const string BuildingIndicators = "BuildingIndicatorConfigs";
-    public const string ResourceSpots = "Configs/ResourceSpots";
+    public const string GameMap = "Configs/GameMap";
     public const string MeteoriteVFXs = "Configs/MeteoriteVFX";
   }
 }

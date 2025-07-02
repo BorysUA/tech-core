@@ -49,7 +49,7 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 
     public async UniTask<ConstructionPlotPreview> CreateConstructionPlotPreview()
     {
-      GameObject previewPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.ConstructionPlotPreview);
+      GameObject previewPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.PlotPreview);
       return Object.Instantiate(previewPrefab, _constructionPlotsRoot).GetComponent<ConstructionPlotPreview>();
     }
 

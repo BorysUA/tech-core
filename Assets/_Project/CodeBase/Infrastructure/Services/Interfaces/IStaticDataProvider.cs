@@ -2,6 +2,7 @@
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.InteractionButtons;
 using _Project.CodeBase.Data.StaticData.Building.StatusItems;
+using _Project.CodeBase.Data.StaticData.Map;
 using _Project.CodeBase.Data.StaticData.Meteorite;
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
@@ -27,7 +28,7 @@ namespace _Project.CodeBase.Infrastructure.Services.Interfaces
     IEnumerable<BuildingActionButtonConfig> GetAllBuildingActionButtons();
     BuildingActionButtonConfig GetBuildingActionButtonConfig(ActionType actionType);
     BuildingIndicatorConfig GetBuildingIndicatorConfig(BuildingIndicatorType indicatorType);
-    IEnumerable<ResourceSpotEntry> GetResourceSpots();
     MeteoriteVFX GetMeteoriteVFXs(MeteoriteType meteoriteType);
+    IEnumerable<MapEntityData> GetMapEntities();
   }
 }

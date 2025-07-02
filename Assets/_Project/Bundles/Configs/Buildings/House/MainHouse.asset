@@ -19,15 +19,15 @@ MonoBehaviour:
   PrefabReference:
     m_AssetGUID: 277e0f71c79d6d3439346bf02ffb2025
     m_SubObjectName: 
-    m_SubObjectGUID: 
     m_SubObjectType: 
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   MeshReference:
     m_AssetGUID: 81d135711823c8a4cb9ece0d7b1080b7
     m_SubObjectName: Main_house
-    m_SubObjectGUID: 
     m_SubObjectType: UnityEngine.Mesh, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 1
   SizeInCells: {x: 2, y: 2}
   Price:

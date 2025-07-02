@@ -1,0 +1,327 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bf08cf2d0a04c81a2b40fddc9fde140, type: 3}
+  m_Name: GameMap
+  m_EditorClassIdentifier: 
+  Entities:
+  - <Type>k__BackingField: 1
+    <OccupiedCells>k__BackingField:
+    - {x: 2, y: 5}
+    - {x: 2, y: 6}
+    - {x: 2, y: 7}
+    - {x: 3, y: 5}
+    - {x: 3, y: 6}
+    - {x: 3, y: 7}
+    - {x: 4, y: 5}
+    - {x: 4, y: 6}
+    - {x: 4, y: 7}
+    <Payload>k__BackingField:
+      rid: 199432763245330432
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: 15, y: 11}
+    - {x: 15, y: 12}
+    - {x: 16, y: 11}
+    - {x: 16, y: 12}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: 0, y: 17}
+    - {x: 0, y: 18}
+    - {x: 1, y: 17}
+    - {x: 1, y: 18}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 1
+    <OccupiedCells>k__BackingField:
+    - {x: -5, y: -10}
+    - {x: -5, y: -9}
+    - {x: -5, y: -8}
+    - {x: -4, y: -10}
+    - {x: -4, y: -9}
+    - {x: -4, y: -8}
+    - {x: -3, y: -10}
+    - {x: -3, y: -9}
+    - {x: -3, y: -8}
+    <Payload>k__BackingField:
+      rid: 199432763245330434
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -2, y: 4}
+    - {x: -2, y: 5}
+    - {x: -2, y: 6}
+    - {x: -1, y: 4}
+    - {x: -1, y: 5}
+    - {x: -1, y: 6}
+    - {x: 0, y: 4}
+    - {x: 0, y: 5}
+    - {x: 0, y: 6}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -17, y: -8}
+    - {x: -17, y: -7}
+    - {x: -17, y: -6}
+    - {x: -16, y: -8}
+    - {x: -16, y: -7}
+    - {x: -16, y: -6}
+    - {x: -15, y: -8}
+    - {x: -15, y: -7}
+    - {x: -15, y: -6}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: 7, y: -16}
+    - {x: 7, y: -15}
+    - {x: 8, y: -16}
+    - {x: 8, y: -15}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: 4, y: -4}
+    - {x: 4, y: -3}
+    - {x: 4, y: -2}
+    - {x: 4, y: -1}
+    - {x: 4, y: 0}
+    - {x: 4, y: 1}
+    - {x: 4, y: 2}
+    - {x: 5, y: -4}
+    - {x: 5, y: -3}
+    - {x: 5, y: -2}
+    - {x: 5, y: -1}
+    - {x: 5, y: 0}
+    - {x: 5, y: 1}
+    - {x: 5, y: 2}
+    - {x: 6, y: -4}
+    - {x: 6, y: -3}
+    - {x: 6, y: -2}
+    - {x: 6, y: -1}
+    - {x: 6, y: 0}
+    - {x: 6, y: 1}
+    - {x: 6, y: 2}
+    - {x: 7, y: -4}
+    - {x: 7, y: -3}
+    - {x: 7, y: -2}
+    - {x: 7, y: -1}
+    - {x: 7, y: 0}
+    - {x: 7, y: 1}
+    - {x: 7, y: 2}
+    - {x: 8, y: -4}
+    - {x: 8, y: -3}
+    - {x: 8, y: -2}
+    - {x: 8, y: -1}
+    - {x: 8, y: 0}
+    - {x: 8, y: 1}
+    - {x: 8, y: 2}
+    - {x: 9, y: -4}
+    - {x: 9, y: -3}
+    - {x: 9, y: -2}
+    - {x: 9, y: -1}
+    - {x: 9, y: 0}
+    - {x: 9, y: 1}
+    - {x: 9, y: 2}
+    - {x: 10, y: -4}
+    - {x: 10, y: -3}
+    - {x: 10, y: -2}
+    - {x: 10, y: -1}
+    - {x: 10, y: 0}
+    - {x: 10, y: 1}
+    - {x: 10, y: 2}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -17, y: 1}
+    - {x: -17, y: 2}
+    - {x: -17, y: 3}
+    - {x: -17, y: 4}
+    - {x: -16, y: 1}
+    - {x: -16, y: 2}
+    - {x: -16, y: 3}
+    - {x: -16, y: 4}
+    - {x: -15, y: 1}
+    - {x: -15, y: 2}
+    - {x: -15, y: 3}
+    - {x: -15, y: 4}
+    - {x: -14, y: 1}
+    - {x: -14, y: 2}
+    - {x: -14, y: 3}
+    - {x: -14, y: 4}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -11, y: -12}
+    - {x: -11, y: -11}
+    - {x: -10, y: -12}
+    - {x: -10, y: -11}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 1
+    <OccupiedCells>k__BackingField:
+    - {x: -11, y: 1}
+    - {x: -11, y: 2}
+    - {x: -11, y: 3}
+    - {x: -10, y: 1}
+    - {x: -10, y: 2}
+    - {x: -10, y: 3}
+    - {x: -9, y: 1}
+    - {x: -9, y: 2}
+    - {x: -9, y: 3}
+    <Payload>k__BackingField:
+      rid: 199432763245330435
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -1, y: -8}
+    - {x: -1, y: -7}
+    - {x: -1, y: -6}
+    - {x: 0, y: -8}
+    - {x: 0, y: -7}
+    - {x: 0, y: -6}
+    - {x: 1, y: -8}
+    - {x: 1, y: -7}
+    - {x: 1, y: -6}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -12, y: 12}
+    - {x: -12, y: 13}
+    - {x: -11, y: 12}
+    - {x: -11, y: 13}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -18, y: 10}
+    - {x: -18, y: 11}
+    - {x: -18, y: 12}
+    - {x: -17, y: 10}
+    - {x: -17, y: 11}
+    - {x: -17, y: 12}
+    - {x: -16, y: 10}
+    - {x: -16, y: 11}
+    - {x: -16, y: 12}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: 14, y: -1}
+    - {x: 14, y: 0}
+    - {x: 14, y: 1}
+    - {x: 15, y: -1}
+    - {x: 15, y: 0}
+    - {x: 15, y: 1}
+    - {x: 16, y: -1}
+    - {x: 16, y: 0}
+    - {x: 16, y: 1}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: 17, y: -15}
+    - {x: 17, y: -14}
+    - {x: 18, y: -15}
+    - {x: 18, y: -14}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -7, y: -6}
+    - {x: -7, y: -5}
+    - {x: -6, y: -6}
+    - {x: -6, y: -5}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: 0, y: 17}
+    - {x: 0, y: 18}
+    - {x: 1, y: 17}
+    - {x: 1, y: 18}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -19, y: 0}
+    - {x: -19, y: 1}
+    - {x: -18, y: 0}
+    - {x: -18, y: 1}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -3, y: -16}
+    - {x: -3, y: -15}
+    - {x: -3, y: -14}
+    - {x: -3, y: -13}
+    - {x: -2, y: -16}
+    - {x: -2, y: -15}
+    - {x: -2, y: -14}
+    - {x: -2, y: -13}
+    - {x: -1, y: -16}
+    - {x: -1, y: -15}
+    - {x: -1, y: -14}
+    - {x: -1, y: -13}
+    - {x: 0, y: -16}
+    - {x: 0, y: -15}
+    - {x: 0, y: -14}
+    - {x: 0, y: -13}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: -8, y: 13}
+    - {x: -8, y: 14}
+    - {x: -8, y: 15}
+    - {x: -8, y: 16}
+    - {x: -7, y: 13}
+    - {x: -7, y: 14}
+    - {x: -7, y: 15}
+    - {x: -7, y: 16}
+    - {x: -6, y: 13}
+    - {x: -6, y: 14}
+    - {x: -6, y: 15}
+    - {x: -6, y: 16}
+    - {x: -5, y: 13}
+    - {x: -5, y: 14}
+    - {x: -5, y: 15}
+    - {x: -5, y: 16}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  - <Type>k__BackingField: 2
+    <OccupiedCells>k__BackingField:
+    - {x: 18, y: -1}
+    - {x: 18, y: 0}
+    - {x: 19, y: -1}
+    - {x: 19, y: 0}
+    <Payload>k__BackingField:
+      rid: 199432763245330433
+  references:
+    version: 2
+    RefIds:
+    - rid: 199432763245330432
+      type: {class: ResourceSpotData, ns: _Project.CodeBase.Gameplay.Markers.Baked.Payloads, asm: Assembly-CSharp}
+      data: 
+    - rid: 199432763245330433
+      type: {class: EmptyPayload, ns: _Project.CodeBase.Gameplay.Markers.Baked.Payloads, asm: Assembly-CSharp}
+      data: 
+    - rid: 199432763245330434
+      type: {class: ResourceSpotData, ns: _Project.CodeBase.Gameplay.Markers.Baked.Payloads, asm: Assembly-CSharp}
+      data: 
+    - rid: 199432763245330435
+      type: {class: ResourceSpotData, ns: _Project.CodeBase.Gameplay.Markers.Baked.Payloads, asm: Assembly-CSharp}
+      data: 
