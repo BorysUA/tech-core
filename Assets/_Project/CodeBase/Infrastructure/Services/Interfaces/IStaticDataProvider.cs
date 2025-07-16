@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using _Project.CodeBase.Data.StaticData;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.InteractionButtons;
 using _Project.CodeBase.Data.StaticData.Building.StatusItems;
@@ -30,5 +31,6 @@ namespace _Project.CodeBase.Infrastructure.Services.Interfaces
     BuildingIndicatorConfig GetBuildingIndicatorConfig(BuildingIndicatorType indicatorType);
     MeteoriteVFX GetMeteoriteVFXs(MeteoriteType meteoriteType);
     IEnumerable<MapEntityData> GetMapEntities();
+    BuildingsShopCatalog GetBuildingsShopCatalog();
   }
 }

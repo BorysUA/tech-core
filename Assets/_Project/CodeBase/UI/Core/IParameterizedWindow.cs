@@ -4,6 +4,5 @@
   {
     public bool Matches(TParam param);
     public void Initialize(TParam parameter);
-    public void Reset();
   }
 }

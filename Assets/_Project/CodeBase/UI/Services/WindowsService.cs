@@ -29,7 +29,13 @@ namespace _Project.CodeBase.UI.Services
       where TWindow : IWindow
       where TViewModel : BaseWindowViewModel
     {
-      await OpenInternal<TWindow, TViewModel>((_, _) => { }, token, loadFromCache);
+      await OpenInternal<TWindow, TViewModel>((viewModel, fromCache) =>
+      {
+        if (fromCache)
+          viewModel.Reset();
+
+        viewModel.Initialize();
+      }, token, loadFromCache);
     }
 
     public async UniTask OpenWindow<TWindow, TViewModel, TParam>(TParam param, bool loadFromCache = true,

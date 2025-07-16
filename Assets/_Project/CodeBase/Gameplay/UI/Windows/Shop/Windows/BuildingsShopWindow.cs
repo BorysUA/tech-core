@@ -22,28 +22,20 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.Windows
     private readonly List<BuyButton> _buyButtons = new();
     private DisposableBag _subscriptions;
     private IGameplayUiFactory _uiFactory;
-    private ILogService _logService;
 
     [Inject]
-    public void Construct(IGameplayUiFactory gameplayUiFactory, ILogService logService)
+    public void Construct(IGameplayUiFactory gameplayUiFactory)
     {
       _uiFactory = gameplayUiFactory;
-      _logService = logService;
     }
 
-    public override void Setup(BaseWindowViewModel viewModel) =>
-      SetupAsync(viewModel).Forget(exception => _logService.LogError(GetType(), "Setup window crashed:", exception));
-
-    private async UniTask SetupAsync(BaseWindowViewModel viewModel)
+    public override void Setup(BaseWindowViewModel viewModel)
     {
       base.Setup(viewModel);
 
-      foreach (BuildingType buildingType in ViewModel.ItemsToShow)
-        await CreateBuyButton(buildingType);
-
       ViewModel.ItemsToShow
         .ObserveAdd()
-        .Subscribe(addEvent => CreateBuyButton(addEvent.Value).Forget())
+        .Subscribe(addEvent => CreateBuyButton(addEvent.Value, addEvent.Index).Forget())
         .AddTo(this);
 
       ViewModel.ItemsToShow.ObserveClear()
@@ -61,10 +53,12 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.Windows
       _buyButtons.Clear();
     }
 
-    private async UniTask CreateBuyButton(BuildingType buildingType)
+    private async UniTask CreateBuyButton(BuildingType buildingType, int index)
     {
       BuyButton buyButton =
         await _uiFactory.CreateBuyButton(buildingType, _buyButtonsContainer);
+
+      buyButton.Initialize(index);
 
       buyButton.OnClick
         .Subscribe(_ => ViewModel.BuyItem(buildingType))

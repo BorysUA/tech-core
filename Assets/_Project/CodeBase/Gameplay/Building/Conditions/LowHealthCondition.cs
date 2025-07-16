@@ -1,14 +1,13 @@
 ﻿using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
+using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus.Indicators;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.Building.Conditions
 {
-  public class LowHealthCondition : OperationalCondition
+  public class LowHealthCondition : PermanentCondition
   {
     private float _healthThreshold;
     private ReadOnlyReactiveProperty<float> _healthRatio;
-
-    public override BuildingIndicatorType IndicatorType => BuildingIndicatorType.CriticallyDamaged;
 
     public void Setup(float healthThreshold, ReadOnlyReactiveProperty<float> healthRatio)
     {
@@ -16,13 +15,7 @@ namespace _Project.CodeBase.Gameplay.Building.Conditions
       _healthRatio = healthRatio;
     }
 
-    public override void Initialize()
-    {
-      base.Initialize();
-
-      _healthRatio
-        .Subscribe(ratio => IsSatisfiedSource.Value = ratio > _healthThreshold)
-        .AddTo(ref Disposable);
-    }
+    protected override Observable<bool> BuildPermanentCondition() =>
+      _healthRatio.Select(ratio => ratio > _healthThreshold);
   }
 }

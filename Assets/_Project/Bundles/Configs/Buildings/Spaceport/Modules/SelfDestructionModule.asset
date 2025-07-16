@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97f12aa215dd4772a0af051700e34535, type: 3}
   m_Name: SelfDestructionModule
   m_EditorClassIdentifier: 
+  OperationalConditions: []
+  IgnoreGlobalConditions: 1
   RefundRatio: 0.2

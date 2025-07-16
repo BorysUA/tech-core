@@ -3,9 +3,7 @@ using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.ConstructionPlot;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Constants;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Infrastructure.StateMachine;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -22,6 +20,8 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
     private readonly IInstantiator _instantiator;
     private Transform _constructionPlotsRoot;
 
+    private ConstructionPlotPreview _preview;
+
     public ConstructionPlotFactory(IAssetProvider assetProvider, IStaticDataProvider staticDataProvider,
       IInstantiator instantiator)
     {
@@ -30,7 +30,7 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
       _instantiator = instantiator;
     }
 
-    public void Initialize() => 
+    public void Initialize() =>
       CreateRoot();
 
     public async UniTask<ConstructionPlotViewModel> CreateConstructionPlot(ConstructionPlotType type,
@@ -47,10 +47,18 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
       return viewModel;
     }
 
-    public async UniTask<ConstructionPlotPreview> CreateConstructionPlotPreview()
+    public async UniTask<ConstructionPlotPreview> CreateConstructionPlotPreview(ConstructionPlotType plotType)
     {
-      GameObject previewPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.PlotPreview);
-      return Object.Instantiate(previewPrefab, _constructionPlotsRoot).GetComponent<ConstructionPlotPreview>();
+      if (_preview is null)
+      {
+        GameObject previewPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.PlotPreview);
+        _preview = Object.Instantiate(previewPrefab, _constructionPlotsRoot).GetComponent<ConstructionPlotPreview>();
+      }
+
+      ConstructionPlotConfig plotConfig = _staticDataProvider.GetConstructionPlotConfig(plotType);
+      _preview.Setup(plotConfig.SizeInCells);
+      _preview.Activate();
+      return _preview;
     }
 
     private void CreateRoot()

@@ -4,7 +4,7 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
 {
   public interface IBuildingIndicatorSource
   {
-    public BuildingIndicatorType IndicatorType { get; }
-    public ReadOnlyReactiveProperty<bool> IsShown { get; }
+    public BuildingIndicatorType Type { get; }
+    public ReadOnlyReactiveProperty<bool> IsVisible { get; }
   }
 }

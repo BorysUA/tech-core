@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using _Project.CodeBase.Gameplay.Meteorite.VFX;
 using _Project.CodeBase.Gameplay.Services.Factories;
+using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using Zenject;
@@ -56,7 +57,7 @@ namespace _Project.CodeBase.Gameplay.Meteorite
       _meteoriteViewModel.Update(Time.deltaTime);
 
     public void OnTriggerEnter(Collider other) =>
-      _meteoriteViewModel.HandleMeteorCollision(other);
+      _meteoriteViewModel.HandleMeteorCollision(other).Forget();
 
     private void Activate()
     {

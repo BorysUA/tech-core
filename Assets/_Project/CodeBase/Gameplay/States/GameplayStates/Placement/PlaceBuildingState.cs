@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Grid;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.InputService;
 using _Project.CodeBase.UI.Services;
@@ -61,10 +58,9 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
     {
       foreach (Vector2Int cell in placeCells)
       {
-        if (!_gridOccupancyService.TryGetCell(cell, out ICellStatus cellData))
-          return false;
+        CellContentType contentMask = _gridOccupancyService.GetCellContentMask(cell);
 
-        if (!DoesCellMatchFilter(cellData, _placementFilter))
+        if (!DoesCellMatchFilter(contentMask, _placementFilter))
           return false;
       }
 

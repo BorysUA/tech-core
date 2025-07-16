@@ -9,9 +9,9 @@ namespace _Project.CodeBase.Gameplay.DataProxy.Modules
     private readonly TradeData _tradeData;
     private readonly CompositeDisposable _disposable = new();
 
-    public ReactiveProperty<float> OfferCloseCountdown = new();
-    public ReactiveProperty<float> NextOfferOpenCountdown = new();
-    public ReactiveProperty<TradeOfferData> CurrentTradeOffer = new();
+    public readonly ReactiveProperty<float> OfferCloseCountdown = new();
+    public readonly ReactiveProperty<float> NextOfferOpenCountdown = new();
+    public readonly ReactiveProperty<TradeOfferData> CurrentTradeOffer = new();
 
     public string BuildingId => _tradeData.BuildingId;
     public int CompletedTradesCount => _tradeData.CompletedTradesCount;

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ea1441eb074ceb963a674f09f0f2ef, type: 3}
   m_Name: ResourceReservationCondition
   m_EditorClassIdentifier: 
-  IndicatorType: 5
+  <IndicatorType>k__BackingField: 5
+  <IsGlobalCondition>k__BackingField: 0
   ResourceToReserve:
     Kind: 2
     Amount: 10

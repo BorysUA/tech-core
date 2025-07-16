@@ -62,6 +62,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a6b4a9440be3f7d499cca43e7e961623
+    m_Address: Configs/BuildingsShopCatalog
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BuildingConfigs
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: daa9a669b387d0d4b98a8ba4a35e3375
     m_Address: Configs/MeteoriteVFX
     m_ReadOnly: 0

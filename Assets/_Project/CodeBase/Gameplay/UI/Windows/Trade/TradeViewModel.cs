@@ -43,7 +43,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
 
     public override void Open()
     {
-      if (!_tradeModule.IsActive.CurrentValue)
+      if (!_tradeModule.IsModuleWorking.CurrentValue)
         return;
 
       Activate();
@@ -56,7 +56,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
       base.Close();
     }
 
-    public void Reset()
+    public override void Reset()
     {
       Deactivate();
       _tradeModule = null;
@@ -64,7 +64,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
 
     public void SellItems()
     {
-      if (!_tradeModule.IsActive.CurrentValue)
+      if (!_tradeModule.IsModuleWorking.CurrentValue)
       {
         _logService.LogError(GetType(), "Attempted to fulfill trade offer while trade module is inactive.");
         return;
@@ -75,7 +75,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
 
     private void Activate()
     {
-      _tradeModule.IsActive
+      _tradeModule.IsModuleWorking
         .Where(value => !value)
         .Subscribe(_ => Close())
         .AddTo(ref _inactiveSubscription);

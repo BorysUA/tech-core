@@ -1,28 +1,44 @@
-﻿using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
+﻿using System;
+using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
+using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus.Indicators;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.Building.Conditions
 {
-  public abstract class OperationalCondition : IBuildingIndicatorSource
+  public abstract class OperationalCondition : IDisposable
   {
-    protected DisposableBag Disposable;
-    protected readonly ReactiveProperty<bool> IsSatisfiedSource = new();
+    private readonly CompositeDisposable _subscriptions = new();
+    
+    private ReadOnlyReactiveProperty<bool> _moduleIsOperational;
+    private BuildingIndicatorType _indicatorType;
+    
+    public ReadOnlyReactiveProperty<bool> IsSatisfied { get; private set; }
+    public IBuildingIndicatorSource Indicator { get; private set; }
 
-    public abstract BuildingIndicatorType IndicatorType { get; }
-    public ReadOnlyReactiveProperty<bool> IsShown { get; private set; }
-    public ReadOnlyReactiveProperty<bool> IsSatisfied => IsSatisfiedSource;
-
-    public virtual void Initialize()
+    public void Setup(ReadOnlyReactiveProperty<bool> moduleIsOperational, BuildingIndicatorType indicatorType)
     {
-      IsShown = IsSatisfied
-        .Select(satisfied => !satisfied)
-        .ToReadOnlyReactiveProperty()
-        .AddTo(ref Disposable);
+      _moduleIsOperational = moduleIsOperational;
+      _indicatorType = indicatorType;
     }
 
-    public virtual void Dispose()
+    public void Initialize()
     {
-      Disposable.Dispose();
+      (Observable<bool> activationCondition, Observable<bool> sustainCondition) = CreateStreams();
+
+      IsSatisfied = _moduleIsOperational
+        .Select(isActive => isActive ? activationCondition : sustainCondition)
+        .Switch()
+        .ToReadOnlyReactiveProperty()
+        .AddTo(_subscriptions);
+
+      Indicator = new ConditionFailureIndicator(_indicatorType, IsSatisfied);
+    }
+
+    protected abstract (Observable<bool> activationCondition, Observable<bool> sustainCondition) CreateStreams();
+
+    public void Dispose()
+    {
+      _subscriptions.Dispose();
     }
   }
 }

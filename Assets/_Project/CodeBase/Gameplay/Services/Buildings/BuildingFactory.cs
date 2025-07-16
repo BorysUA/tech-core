@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.Conditions;
 using _Project.CodeBase.Data.StaticData.Building.Modules;
@@ -11,9 +10,7 @@ using _Project.CodeBase.Gameplay.Building.Modules;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Constants;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -49,7 +46,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
     public void Initialize() =>
       CreateRoot();
-    
+
     public async UniTask<BuildingViewModel> CreateBuilding(BuildingType buildingType, Vector3 position)
     {
       BuildingConfig buildingConfig = _staticDataProvider.GetBuildingConfig(buildingType);
@@ -63,10 +60,8 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
       foreach (BuildingModuleConfig moduleConfig in buildingConfig.BuildingsModules)
       {
-        BuildingModule module = moduleConfig is BuildingModuleWithConditionsConfig withConditions
-          ? withConditions.CreateBuildingModuleWithConditions(InstantiateModule, InstantiateCondition, buildingConfig,
-            _logService)
-          : moduleConfig.CreateBuildingModule(InstantiateModule, buildingConfig);
+        BuildingModule module =
+          moduleConfig.CreateModule(InstantiateModule, InstantiateCondition, buildingConfig, _logService);
 
         modules.Add(module);
       }
@@ -89,6 +84,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
       Mesh buildingPreviewMesh = await _assetProvider.LoadAssetAsync<Mesh>(meshReference);
 
       _buildingPreview.Setup(buildingPreviewMesh);
+      _buildingPreview.Activate();
 
       return _buildingPreview;
     }

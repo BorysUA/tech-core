@@ -10,7 +10,6 @@ namespace _Project.CodeBase.Gameplay.Building
     public void Setup(Mesh mesh)
     {
       _meshFilter.mesh = mesh;
-      Activate();
     }
   }
 }

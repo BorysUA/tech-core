@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Buildings
   m_GUID: e957c04945e007c4d938918c057da504
   m_SerializeEntries:
+  - m_GUID: 24410d5a152f0ca438882e3553ad1346
+    m_Address: Buildings/ShieldGenerator
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 277e0f71c79d6d3439346bf02ffb2025
     m_Address: Buildings/MainHouse
     m_ReadOnly: 0
@@ -45,8 +51,26 @@ MonoBehaviour:
     m_SerializedLabels:
     - InGamePreload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8cb0989987d69944ea3057e098b98248
+    m_Address: Buildings/SolarPanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9156625afbe44d04a9e81ced802dc31a
     m_Address: Buildings/Reactor
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 96e3abb63ddab0c46a9a3e84b05c4775
+    m_Address: Buildings/Windturbine
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGamePreload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9d7fe673746ce146a3ed1a1dc5a8fda
+    m_Address: Buildings/Windmill
     m_ReadOnly: 0
     m_SerializedLabels:
     - InGamePreload

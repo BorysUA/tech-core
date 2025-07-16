@@ -26,6 +26,9 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.Buttons
       _priceIcon.sprite = priceIcon;
     }
 
+    public void Initialize(int index) =>
+      transform.SetSiblingIndex(index);
+
     public void Activate(Transform parent)
     {
       gameObject.SetActive(true);

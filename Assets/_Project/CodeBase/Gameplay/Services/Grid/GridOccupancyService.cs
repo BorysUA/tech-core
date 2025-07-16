@@ -38,6 +38,11 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
       ObserveBuildingsCollection();
     }
 
+    public CellContentType GetCellContentMask(Vector2Int position) =>
+      OccupiedCells.TryGetValue(position, out CellData cellData)
+        ? cellData.ContentMask
+        : CellContentType.None;
+
     public bool TryGetCell(Vector2Int position, out ICellStatus cellStatus)
     {
       if (OccupiedCells.TryGetValue(position, out CellData cellData))
@@ -149,13 +154,18 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
     private void RegisterBuildingInGrid(BuildingDataProxy proxy)
     {
       foreach (Vector2Int cellPosition in proxy.OccupiedCells)
-        OccupiedCells[cellPosition].SetBuilding(proxy.Id);
+        GetOrCreate(cellPosition).SetBuilding(proxy.Id);
     }
 
     private void UnregisterBuildingInGrid(BuildingDataProxy proxy)
     {
       foreach (Vector2Int cellPosition in proxy.OccupiedCells)
+      {
         OccupiedCells[cellPosition].RemoveBuilding();
+
+        if (OccupiedCells[cellPosition].HasContent(CellContentType.None))
+          OccupiedCells.Remove(cellPosition);
+      }
     }
   }
 }

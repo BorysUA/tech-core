@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using _Project.CodeBase.Data.StaticData;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
@@ -28,8 +30,10 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     private readonly CompositeDisposable _disposable = new();
 
     private readonly Dictionary<string, BuildingViewModel> _currentBuildings = new();
-    private readonly ObservableList<BuildingInfo> _availableBuildings = new();
-    public IObservableCollection<BuildingInfo> AvailableBuildings => _availableBuildings;
+    private readonly Dictionary<BuildingCategory, IEnumerable<BuildingInfo>> _availableSortedBuildings = new();
+
+    public IReadOnlyDictionary<BuildingCategory, IEnumerable<BuildingInfo>> AvailableSortedBuildings =>
+      _availableSortedBuildings;
 
     public BuildingService(ICommandBroker commandBroker, IProgressService progressService,
       IBuildingFactory buildingFactory, IStaticDataProvider staticDataProvider, IResourceService resourceService,
@@ -45,8 +49,14 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
       foreach (var buildingEntity in progressService.GameStateProxy.BuildingsCollection)
         CreateView(buildingEntity.Value);
 
-      foreach (BuildingConfig config in _staticDataProvider.GetAllBuildings())
-        _availableBuildings.Add(new BuildingInfo(config.Type, config.Category, config.SizeInCells));
+      foreach (var categoryGroup in _staticDataProvider.GetBuildingsShopCatalog().Categories)
+      {
+        _availableSortedBuildings.Add(categoryGroup.Category, categoryGroup.Buildings.Select(buildingType =>
+        {
+          BuildingConfig buildingConfig = _staticDataProvider.GetBuildingConfig(buildingType);
+          return new BuildingInfo(buildingType, buildingConfig.Category, buildingConfig.SizeInCells);
+        }).ToList());
+      }
 
       progressService.GameStateProxy.BuildingsCollection
         .ObserveAdd()

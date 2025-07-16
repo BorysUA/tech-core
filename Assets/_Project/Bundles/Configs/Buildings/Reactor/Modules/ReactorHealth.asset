@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5602cf96865c459da06ec6121fd4c50b, type: 3}
   m_Name: ReactorHealth
   m_EditorClassIdentifier: 
-  OperationalConditions: []
+  OperationalConditions:
+  - {fileID: 11400000, guid: 25e41d294ec543f4895fef3ddd8df8f9, type: 2}
+  IgnoreGlobalConditions: 1
   HealthConfig:
     Max: 200
     Min: 0

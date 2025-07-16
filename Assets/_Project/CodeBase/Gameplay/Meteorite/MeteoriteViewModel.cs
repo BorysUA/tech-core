@@ -2,13 +2,16 @@
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Building.Modules.EnergyShield;
 using _Project.CodeBase.Gameplay.Building.Modules.Health;
+using _Project.CodeBase.Gameplay.Building.VFX.Module;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Markers;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.Services.Pool;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Utility;
+using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using static UnityEngine.Random;
@@ -82,7 +85,7 @@ namespace _Project.CodeBase.Gameplay.Meteorite
       Rotate(deltaTime);
     }
 
-    public void HandleMeteorCollision(Collider other)
+    public async UniTask HandleMeteorCollision(Collider other)
     {
       if (other.TryGetComponent(out Ground ground))
       {
@@ -90,11 +93,17 @@ namespace _Project.CodeBase.Gameplay.Meteorite
         Explode();
       }
 
+      if (other.TryGetComponent(out EnergyShieldEffect shieldEffect))
+      {
+        if (await shieldEffect.DamageInterceptor.TryInterceptDamage(_meteoriteConfig.Damage))
+          Explode();
+      }
+
       if (other.TryGetComponent(out BuildingView building))
       {
-        BuildingViewModel buildingViewModel = _buildingService.GetBuildingById(building.Id);
+        IBuildingViewInteractor buildingInteractor = building.BuildingViewInteractor;
 
-        if (buildingViewModel.TryGetModule(out IDamageable damageable))
+        if (buildingInteractor.TryGetPublicModuleContract(out IDamageable damageable))
           damageable.TakeDamage(_meteoriteConfig.Damage);
 
         Explode();

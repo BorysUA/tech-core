@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using _Project.CodeBase.Data.StaticData;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.InteractionButtons;
 using _Project.CodeBase.Data.StaticData.Building.StatusItems;
@@ -36,6 +37,7 @@ namespace _Project.CodeBase.Infrastructure.Services
 
     private GameMap _gameMap;
     private MeteoriteSpawnerConfig _meteoriteSpawner;
+    private BuildingsShopCatalog _buildingsShopCatalog;
 
     private readonly List<AsyncOperationHandle> _handles = new();
 
@@ -57,6 +59,9 @@ namespace _Project.CodeBase.Infrastructure.Services
 
     public IEnumerable<MapEntityData> GetMapEntities()
       => _gameMap.Entities;
+
+    public BuildingsShopCatalog GetBuildingsShopCatalog()
+      => _buildingsShopCatalog;
 
     public ResourceConfig GetResourceConfig(ResourceKind resourceKind) =>
       _resources.GetValueOrDefault(resourceKind);
@@ -135,6 +140,7 @@ namespace _Project.CodeBase.Infrastructure.Services
 
       _meteoriteSpawner = await LoadConfigAsync<MeteoriteSpawnerConfig>(StaticDataAddress.MeteoriteSpawner);
       _gameMap = await LoadConfigAsync<GameMap>(StaticDataAddress.GameMap);
+      _buildingsShopCatalog = await LoadConfigAsync<BuildingsShopCatalog>(StaticDataAddress.BuildingsShopCatalog);
     }
 
     private async UniTask<T> LoadConfigAsync<T>(string address)
