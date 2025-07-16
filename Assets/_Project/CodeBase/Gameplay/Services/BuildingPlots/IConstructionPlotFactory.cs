@@ -7,8 +7,7 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 {
   public interface IConstructionPlotFactory
   {
-    UniTask<ConstructionPlotPreview> CreateConstructionPlotPreview();
-    void Initialize();
+    UniTask<ConstructionPlotPreview> CreateConstructionPlotPreview(ConstructionPlotType plotType);
     UniTask<ConstructionPlotViewModel> CreateConstructionPlot(ConstructionPlotType type, Vector3 worldPivot);
   }
 }

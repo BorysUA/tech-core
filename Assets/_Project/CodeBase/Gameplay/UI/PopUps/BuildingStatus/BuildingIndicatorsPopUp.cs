@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.UI.Core;
+using Cysharp.Threading.Tasks;
 using R3;
-using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
@@ -16,6 +15,7 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
 
     private IGameplayUiFactory _uiFactory;
     private readonly Dictionary<BuildingIndicatorType, BuildingIndicatorView> _indicatorViews = new();
+    private readonly HashSet<BuildingIndicatorType> _pending = new();
 
     [Inject]
     public void Construct(IGameplayUiFactory uiFactory) =>
@@ -36,7 +36,7 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
         .AddTo(this);
 
       ViewModel.IndicatorChanged
-        .Subscribe(OnIndicatorChanged)
+        .Subscribe(indicator => OnIndicatorChanged(indicator).Forget())
         .AddTo(this);
 
       ViewModel.Initialized -= OnInitialize;
@@ -50,13 +50,16 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
       Destroy(gameObject);
     }
 
-    private async void OnIndicatorChanged(IndicatorVisibility indicator)
+    private async UniTask OnIndicatorChanged(IndicatorVisibility indicator)
     {
       if (!_indicatorViews.TryGetValue(indicator.Type, out BuildingIndicatorView indicatorView))
       {
-        indicatorView = await _uiFactory.CreateBuildingIndicator(indicator.Type, _indicatorsContainer);
+        if (!_pending.Add(indicator.Type))
+          return;
 
+        indicatorView = await _uiFactory.CreateBuildingIndicator(indicator.Type, _indicatorsContainer);
         _indicatorViews.TryAdd(indicator.Type, indicatorView);
+        _pending.Remove(indicator.Type);
       }
 
       indicatorView.SetVisible(indicator.Visible);

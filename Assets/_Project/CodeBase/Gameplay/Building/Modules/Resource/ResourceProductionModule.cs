@@ -12,9 +12,9 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Resource
   {
     private readonly IResourceService _resourceService;
     private readonly IProductionModifierService _productionModifierService;
-    private ResourceFlowConfig _flowConfig;
 
-    private DisposableBag _disposableBag;
+    private ResourceFlowConfig _flowConfig;
+    private DisposableBag _activationScope;
 
     public ResourceProductionModule(IResourceService resourceService,
       IProductionModifierService productionModifierService)
@@ -26,11 +26,22 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Resource
     public void Setup(ResourceFlowConfig resourceFlowConfig) =>
       _flowConfig = resourceFlowConfig;
 
-    public override void Activate()
+    protected override void Activate()
     {
       Observable.Interval(TimeSpan.FromSeconds(_flowConfig.TickInterval))
         .Subscribe(_ => Produce())
-        .AddTo(ref _disposableBag);
+        .AddTo(ref _activationScope);
+    }
+
+    protected override void Deactivate()
+    {
+      _activationScope.Clear();
+    }
+
+    public override void Dispose()
+    {
+      base.Dispose();
+      _activationScope.Dispose();
     }
 
     private void Produce()
@@ -40,16 +51,6 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Resource
       int total = Mathf.RoundToInt(_flowConfig.AmountPerTick * productionBonus);
 
       _resourceService.AddResource(resource, total);
-    }
-
-    public override void Deactivate()
-    {
-      _disposableBag.Clear();
-    }
-
-    public override void OnDestroyed()
-    {
-      _disposableBag.Dispose();
     }
   }
 }

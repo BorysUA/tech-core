@@ -4,6 +4,7 @@ using _Project.CodeBase.Gameplay.Building.Actions;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.Services.Resource;
+using R3;
 using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Building.Modules.SelfDestruction
@@ -26,14 +27,17 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.SelfDestruction
       _buildingService = buildingService;
       _actionFactory = actionFactory;
       _resourceService = resourceService;
-
-      InitializeActions();
     }
 
     public void Setup(float refundRatio, ResourceCostConfig buildingPrice)
     {
       _refundRatio = refundRatio;
       _buildingPrice = buildingPrice;
+    }
+
+    protected override void OnInitialize()
+    {
+      CreateActions();
     }
 
     public void SelfDestruct()
@@ -43,7 +47,7 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.SelfDestruction
       _buildingService.DestroyBuilding(BuildingId);
     }
 
-    private void InitializeActions()
+    private void CreateActions()
     {
       SelfDestructionAction selfDestructionAction = _actionFactory.CreateAction<SelfDestructionAction>();
       selfDestructionAction.Setup(this);

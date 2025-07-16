@@ -10,6 +10,14 @@ namespace _Project.CodeBase.UI.Core
     public Observable<Unit> WindowOpened => _windowOpened;
     public Observable<Unit> WindowClosed => _windowClosed;
 
+    public virtual void Initialize()
+    {
+    }
+
+    public virtual void Reset()
+    {
+    }
+
     public virtual void Open()
     {
       _windowOpened.OnNext(Unit.Default);

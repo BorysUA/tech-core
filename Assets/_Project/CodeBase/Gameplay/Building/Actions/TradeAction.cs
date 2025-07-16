@@ -24,7 +24,7 @@ namespace _Project.CodeBase.Gameplay.Building.Actions
 
     public void Execute()
     {
-      if (_tradeModule.IsActive.CurrentValue)
+      if (_tradeModule.IsModuleWorking.CurrentValue)
       {
         _windowsService.OpenWindow<TradeWindow, TradeViewModel, SpaceportTradeModule>(_tradeModule,
           token: _tradeModule.Lifetime);

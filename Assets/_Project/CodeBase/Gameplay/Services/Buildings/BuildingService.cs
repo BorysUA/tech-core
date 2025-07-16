@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using _Project.CodeBase.Data.StaticData;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
@@ -22,24 +24,24 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     private readonly ICommandBroker _commandBroker;
     private readonly IBuildingFactory _buildingFactory;
     private readonly IStaticDataProvider _staticDataProvider;
-    private readonly IGridService _gridService;
     private readonly IResourceService _resourceService;
     private readonly ILogService _logService;
     private readonly IPopUpService _popUpService;
     private readonly CompositeDisposable _disposable = new();
 
     private readonly Dictionary<string, BuildingViewModel> _currentBuildings = new();
-    private readonly ObservableList<BuildingInfo> _availableBuildings = new();
-    public IObservableCollection<BuildingInfo> AvailableBuildings => _availableBuildings;
+    private readonly Dictionary<BuildingCategory, IEnumerable<BuildingInfo>> _availableSortedBuildings = new();
+
+    public IReadOnlyDictionary<BuildingCategory, IEnumerable<BuildingInfo>> AvailableSortedBuildings =>
+      _availableSortedBuildings;
 
     public BuildingService(ICommandBroker commandBroker, IProgressService progressService,
-      IBuildingFactory buildingFactory, IStaticDataProvider staticDataProvider,
-      IGridService gridService, IResourceService resourceService, ILogService logService, IPopUpService popUpService)
+      IBuildingFactory buildingFactory, IStaticDataProvider staticDataProvider, IResourceService resourceService,
+      ILogService logService, IPopUpService popUpService)
     {
       _commandBroker = commandBroker;
       _buildingFactory = buildingFactory;
       _staticDataProvider = staticDataProvider;
-      _gridService = gridService;
       _resourceService = resourceService;
       _logService = logService;
       _popUpService = popUpService;
@@ -47,8 +49,14 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
       foreach (var buildingEntity in progressService.GameStateProxy.BuildingsCollection)
         CreateView(buildingEntity.Value);
 
-      foreach (BuildingConfig config in _staticDataProvider.GetAllBuildings())
-        _availableBuildings.Add(new BuildingInfo(config.Type, config.Category, config.SizeInCells));
+      foreach (var categoryGroup in _staticDataProvider.GetBuildingsShopCatalog().Categories)
+      {
+        _availableSortedBuildings.Add(categoryGroup.Category, categoryGroup.Buildings.Select(buildingType =>
+        {
+          BuildingConfig buildingConfig = _staticDataProvider.GetBuildingConfig(buildingType);
+          return new BuildingInfo(buildingType, buildingConfig.Category, buildingConfig.SizeInCells);
+        }).ToList());
+      }
 
       progressService.GameStateProxy.BuildingsCollection
         .ObserveAdd()
@@ -97,7 +105,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
     private async void CreateView(BuildingDataProxy buildingData)
     {
-      Vector3 worldBuildingPosition = _gridService.GetWorldPivot(buildingData.OccupiedCells);
+      Vector3 worldBuildingPosition = GridUtils.GetWorldPivot(buildingData.OccupiedCells);
 
       BuildingViewModel viewModel = await _buildingFactory.CreateBuilding(buildingData.Type, worldBuildingPosition);
       viewModel.Initialize(buildingData);

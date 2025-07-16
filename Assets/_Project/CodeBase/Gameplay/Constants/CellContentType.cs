@@ -8,6 +8,7 @@ namespace _Project.CodeBase.Gameplay.Constants
     None = 0,
     ConstructionPlot = 1 << 1,
     ResourceSpot = 1 << 2,
-    Building = 1 << 3
+    Building = 1 << 3,
+    Obstacle = 1 << 4,
   }
 }

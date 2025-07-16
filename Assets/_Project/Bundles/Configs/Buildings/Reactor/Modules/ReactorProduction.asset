@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f5ea63c0cd647adb31ccce98a1c36c5, type: 3}
   m_Name: ReactorProduction
   m_EditorClassIdentifier: 
+  OperationalConditions:
+  - {fileID: 11400000, guid: 4c02a3187133fd34a8af5d8b3b291088, type: 2}
   ResourceFlowConfig:
     ResourceConfig: {fileID: 11400000, guid: 757612a8c2ecf7b49ab3b3130d8f2fe6, type: 2}
     AmountPerTick: 20

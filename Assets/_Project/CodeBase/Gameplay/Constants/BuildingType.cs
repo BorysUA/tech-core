@@ -8,6 +8,10 @@
     Farm = 3,
     Reactor = 4,
     SpacePort = 5,
-    Mine = 6
+    Mine = 6,
+    SolarPanel = 7,
+    Windmills = 8,
+    WindTurbine = 9,
+    ShieldGenerator = 10,
   }
 }

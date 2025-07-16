@@ -2,8 +2,8 @@
 using _Project.CodeBase.Gameplay.Building.Conditions;
 using _Project.CodeBase.Gameplay.Building.Modules;
 using _Project.CodeBase.Gameplay.Building.Modules.Health;
+using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.CodeBase.Data.StaticData.Building.Conditions
 {
@@ -13,17 +13,17 @@ namespace _Project.CodeBase.Data.StaticData.Building.Conditions
   {
     public float HealthThreshold;
 
-    public override bool IsValidFor(IConditionBoundModule module) => module is HealthModule;
+    protected override OperationalCondition InstantiateCondition(Func<Type, OperationalCondition> instantiator) =>
+      instantiator.Invoke(typeof(LowHealthCondition));
 
-    public override OperationalCondition CreateOperationalCondition(Func<Type, OperationalCondition> instantiator,
-      IConditionBoundModule module)
+    public override bool IsValidFor(BuildingModule module) => module is HealthModule;
+
+    protected override void SetupCondition(OperationalCondition condition, BuildingModule module)
     {
-      LowHealthCondition condition = (LowHealthCondition)instantiator.Invoke(typeof(LowHealthCondition));
-
+      base.SetupCondition(condition, module);
+      LowHealthCondition lowHealthCondition = (LowHealthCondition)condition;
       HealthModule healthModule = (HealthModule)module;
-
-      condition.Setup(HealthThreshold, healthModule.Ratio);
-      return condition;
+      lowHealthCondition.Setup(HealthThreshold, healthModule.Ratio);
     }
   }
 }

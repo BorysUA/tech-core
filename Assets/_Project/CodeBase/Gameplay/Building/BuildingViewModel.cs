@@ -13,35 +13,34 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Building
 {
-  public class BuildingViewModel
+  public class BuildingViewModel : IBuildingViewInteractor
   {
-    private BuildingDataProxy _buildingDataProxy;
-
-    private readonly IGridService _gridService;
     private readonly ContractToModuleRegistry _contractToModuleRegistry;
-    private readonly CompositeDisposable _disposable = new();
     private readonly ILogService _logService;
+    private readonly Subject<Unit> _isInitialized = new();
     private readonly Subject<Unit> _selected = new();
     private readonly Subject<Unit> _unselected = new();
     private readonly Subject<Unit> _destroyed = new();
 
-    private Dictionary<Type, BuildingModule> _modules;
-    private readonly List<IConditionBoundModule> _conditionBoundModules = new();
     private readonly List<IBuildingIndicatorSource> _indicators = new();
     private readonly List<IBuildingActionsProvider> _actions = new();
-    private Observable<bool> _modulesOperationalObservable;
+
+    private BuildingDataProxy _buildingDataProxy;
+    private Dictionary<Type, BuildingModule> _modules;
+    private Observable<bool> _buildingOperational;
 
     public string Id => _buildingDataProxy.Id;
+    public Subject<Unit> IsInitialized => _isInitialized;
     public Observable<Unit> Selected => _selected;
     public Observable<Unit> Unselected => _unselected;
     public Observable<Unit> Destroyed => _destroyed;
-    public Vector3 WorldPosition => _gridService.GetWorldPivot(_buildingDataProxy.OccupiedCells);
+    public Observable<bool> BuildingOperational => _buildingOperational;
+    public Vector3 WorldPosition => GridUtils.GetWorldPivot(_buildingDataProxy.OccupiedCells);
     public IEnumerable<IBuildingIndicatorSource> Indicators => _indicators;
     public IEnumerable<IBuildingActionsProvider> Actions => _actions;
 
-    public BuildingViewModel(IGridService gridService, ContractToModuleRegistry contractToModuleRegistry)
+    public BuildingViewModel(ContractToModuleRegistry contractToModuleRegistry)
     {
-      _gridService = gridService;
       _contractToModuleRegistry = contractToModuleRegistry;
     }
 
@@ -51,9 +50,6 @@ namespace _Project.CodeBase.Gameplay.Building
 
       foreach (BuildingModule module in modules)
       {
-        if (module is IConditionBoundModule conditionBound)
-          _conditionBoundModules.Add(conditionBound);
-
         if (module is IBuildingActionsProvider actionProvider)
           _actions.Add(actionProvider);
       }
@@ -64,11 +60,7 @@ namespace _Project.CodeBase.Gameplay.Building
       _buildingDataProxy = buildingDataProxy;
 
       InitializeModules();
-
-      if (_conditionBoundModules.Count > 0)
-        TrackConditionBoundModules();
-      else
-        ActivateBuildingModules();
+      _isInitialized.OnNext(Unit.Default);
     }
 
     public void Select()
@@ -89,15 +81,29 @@ namespace _Project.CodeBase.Gameplay.Building
 
     public void Destroy()
     {
-      _disposable?.Dispose();
-
       foreach (BuildingModule module in _modules.Values)
-        module.OnDestroyed();
+        module.Dispose();
 
       _destroyed.OnNext(Unit.Default);
     }
 
-    public bool TryGetModule<TContract>(out TContract result) where TContract : class
+    public bool TryGetPublicModuleContract<TContract>(out TContract result) where TContract : class
+    {
+      result = null;
+
+      if (!typeof(TContract).IsInterface || !TryGetModuleUnsafe(out result))
+        return false;
+
+      return result is BuildingModule module && module.IsModuleWorking.CurrentValue;
+    }
+
+    public bool TryGetModuleUnsafe(Type contractType, out BuildingModule result)
+    {
+      result = null;
+      return TryGetExactModuleOfType(contractType, ref result) || TryGetModuleAssignableTo(contractType, ref result);
+    }
+
+    public bool TryGetModuleUnsafe<TContract>(out TContract result) where TContract : class
     {
       result = null;
       Type contractType = typeof(TContract);
@@ -136,46 +142,22 @@ namespace _Project.CodeBase.Gameplay.Building
 
     private void InitializeModules()
     {
+      _buildingOperational = Observable
+        .CombineLatest(_modules.Values.Select(c => c.CanBuildingWork))
+        .Select(flags => flags.All(x => x))
+        .DistinctUntilChanged()
+        .Replay(1)
+        .RefCount();
+
       foreach (BuildingModule module in _modules.Values)
       {
-        module.Setup(Id);
-
         if (module is IProgressModule progressModule)
           AttachProgressData(progressModule);
 
-        module.Initialize();
+        module.Initialize(Id, _buildingOperational);
 
-        if (module is IBuildingIndicatorsProvider statusesProvider)
-          _indicators.AddRange(statusesProvider.Indicators);
+        _indicators.AddRange(module.Indicators);
       }
-    }
-
-    private void ActivateBuildingModules()
-    {
-      foreach (BuildingModule module in _modules.Values)
-        module.Activate();
-    }
-
-    private void DeactivateBuildingModules()
-    {
-      foreach (BuildingModule module in _modules.Values)
-        module.Deactivate();
-    }
-
-    private void TrackConditionBoundModules()
-    {
-      _modulesOperationalObservable = Observable
-        .CombineLatest(_conditionBoundModules.Select(c => c.IsOperational))
-        .Select(results => results.All(x => x));
-
-      _modulesOperationalObservable.Subscribe(allOperational =>
-        {
-          if (allOperational)
-            ActivateBuildingModules();
-          else
-            DeactivateBuildingModules();
-        })
-        .AddTo(_disposable);
     }
 
     private void AttachProgressData(IProgressModule progressModule)

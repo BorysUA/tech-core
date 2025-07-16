@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using _Project.CodeBase.Data.Progress;
+﻿using System.Collections.Generic;
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
-using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.Modules;
 using _Project.CodeBase.Gameplay.Building.Actions;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
-using _Project.CodeBase.Gameplay.Building.Conditions;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus.Indicators;
@@ -17,24 +12,20 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Building.Modules.Health
 {
-  public class HealthModule : BuildingModuleWithProgressData<HealthData>, IDamageable, IBuildingActionsProvider,
-    IConditionBoundModule
+  public class HealthModule : BuildingModuleWithProgressData<HealthData>, IDamageable, IBuildingActionsProvider
   {
-    private HealthConfig _healthConfig;
-    private DisposableBag _disposable;
     private readonly ActionFactory _actionFactory;
     private readonly IBuildingService _buildingService;
-    private OperationalConditionTracer _conditionTracer;
-    private readonly ReactiveProperty<int> _current = new();
-    private readonly ReactiveProperty<float> _ratio = new();
+    private readonly CompositeDisposable _lifetimeDisposables = new();
     private readonly IBuildingAction[] _actions = new IBuildingAction[1];
-    private readonly List<IBuildingIndicatorSource> _indicators = new();
+    private readonly ReactiveProperty<int> _current = new();
+
+    private HealthConfig _healthConfig;
+    private DisposableBag _activationScope;
 
     public ReadOnlyReactiveProperty<int> Current => _current;
-    public ReadOnlyReactiveProperty<float> Ratio => _ratio;
-    public ReadOnlyReactiveProperty<bool> IsOperational => _conditionTracer.AllSatisfied;
     public IEnumerable<IBuildingAction> Actions => _actions;
-    public IEnumerable<IBuildingIndicatorSource> Indicators => _indicators;
+    public ReadOnlyReactiveProperty<float> Ratio { get; private set; }
 
     public HealthModule(ILogService logService, ActionFactory actionFactory, IBuildingService buildingService) :
       base(logService)
@@ -43,31 +34,14 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Health
       _buildingService = buildingService;
     }
 
-    public void Setup(HealthConfig healthConfig) =>
+    public void Setup(HealthConfig healthConfig)
+    {
       _healthConfig = healthConfig;
 
-    public void Setup(List<OperationalCondition> conditions)
-    {
-      _conditionTracer = new OperationalConditionTracer(conditions);
-      _indicators.AddRange(conditions);
-    }
-
-    public override void Initialize()
-    {
-      _current.Value = Mathf.Clamp(ModuleData.Health, _healthConfig.Min, _healthConfig.Max);
-      
-      _current
-        .Subscribe(health => ModuleData.Health = health)
-        .AddTo(ref _disposable);
-
-      Current.Select(health => (float)health / _healthConfig.Max)
-        .Subscribe(ratio => _ratio.Value = ratio)
-        .AddTo(ref _disposable);
-
-      CreateActions();
-      CreateIndicators();
-
-      _conditionTracer.Initialize();
+      Ratio = _current
+        .Select(health => (float)health / _healthConfig.Max)
+        .ToReadOnlyReactiveProperty(1f)
+        .AddTo(_lifetimeDisposables);
     }
 
     public override IModuleData CreateInitialData(string buildingId)
@@ -76,24 +50,41 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Health
       return healthData;
     }
 
+    protected override void OnInitialize()
+    {
+      _current.Value = Mathf.Clamp(ModuleData.Health, _healthConfig.Min, _healthConfig.Max);
+
+      CreateActions();
+      CreateIndicators();
+    }
+
     public void TakeDamage(int damage)
     {
+      GuardActive();
+
       _current.Value = Mathf.Max(_current.CurrentValue - damage, _healthConfig.Min);
 
       if (_current.CurrentValue == _healthConfig.Min)
-      {
         Destroy();
-      }
     }
 
-    public override void OnDestroyed()
+    protected override void Activate()
     {
-      _disposable.Dispose();
-      _conditionTracer.Dispose();
+      _current
+        .Subscribe(health => ModuleData.Health = health)
+        .AddTo(ref _activationScope);
+    }
 
-      foreach (IBuildingIndicatorSource indicator in _indicators)
-        if (indicator is IDisposable indicatorDisposable)
-          indicatorDisposable.Dispose();
+    protected override void Deactivate()
+    {
+      _activationScope.Clear();
+    }
+
+    public override void Dispose()
+    {
+      base.Dispose();
+      _activationScope.Dispose();
+      _lifetimeDisposables.Dispose();
     }
 
     private void Destroy()
@@ -103,7 +94,8 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Health
 
     private void CreateIndicators()
     {
-      _indicators.Add(new DamagedIndicator(BuildingIndicatorType.Damaged, .99f, Ratio));
+      AddIndicator(new ThresholdIndicator<float>(BuildingIndicatorType.Damaged, Ratio, 0.99f,
+        (current, threshold) => current < threshold));
     }
 
     private void CreateActions()

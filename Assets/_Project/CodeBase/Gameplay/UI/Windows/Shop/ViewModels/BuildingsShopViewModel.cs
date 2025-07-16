@@ -27,15 +27,14 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels
     {
       _currentCategory = category;
 
-      foreach (BuildingInfo building in _buildingService.AvailableBuildings)
-        if (building.Category == _currentCategory)
-          _itemsToShow.Add(building.Type);
+      foreach (BuildingInfo buildingInfo in _buildingService.AvailableSortedBuildings[category])
+        _itemsToShow.Add(buildingInfo.Type);
     }
 
     public bool Matches(BuildingCategory param) =>
       _currentCategory == param;
 
-    public void Reset() =>
+    public override void Reset() =>
       _itemsToShow.Clear();
 
     public void BuyItem(BuildingType buildingType)

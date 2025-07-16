@@ -64,17 +64,17 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
     {
       foreach (IBuildingIndicatorSource indicatorSource in indicators)
       {
-        BuildingIndicatorConfig config = _staticDataProvider.GetBuildingIndicatorConfig(indicatorSource.IndicatorType);
+        BuildingIndicatorConfig config = _staticDataProvider.GetBuildingIndicatorConfig(indicatorSource.Type);
 
         Indicator indicator =
-          new Indicator(config.SlotType, indicatorSource.IndicatorType, indicatorSource.IsShown, config.Priority);
+          new Indicator(config.SlotType, indicatorSource.Type, indicatorSource.IsVisible, config.Priority);
 
         if (!_slots.TryGetValue(indicator.SlotType, out IndicatorSlot slot))
           _slots[indicator.SlotType] = slot = new IndicatorSlot();
 
         slot.Indicators.Add(indicator);
 
-        indicatorSource.IsShown
+        indicatorSource.IsVisible
           .Subscribe(shown => OnIndicatorVisibilityChanged(indicator, shown))
           .AddTo(slot.Disposable);
       }

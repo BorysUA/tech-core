@@ -14,7 +14,6 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     private readonly IGameplayFactory _gameplayFactory;
     private readonly IStaticDataProvider _staticDataProvider;
     private readonly ICoroutineRunner _coroutineRunner;
-    private readonly IGridService _gridService;
     private readonly ILogService _logService;
 
     private WaitForSeconds _waitSpawnInterval;
@@ -23,12 +22,11 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     private Coroutine _spawnMeteoritesCoroutine;
 
     public MeteoriteSpawner(IGameplayFactory gameplayFactory, IStaticDataProvider staticDataProvider,
-      ICoroutineRunner coroutineRunner, IGridService gridService, ILogService logService)
+      ICoroutineRunner coroutineRunner, ILogService logService)
     {
       _gameplayFactory = gameplayFactory;
       _staticDataProvider = staticDataProvider;
       _coroutineRunner = coroutineRunner;
-      _gridService = gridService;
       _logService = logService;
     }
 
@@ -80,15 +78,15 @@ namespace _Project.CodeBase.Gameplay.Meteorite
 
     private Vector3 GetTargetPosition(Vector2Int explosionAreaSize)
     {
-      Vector2Int randomCell = _gridService.GetRandomCell();
-      Vector3 worldPivot = _gridService.GetWorldPivot(randomCell);
+      Vector2Int randomCell = GridUtils.GetRandomCell();
+      Vector3 worldPivot = GridUtils.GetWorldPivot(randomCell);
 
       if (explosionAreaSize.sqrMagnitude > Vector2Int.one.sqrMagnitude)
       {
-        Vector3 snappedPosition = _gridService.GetSnappedPosition(worldPivot, explosionAreaSize);
+        Vector3 snappedPosition = GridUtils.GetSnappedPosition(worldPivot, explosionAreaSize);
         List<Vector2Int> explosionAreaCells =
-          _gridService.GetCells(snappedPosition, explosionAreaSize);
-        worldPivot = _gridService.GetWorldPivot(explosionAreaCells);
+          GridUtils.GetCells(snappedPosition, explosionAreaSize);
+        worldPivot = GridUtils.GetWorldPivot(explosionAreaCells);
       }
 
       return worldPivot;

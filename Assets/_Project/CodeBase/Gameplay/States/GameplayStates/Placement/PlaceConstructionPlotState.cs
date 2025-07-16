@@ -50,12 +50,23 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
 
       Vector3 defaultPosition = _coordinateMapper.CenterScreenToWorldPoint();
       ConstructionPlotConfig plotConfig = _staticDataProvider.GetConstructionPlotConfig(type);
+      ConstructionPlotPreview preview = await _constructionPlotFactory.CreateConstructionPlotPreview(type);
       _placementFilter = plotConfig.PlacementFilter;
-      ConstructionPlotPreview preview = await _constructionPlotFactory.CreateConstructionPlotPreview();
-
-      preview.Setup(plotConfig.SizeInCells);
 
       GridPlacement.Setup(preview, defaultPosition, plotConfig.SizeInCells, IsPlacementValid);
+    }
+
+    protected override bool IsPlacementValid(IEnumerable<Vector2Int> placeCells)
+    {
+      foreach (Vector2Int cell in placeCells)
+      {
+        CellContentType contentMask = _gridOccupancyService.GetCellContentMask(cell);
+
+        if (!DoesCellMatchFilter(contentMask, _placementFilter))
+          return false;
+      }
+
+      return true;
     }
 
     protected override void ProcessResult(PlacementResult placementResult)
@@ -64,20 +75,6 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
         _constructionPlotService.PlaceConstructionPlot(_type, placementResult.Cells);
 
       _gameplayStateMachine.Enter<DefaultGameplayState>();
-    }
-
-    protected override bool IsPlacementValid(IEnumerable<Vector2Int> placeCells)
-    {
-      foreach (Vector2Int cell in placeCells)
-      {
-        if (!_gridOccupancyService.TryGetCell(cell, out ICellStatus cellData))
-          continue;
-
-        if (!DoesCellMatchFilter(cellData, _placementFilter))
-          return false;
-      }
-
-      return true;
     }
   }
 }

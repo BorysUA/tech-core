@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.Building.Conditions
@@ -8,27 +9,29 @@ namespace _Project.CodeBase.Gameplay.Building.Conditions
   public class OperationalConditionTracer : IDisposable
   {
     private readonly CompositeDisposable _disposable = new();
-    private readonly List<OperationalCondition> _conditions;
+    private readonly List<OperationalCondition> _conditions = new();
     private readonly ReactiveProperty<bool> _allSatisfied = new(true);
 
     public ReadOnlyReactiveProperty<bool> AllSatisfied => _allSatisfied;
-
-    public OperationalConditionTracer(List<OperationalCondition> conditions) =>
-      _conditions = conditions;
+    public IEnumerable<IBuildingIndicatorSource> Indicators => _conditions.Select(condition => condition.Indicator);
 
     public void Initialize()
     {
-      foreach (OperationalCondition condition in _conditions) 
+      foreach (OperationalCondition condition in _conditions)
         condition.Initialize();
-      
-      Observable<bool> allConditionsObservable = Observable
+
+      Observable
         .CombineLatest(_conditions
           .Select(c => c.IsSatisfied))
-        .Select(values => values.All(x => x));
-
-      allConditionsObservable
+        .Select(values => values.All(x => x))
         .Subscribe(value => _allSatisfied.OnNext(value))
         .AddTo(_disposable);
+    }
+
+    public void AddConditions(IEnumerable<OperationalCondition> conditions)
+    {
+      foreach (OperationalCondition condition in conditions)
+        _conditions.Add(condition);
     }
 
     public void Dispose()

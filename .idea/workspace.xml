@@ -1,7 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="06277468-3f59-4498-aebe-aafbaf280c20" name="Changes" comment="" />
+    <list default="true" id="06277468-3f59-4498-aebe-aafbaf280c20" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/EnergyShieldModuleConfig.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/EnergyShieldModuleConfig.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/ConstantResourceConsumption.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/ConstantResourceConsumption.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/EnergyShield.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/EnergyShield/EnergyShieldModule.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/EnergyShield/EnergyShieldModule.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/IBuildingOperationalGate.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/IBuildingOperationalGate.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/IControllableModule.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/IControllableModule.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/IModuleEffect.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/IModuleEffect.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/ISimpleEffect.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/ISimpleEffect.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/Module.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/Module/EnergyShieldEffect.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/Module/EnergyShieldEffect.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/Simple.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/Simple/SmokeEffect.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/VFX/Simple/SmokeEffect.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Resource/Spending.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Resource/Spending/IResourceSpender.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Resource/Spending/IResourceSpender.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/AddressableAssetsData/AssetGroups/Buildings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/AddressableAssetsData/AssetGroups/Buildings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/containers_C.fbx.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/containers_C.fbx.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/lander_B.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/lander_B.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/lights.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/lights.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/roofmodule_base.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/roofmodule_base.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/roofmodule_solarpanels.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/roofmodule_solarpanels.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/solarpanel.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/solarpanel.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/windturbine_low.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/windturbine_low.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/windturbine_tall.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/KayKit_Space_Base_Bits_1.0_FREE/Assets/fbx (unity)/windturbine_tall.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/SpaceColony/fbx/Main_house_2lv.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/SpaceColony/fbx/Main_house_2lv.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/SpaceColony/fbx/Main_house_3lv.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/SpaceColony/fbx/Main_house_3lv.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/SpaceColony/fbx/Research_center.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ThirdParty/SpaceColony/fbx/Research_center.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Buildings/Materials/Buildings.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/Bundles/Buildings/Materials/Buildings.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Buildings/Textures/T_Spase_white.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/Bundles/Buildings/Textures/T_Spase_white.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/Farm.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/Farm.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/GeothermalGenerator.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/GeothermalGenerator.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/Spaceport/Conditions/EnoughEnergyCondition.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/Spaceport/Conditions/EnoughEnergyCondition.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/Spaceport/Modules/ResourceConsumerModule.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/Spaceport/Modules/ResourceConsumerModule.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/Spaceport/Spaceport.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/Bundles/Configs/Buildings/Spaceport/Spaceport.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/BuildingModuleConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/BuildingModuleConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/EnoughResourceConditionConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/ConstantResourceConsumptionConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/EnoughResourceConditionConfig.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/ConstantResourceConsumptionConfig.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/LowHealthConditionConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/LowHealthConditionConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/OperationalConditionConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/OperationalConditionConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/ResourceReservationConditionConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Conditions/ResourceReservationConditionConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/BuildingModuleWithConditionsConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/BuildingModuleWithConditionsConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/HealthModuleConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/HealthModuleConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/ResourceCapacityModuleConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/ResourceCapacityModuleConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/ResourceConsumerModuleConfig.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/ResourceConsumerModuleConfig.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/ResourceProductionModuleConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/ResourceProductionModuleConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/ResourceReservationModuleConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/ResourceReservationModuleConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/SelfDistrcuctionModuleConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/SelfDistrcuctionModuleConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/TradeModuleConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Data/StaticData/Building/Modules/TradeModuleConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Actions/TradeAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Actions/TradeAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/BuildingPreview.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/BuildingPreview.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/BuildingView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/BuildingView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/BuildingViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/BuildingViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/EnoughResourceCondition.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/EnoughResourceCondition.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/LowHealthCondition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/LowHealthCondition.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/OperationalCondition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/OperationalCondition.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/ResourceReservationCondition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Conditions/ResourceReservationCondition.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/BuildingModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/BuildingModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/BuildingModuleWithProgressData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/BuildingModuleWithProgressData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/CapacityModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Resource/CapacityModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/CapacityModule.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Resource/CapacityModule.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Health/HealthModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Health/HealthModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/IConditionBoundModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/IConditionBoundModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Resource/ResourceConsumerModule.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Resource/ResourceConsumerModule.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Resource/ResourceProductionModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Resource/ResourceProductionModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Resource/ResourceReservationModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Resource/ResourceReservationModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/SelfDestruction/SelfDestructionModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/SelfDestruction/SelfDestructionModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Spaceport/SpaceportTradeModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Building/Modules/Spaceport/SpaceportTradeModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Constants/BuildingType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Constants/BuildingType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/ConstructionPlot/ConstructionPlotPreview.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/ConstructionPlot/ConstructionPlotPreview.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Meteorite/MeteoriteViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Meteorite/MeteoriteViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/BuildingPlots/ConstructionPlotFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/BuildingPlots/ConstructionPlotFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/BuildingPlots/IConstructionPlotFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/BuildingPlots/IConstructionPlotFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/Buildings/BuildingFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/Buildings/BuildingFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/Grid/GridOccupancyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/Grid/GridOccupancyService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/Grid/IGridOccupancyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/Services/Grid/IGridOccupancyService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/States/GameplayStates/Placement/PlaceBuildingState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/States/GameplayStates/Placement/PlaceBuildingState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/States/GameplayStates/Placement/PlaceConstructionPlotState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/States/GameplayStates/Placement/PlaceConstructionPlotState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/States/GameplayStates/Placement/PlacementState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/States/GameplayStates/Placement/PlacementState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/UI/Windows/Trade/TradeViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/CodeBase/Gameplay/UI/Windows/Trade/TradeViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Project/Scenes/Gameplay.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Project/Scenes/Gameplay.unity" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,7 +131,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feat/firebase-implementation"
+    "git-widget-placeholder": "feat/visual-improvements"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -36,6 +144,7 @@
       <updated>1749210737710</updated>
       <workItem from="1749210739502" duration="38000" />
       <workItem from="1749221734243" duration="11000" />
+      <workItem from="1751810876319" duration="32000" />
     </task>
     <servers />
   </component>

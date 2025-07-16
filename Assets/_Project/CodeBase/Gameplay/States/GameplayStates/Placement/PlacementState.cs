@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.UI.PopUps.ConfirmPlace;
@@ -39,12 +40,12 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
 
     protected abstract bool IsPlacementValid(IEnumerable<Vector2Int> placeCells);
 
-    protected bool DoesCellMatchFilter(ICellStatus cell, PlacementFilter filter)
+    protected bool DoesCellMatchFilter(CellContentType contentMask, PlacementFilter filter)
     {
-      if ((cell.ContentMask & filter.MustHave) != filter.MustHave)
+      if ((contentMask & filter.MustHave) != filter.MustHave)
         return false;
 
-      if ((cell.ContentMask & filter.MustBeEmpty) != 0)
+      if ((contentMask & filter.MustBeEmpty) != 0)
         return false;
 
       return true;

@@ -10,6 +10,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels
   public class PlotsShopViewModel : BaseWindowViewModel
   {
     private readonly SignalBus _signalBus;
+    private readonly IConstructionPlotService _constructionPlotService;
     private readonly ObservableList<ConstructionPlotType> _itemsToShow = new();
 
     public IObservableCollection<ConstructionPlotType> ItemsToShow => _itemsToShow;
@@ -18,10 +19,17 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels
       SignalBus signalBus)
     {
       _signalBus = signalBus;
+      _constructionPlotService = constructionPlotService;
+    }
 
-      foreach (ConstructionPlotInfo plotInfo in constructionPlotService.AvailablePlots)
+    public override void Initialize()
+    {
+      foreach (ConstructionPlotInfo plotInfo in _constructionPlotService.AvailablePlots)
         _itemsToShow.Add(plotInfo.Type);
     }
+
+    public override void Reset() =>
+      _itemsToShow.Clear();
 
     public void BuyItem(ConstructionPlotType plotType)
     {

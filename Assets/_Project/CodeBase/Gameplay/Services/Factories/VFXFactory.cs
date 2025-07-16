@@ -40,7 +40,8 @@ namespace _Project.CodeBase.Gameplay.Services.Factories
     {
       MeteoriteVFX meteoriteVFXs = _staticDataProvider.GetMeteoriteVFXs(meteoriteType);
 
-      ExplosionEffect explosion = await GetOrCreate(meteoriteVFXs.ExplosionPrefab, PoolUnit.Default, _explosionsPool);
+      ExplosionEffect explosion =
+        await GetOrCreate(meteoriteVFXs.ExplosionPrefab, PoolUnit.Default, _explosionsPool, _vfxRoot);
       explosion.Setup(position, meteoriteVFXs.ExplosionScale, meteoriteVFXs.CameraShakePreset);
 
       return explosion;
@@ -50,21 +51,21 @@ namespace _Project.CodeBase.Gameplay.Services.Factories
     {
       MeteoriteVFX meteoriteVFXs = _staticDataProvider.GetMeteoriteVFXs(meteoriteType);
 
-      TrailEffect trail = await GetOrCreate(meteoriteVFXs.TrailPrefab, parent, _trailPool);
+      TrailEffect trail = await GetOrCreate(meteoriteVFXs.TrailPrefab, parent, _trailPool, parent);
       trail.Initialize(_vfxRoot);
 
       return trail;
     }
 
     private async UniTask<TItem> GetOrCreate<TItem, TParam>(AssetReference address, TParam param,
-      ObjectPool<TItem, TParam> pool)
+      ObjectPool<TItem, TParam> pool, Transform parent)
       where TItem : class, IPoolItem<TParam>
     {
       if (pool.TryGet(param, out TItem item))
         return item;
 
       GameObject model = await _assetProvider.LoadAssetAsync<GameObject>(address);
-      TItem instance = _instantiator.InstantiatePrefab(model, _vfxRoot).GetComponent<TItem>();
+      TItem instance = _instantiator.InstantiatePrefab(model, parent).GetComponent<TItem>();
       pool.Add(instance);
       return instance;
     }

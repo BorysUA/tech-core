@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.CodeBase.Gameplay.Building;
-using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Services.InputService;
@@ -14,11 +13,10 @@ namespace _Project.CodeBase.Gameplay.InputHandlers
   public class GridPlacement : PlayerInputHandler
   {
     private readonly CoordinateMapper _coordinateMapper;
-    private readonly IGridService _gridService;
 
     private readonly ReactiveProperty<Vector3> _position = new();
     private readonly ReactiveProperty<PlacementState> _state = new();
-    
+
     private PlacementPreview _preview;
     private Vector2Int _cellSize;
     private Func<IEnumerable<Vector2Int>, bool> _isPlacementValid;
@@ -27,10 +25,9 @@ namespace _Project.CodeBase.Gameplay.InputHandlers
     public ReadOnlyReactiveProperty<PlacementState> State => _state;
     public ReadOnlyReactiveProperty<Vector3> Position => _position;
 
-    public GridPlacement(CoordinateMapper coordinateMapper, IGridService gridService)
+    public GridPlacement(CoordinateMapper coordinateMapper)
     {
       _coordinateMapper = coordinateMapper;
-      _gridService = gridService;
     }
 
     public void Setup(PlacementPreview preview, Vector3 spawnPoint, Vector2Int cellsSize,
@@ -86,8 +83,8 @@ namespace _Project.CodeBase.Gameplay.InputHandlers
 
     private void UpdateBuildingState(Vector3 toPosition)
     {
-      Vector3 snappedPos = _gridService.GetSnappedPosition(toPosition, _cellSize);
-      _currentPlace = _gridService.GetCells(snappedPos, _cellSize);
+      Vector3 snappedPos = GridUtils.GetSnappedPosition(toPosition, _cellSize);
+      _currentPlace = GridUtils.GetCells(snappedPos, _cellSize);
 
       _preview.SetPosition(snappedPos);
       _position.OnNext(snappedPos);

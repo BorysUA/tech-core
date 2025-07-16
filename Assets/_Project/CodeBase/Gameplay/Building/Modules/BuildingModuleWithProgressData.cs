@@ -1,5 +1,4 @@
 ﻿using System;
-using _Project.CodeBase.Data.Progress;
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using _Project.CodeBase.Services.LogService;
 

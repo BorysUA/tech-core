@@ -9,8 +9,10 @@ using _Project.CodeBase.Data.StaticData.Building.Modules;
 using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Building.Actions;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
+using _Project.CodeBase.Gameplay.Building.Conditions;
 using _Project.CodeBase.Gameplay.DataProxy.Modules;
 using _Project.CodeBase.Gameplay.Services.Resource;
+using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
 using R3;
@@ -21,22 +23,21 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Spaceport
 {
   public class SpaceportTradeModule : BuildingModuleWithProgressData<TradeData>, IBuildingActionsProvider
   {
+    private readonly ActionFactory _actionFactory;
+    private readonly IResourceService _resourceService;
+    private readonly ICoroutineRunner _coroutineRunner;
+    private readonly IBuildingAction[] _actions = new IBuildingAction[1];
+    private readonly WaitForEndOfFrame _waitForEndOfFrame = new();
+
     private TradeConfig _tradeConfig;
     private TradeDataProxy _tradeDataProxy;
     private CancellationTokenSource _lifetimeCts;
-
-    private readonly ActionFactory _actionFactory;
-    private readonly ICoroutineRunner _coroutineRunner;
-    private readonly IResourceService _resourceService;
-
-    private readonly IBuildingAction[] _actions = new IBuildingAction[1];
     private ResourceRange[] _tradeOfferResources;
 
     private Coroutine _closeOfferCoroutine;
     private Coroutine _generateOfferCoroutine;
-    private readonly WaitForEndOfFrame _waitForEndOfFrame = new();
 
-    public CancellationToken Lifetime  => _lifetimeCts.Token;
+    public CancellationToken Lifetime => _lifetimeCts.Token;
     public ReadOnlyReactiveProperty<float> OfferCloseCountdown => _tradeDataProxy.OfferCloseCountdown;
     public ReadOnlyReactiveProperty<float> NextOfferOpenCountdown => _tradeDataProxy.NextOfferOpenCountdown;
     public TradeOfferData CurrentTradeOffer => _tradeDataProxy.CurrentTradeOffer.CurrentValue;
@@ -59,8 +60,8 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Spaceport
       _tradeOfferResources = _tradeConfig.PurchaseResources.ToArray();
     }
 
-    public override void Initialize() =>
-      InitializeActions();
+    public override IModuleData CreateInitialData(string buildingId) =>
+      new TradeData(buildingId, 0);
 
     public override void AttachData(IModuleData moduleData)
     {
@@ -68,37 +69,10 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Spaceport
       _tradeDataProxy = new TradeDataProxy(ModuleData);
     }
 
-    public override void Activate()
+    protected override void OnInitialize()
     {
-      _lifetimeCts = new CancellationTokenSource();
-      base.Activate();
-
-      if (_tradeDataProxy.OfferCloseCountdown.CurrentValue > 0.01f)
-      {
-        TradeOfferOpened?.Invoke();
-        _closeOfferCoroutine = _coroutineRunner.ExecuteCoroutine(CloseCurrentOfferAfterCountdown());
-      }
-      else
-      {
-        TradeOfferClosed?.Invoke();
-        _generateOfferCoroutine = _coroutineRunner.ExecuteCoroutine(GenerateTradeOfferAfterCountdown());
-      }
+      CreateActions();
     }
-
-    public override void Deactivate()
-    {
-      _lifetimeCts?.Cancel();
-      _lifetimeCts?.Dispose();
-      _lifetimeCts = null;
-
-      base.Deactivate();
-
-      _coroutineRunner.TerminateCoroutine(_closeOfferCoroutine);
-      _coroutineRunner.TerminateCoroutine(_generateOfferCoroutine);
-    }
-
-    public override IModuleData CreateInitialData(string buildingId) =>
-      new TradeData(buildingId, 0);
 
     public void FulfillOffer()
     {
@@ -115,6 +89,32 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Spaceport
         _coroutineRunner.TerminateCoroutine(_closeOfferCoroutine);
         CloseCurrentOffer();
       }
+    }
+
+    protected override void Activate()
+    {
+      _lifetimeCts = new CancellationTokenSource();
+
+      if (_tradeDataProxy.OfferCloseCountdown.CurrentValue > 0.01f)
+      {
+        TradeOfferOpened?.Invoke();
+        _closeOfferCoroutine = _coroutineRunner.ExecuteCoroutine(CloseCurrentOfferAfterCountdown());
+      }
+      else
+      {
+        TradeOfferClosed?.Invoke();
+        _generateOfferCoroutine = _coroutineRunner.ExecuteCoroutine(GenerateTradeOfferAfterCountdown());
+      }
+    }
+
+    protected override void Deactivate()
+    {
+      _lifetimeCts?.Cancel();
+      _lifetimeCts?.Dispose();
+      _lifetimeCts = null;
+
+      _coroutineRunner.TerminateCoroutine(_closeOfferCoroutine);
+      _coroutineRunner.TerminateCoroutine(_generateOfferCoroutine);
     }
 
     private IEnumerator CloseCurrentOfferAfterCountdown()
@@ -160,7 +160,7 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Spaceport
 
       _tradeDataProxy.NextOfferOpenCountdown.Value = _tradeConfig.NextOfferOpenCountdown;
 
-      if (IsActive.CurrentValue)
+      if (IsModuleWorking.CurrentValue)
         _generateOfferCoroutine = _coroutineRunner.ExecuteCoroutine(GenerateTradeOfferAfterCountdown());
     }
 
@@ -194,7 +194,7 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Spaceport
       return new TradeOfferData(purchaseResources, payment);
     }
 
-    private void InitializeActions()
+    private void CreateActions()
     {
       TradeAction tradeAction = _actionFactory.CreateAction<TradeAction>();
       tradeAction.Setup(this);

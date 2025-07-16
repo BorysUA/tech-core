@@ -144,7 +144,6 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.BindInterfacesTo<SessionTimer>().AsSingle();
       Container.BindInterfacesTo<StartingResourceProvider>().AsSingle();
       Container.BindInterfacesTo<WindowsService>().AsSingle();
-      Container.BindInterfacesTo<GridService>().AsSingle();
       Container.BindInterfacesTo<PopUpService>().AsSingle();
       Container.BindInterfacesTo<ProductionModifierService>().AsSingle();
       Container.BindInterfacesTo<ConstructionPlotService>().AsSingle();
