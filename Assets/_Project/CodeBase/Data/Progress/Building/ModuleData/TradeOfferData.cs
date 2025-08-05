@@ -6,13 +6,13 @@ namespace _Project.CodeBase.Data.Progress.Building.ModuleData
   [Serializable]
   public class TradeOfferData
   {
-    public ResourceAmountData[] PurchaseResources { get; private set; }
-    public ResourceAmountData Payment { get; private set; }
+    public ResourceAmountData[] ResourcesToSell { get; private set; }
+    public ResourceAmountData Reward { get; private set; }
 
-    public TradeOfferData(ResourceAmountData[] purchaseResources, ResourceAmountData payment)
+    public TradeOfferData(ResourceAmountData[] resourcesToSell, ResourceAmountData reward)
     {
-      PurchaseResources = purchaseResources;
-      Payment = payment;
+      ResourcesToSell = resourcesToSell;
+      Reward = reward;
     }
   }
 }

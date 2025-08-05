@@ -27,7 +27,7 @@ namespace _Project.CodeBase.Gameplay.Building.Conditions
     protected override Observable<bool> BuildPermanentCondition() =>
       _onTriggered.Select(tks =>
       {
-        bool result = _resourceService.TrySpend(_cost);
+        bool result = _resourceService.TrySpend(_cost.Kind, ResourceSink.Production, _cost.Amount);
         tks.TrySetResult(result);
         return result;
       }).Prepend(true);

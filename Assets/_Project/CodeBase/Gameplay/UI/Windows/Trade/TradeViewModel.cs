@@ -9,9 +9,9 @@ using R3;
 
 namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
 {
-  public class TradeViewModel : BaseWindowViewModel, IParameterizedWindow<SpaceportTradeModule>
+  public class TradeViewModel : BaseWindowViewModel, IParameterizedWindow<TradeModule>
   {
-    private SpaceportTradeModule _tradeModule;
+    private TradeModule _tradeModule;
 
     private readonly ReactiveProperty<bool> _isOfferFulfillable = new();
     private readonly IResourceService _resourceService;
@@ -35,10 +35,10 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
       _logService = logService;
     }
 
-    public void Initialize(SpaceportTradeModule tradeModule) =>
+    public void Initialize(TradeModule tradeModule) =>
       _tradeModule = tradeModule;
 
-    public bool Matches(SpaceportTradeModule param) =>
+    public bool Matches(TradeModule param) =>
       _tradeModule.Equals(param);
 
     public override void Open()
@@ -102,7 +102,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
 
     private void OnTradeOfferOpened()
     {
-      foreach (ResourceAmountData resourceToSell in CurrentTradeOffer.PurchaseResources)
+      foreach (ResourceAmountData resourceToSell in CurrentTradeOffer.ResourcesToSell)
       {
         _resourceService.ObserveResource(resourceToSell.Kind)
           .Subscribe(resourceAmount => { _isOfferFulfillable.Value = resourceAmount >= resourceToSell.Amount; })

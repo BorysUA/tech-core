@@ -14,8 +14,6 @@ namespace _Project.CodeBase.Gameplay.Building.Modules
       LogService = logService;
     }
 
-    public abstract IModuleData CreateInitialData(string buildingId);
-
     public virtual void AttachData(IModuleData moduleData)
     {
       if (moduleData is TData data)

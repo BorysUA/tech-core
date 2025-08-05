@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using _Project.CodeBase.Gameplay.Signals.System;
+using _Project.CodeBase.Infrastructure.Signals;
 using _Project.CodeBase.Services.AnalyticsService.Constants;
 using UnityEngine;
 using Zenject;
@@ -20,18 +20,29 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
       _signalBus = signalBus;
     }
 
-    public void Initialize()
-    {
-      _signalBus.Subscribe<GameSessionPaused>(OnPause);
-      _signalBus.Subscribe<GameSessionEnded>(OnQuit);
-      _signalBus.Subscribe<GameSessionStarted>(OnStart);
-    }
+    public void Initialize() => 
+      _signalBus.Subscribe<AppLifecycleChanged>(OnAppLifecycleChanged);
 
-    public void Dispose()
+    public void Dispose() => 
+      _signalBus.Unsubscribe<AppLifecycleChanged>(OnAppLifecycleChanged);
+
+    private void OnAppLifecycleChanged(AppLifecycleChanged lifecycleStatus)
     {
-      _signalBus.Unsubscribe<GameSessionStarted>(OnStart);
-      _signalBus.Unsubscribe<GameSessionPaused>(OnPause);
-      _signalBus.Unsubscribe<GameSessionEnded>(OnQuit);
+      switch (lifecycleStatus.Current)
+      {
+        case AppLifecycleChanged.Phase.Started:
+          OnStart();
+          break;
+        case AppLifecycleChanged.Phase.Paused:
+          OnPause();
+          break;
+        case AppLifecycleChanged.Phase.Resumed:
+          OnResume();
+          break;
+        case AppLifecycleChanged.Phase.Quited:
+          OnQuit();
+          break;
+      }
     }
 
     private void OnStart()
@@ -42,13 +53,11 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
       _analyticsService.LogEvent(EventNames.GameStarted);
     }
 
-    private void OnPause(GameSessionPaused isPaused)
-    {
-      if (isPaused.Status)
-        LogSessionMetadata();
-      else
-        _sessionStartTime = Time.realtimeSinceStartup;
-    }
+    private void OnPause() =>
+      LogSessionMetadata();
+
+    private void OnResume() =>
+      _sessionStartTime = Time.realtimeSinceStartup;
 
     private void OnQuit() =>
       LogSessionMetadata();

@@ -13,6 +13,8 @@ namespace _Project.CodeBase.Data.StaticData.Building.Modules
   {
     public CapacityEffect CapacityEffect;
 
+    public override Type ModuleType => typeof(CapacityModule);
+
     protected override BuildingModule InstantiateModule(Func<Type, BuildingModule> instantiator) =>
       instantiator.Invoke(typeof(CapacityModule));
 

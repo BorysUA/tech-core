@@ -1,16 +1,18 @@
 ﻿using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Data.StaticData.Building.Modules;
-using _Project.CodeBase.Gameplay.Services.Resource;
+using _Project.CodeBase.Gameplay.Models.Session;
 
 namespace _Project.CodeBase.Gameplay.Building.Modules.Resource
 {
   public class CapacityModule : BuildingModule
   {
-    private readonly IResourceService _resourceService;
+    private readonly ISessionProgress _sessionStateModel;
     private CapacityEffect _capacityEffect;
-    
-    public CapacityModule(IResourceService resourceService) =>
-      _resourceService = resourceService;
+
+    public CapacityModule(ISessionProgress sessionStateModel)
+    {
+      _sessionStateModel = sessionStateModel;
+    }
 
     public void Setup(CapacityEffect capacityEffect) =>
       _capacityEffect = capacityEffect;
@@ -19,16 +21,20 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Resource
     {
       ResourceAmountData resource = _capacityEffect.AdditionalCapacity;
 
-      if (_resourceService.IncreaseCapacity(resource.Kind, resource.Amount) && _capacityEffect.FillOnAdd)
-        _resourceService.AddResource(resource.Kind, resource.Amount);
+      _sessionStateModel.GetResourceModel(resource.Kind).AddCapacityBonus(resource.Amount);
+
+      if (_capacityEffect.FillOnAdd)
+        _sessionStateModel.GetResourceModel(resource.Kind).AddRuntimeAmount(resource.Amount);
     }
 
     protected override void Deactivate()
     {
       ResourceAmountData resource = _capacityEffect.AdditionalCapacity;
 
-      if (_resourceService.DecreaseCapacity(resource.Kind, resource.Amount) && _capacityEffect.FillOnAdd)
-        _resourceService.TrySpend(resource.Kind, resource.Amount);
+      _sessionStateModel.GetResourceModel(resource.Kind).SubtractCapacityBonus(resource.Amount);
+
+      if (_capacityEffect.FillOnAdd)
+        _sessionStateModel.GetResourceModel(resource.Kind).SubtractRuntimeAmount(resource.Amount);
     }
   }
 }

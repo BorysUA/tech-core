@@ -1,4 +1,5 @@
-﻿using R3;
+﻿using _Project.CodeBase.Gameplay.Constants;
+using R3;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -15,20 +16,21 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.ResourceBar
     [Inject]
     public void Setup(ResourceBarViewModel viewModel)
     {
-      viewModel.Metal
-        .Subscribe(value => _metalResource.text = value)
-        .AddTo(this);
-      
-      viewModel.Energy
-        .Subscribe(value => _energyResource.text = value)
-        .AddTo(this);
-      
-      viewModel.Population
-        .Subscribe(value => _populationResource.text = value)
-        .AddTo(this);
-      
-      viewModel.Coin
-        .Subscribe(value => _coinResource.text = value)
+      viewModel.Initialize();
+
+      Bind(_metalResource, ResourceKind.Metal, viewModel);
+      Bind(_energyResource, ResourceKind.Energy, viewModel);
+      Bind(_populationResource, ResourceKind.Population, viewModel);
+      Bind(_coinResource, ResourceKind.Coin, viewModel);
+    }
+    
+    private void Bind(TextMeshProUGUI textMeshPro, ResourceKind kind, ResourceBarViewModel viewModel)
+    {
+      Observable.CombineLatest(
+          viewModel.GetAmount(kind),
+          viewModel.GetCapacity(kind),
+          (amount, capacity) => $"{amount}/{capacity}")
+        .Subscribe(result => textMeshPro.text = result)
         .AddTo(this);
     }
   }

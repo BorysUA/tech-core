@@ -1,16 +1,15 @@
-﻿using _Project.CodeBase.Gameplay.DataProxy;
+﻿using _Project.CodeBase.Gameplay.Constants;
+using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
+using _Project.CodeBase.Gameplay.Models.Session;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.Resource.Behaviours
 {
   public interface IResourceBehaviour
   {
-    ReadOnlyReactiveProperty<int> AvailableAmount { get; }
-    public void Setup(ResourceProxy resourceProxy);
-    public void Add(int amount);
-    public bool CanSpend(int amount);
-    public bool TrySpend(int amount);
-    public bool IncreaseCapacity(int amount);
-    public bool DecreaseCapacity(int amount);
+    ReadOnlyReactiveProperty<int> TotalAmount { get; }
+    ReadOnlyReactiveProperty<int> TotalCapacity { get; }
+    ResourceKind Kind { get; }
+    public void Setup(IResourceReader resourceProxy, ResourceSessionModel resourceSessionModel);
   }
 }

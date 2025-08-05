@@ -31,9 +31,8 @@ MonoBehaviour:
     m_EditorAssetChanged: 1
   SizeInCells: {x: 2, y: 2}
   Price:
-    Resource: {fileID: 11400000, guid: 008e41552d447d84184f32123d927cfb, type: 2}
+    Kind: 4
     Amount: 20
-  ShopOrder: 7
   Title: Solar panel
   Icon: {fileID: 21300000, guid: b1b48ce7aebcc5d44b486aab3e46ceff, type: 3}
   StartLevel: 1

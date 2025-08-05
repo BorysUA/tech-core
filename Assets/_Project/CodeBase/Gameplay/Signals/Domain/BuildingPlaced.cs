@@ -4,13 +4,11 @@ namespace _Project.CodeBase.Gameplay.Signals.Domain
 {
   public readonly struct BuildingPlaced
   {
-    public readonly BuildingType Type;
-    public readonly int Level;
+    public readonly int BuildingId;
 
-    public BuildingPlaced(BuildingType type, int level)
+    public BuildingPlaced(int buildingId)
     {
-      Type = type;
-      Level = level;
+      BuildingId = buildingId;
     }
   }
 }

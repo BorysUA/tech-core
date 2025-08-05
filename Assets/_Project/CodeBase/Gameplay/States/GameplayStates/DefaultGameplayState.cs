@@ -1,7 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services;
-using _Project.CodeBase.Gameplay.Signals;
 using _Project.CodeBase.Gameplay.Signals.Command;
 using _Project.CodeBase.Gameplay.States.GameplayStates.Placement;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
@@ -10,7 +9,7 @@ using Zenject;
 
 namespace _Project.CodeBase.Gameplay.States.GameplayStates
 {
-  public class DefaultGameplayState : IState
+  public class DefaultGameplayState : IEnterState, IExitState
   {
     private readonly SignalBus _signalBus;
     private readonly GameplayStateMachine _gameplayStateMachine;

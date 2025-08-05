@@ -1,54 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using _Project.CodeBase.Data.StaticData;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Services.Command;
-using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.Services.Resource;
+using _Project.CodeBase.Gameplay.States;
+using _Project.CodeBase.Gameplay.States.PhaseFlow;
+using _Project.CodeBase.Gameplay.UI.HUD;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.UI.Services;
-using ObservableCollections;
 using R3;
 using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings
 {
-  public class BuildingService : IBuildingService, IDisposable
+  public class BuildingService : IBuildingService, IGameplayInit
   {
     private readonly ICommandBroker _commandBroker;
-    private readonly IBuildingFactory _buildingFactory;
     private readonly IStaticDataProvider _staticDataProvider;
-    private readonly IResourceService _resourceService;
-    private readonly ILogService _logService;
+    private readonly IBuildingRepository _buildingRepository;
     private readonly IPopUpService _popUpService;
-    private readonly CompositeDisposable _disposable = new();
+    private readonly IGameplayPhaseFlow _gameplayPhaseFlow;
+    private readonly CompositeDisposable _subscriptions = new();
 
-    private readonly Dictionary<string, BuildingViewModel> _currentBuildings = new();
+    private readonly ReactiveProperty<BuildingViewModel> _currentSelectedBuilding = new(null);
     private readonly Dictionary<BuildingCategory, IEnumerable<BuildingInfo>> _availableSortedBuildings = new();
 
     public IReadOnlyDictionary<BuildingCategory, IEnumerable<BuildingInfo>> AvailableSortedBuildings =>
       _availableSortedBuildings;
 
-    public BuildingService(ICommandBroker commandBroker, IProgressService progressService,
-      IBuildingFactory buildingFactory, IStaticDataProvider staticDataProvider, IResourceService resourceService,
-      ILogService logService, IPopUpService popUpService)
+    public ReadOnlyReactiveProperty<BuildingViewModel> CurrentSelectedBuilding => _currentSelectedBuilding;
+
+    public BuildingService(ICommandBroker commandBroker, IStaticDataProvider staticDataProvider,
+      IBuildingRepository buildingRepository, IPopUpService popUpService, IGameplayPhaseFlow gameplayPhaseFlow)
     {
       _commandBroker = commandBroker;
-      _buildingFactory = buildingFactory;
       _staticDataProvider = staticDataProvider;
-      _resourceService = resourceService;
-      _logService = logService;
+      _buildingRepository = buildingRepository;
       _popUpService = popUpService;
+      _gameplayPhaseFlow = gameplayPhaseFlow;
+    }
 
-      foreach (var buildingEntity in progressService.GameStateProxy.BuildingsCollection)
-        CreateView(buildingEntity.Value);
-
+    public void Initialize()
+    {
       foreach (var categoryGroup in _staticDataProvider.GetBuildingsShopCatalog().Categories)
       {
         _availableSortedBuildings.Add(categoryGroup.Category, categoryGroup.Buildings.Select(buildingType =>
@@ -58,68 +54,51 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
         }).ToList());
       }
 
-      progressService.GameStateProxy.BuildingsCollection
-        .ObserveAdd()
-        .Subscribe(addEvent => CreateView(addEvent.Value.Value))
-        .AddTo(_disposable);
+      _buildingRepository.BuildingsAdded.Subscribe(viewModel =>
+        {
+          _gameplayPhaseFlow.Register(viewModel);
 
-      progressService.GameStateProxy.BuildingsCollection
-        .ObserveRemove()
-        .Subscribe(removeEvent => DestroyView(removeEvent.Value.Value))
-        .AddTo(_disposable);
+          _popUpService
+            .ShowPopUp<BuildingIndicatorsPopUp, BuildingIndicatorsViewModel, BuildingViewModel>(viewModel, false);
+        })
+        .AddTo(_subscriptions);
+
+      _buildingRepository.BuildingsRemoved.Subscribe(viewModel => _gameplayPhaseFlow.Unregister(viewModel))
+        .AddTo(_subscriptions);
     }
 
     public void PlaceBuilding(BuildingType buildingType, List<Vector2Int> position)
     {
-      BuildingConfig buildingConfig = _staticDataProvider.GetBuildingConfig(buildingType);
+      PlaceBuildingCommand placeBuildingCommand = new PlaceBuildingCommand(buildingType, 1, position);
 
-      if (_resourceService.TrySpend(buildingConfig.Price.Resource.Kind,
-            buildingConfig.Price.Amount))
-      {
-        PlaceBuildingCommand placeBuildingCommand = new PlaceBuildingCommand(
-          buildingType, buildingConfig.StartLevel, position);
-
-        _commandBroker.ExecuteCommand(placeBuildingCommand);
-      }
+      _commandBroker.ExecuteCommand(placeBuildingCommand);
     }
 
-    public void DestroyBuilding(string buildingId)
+    public void DestroyBuilding(int buildingId)
     {
       DestroyBuildingCommand destroyBuildingCommand = new DestroyBuildingCommand(buildingId);
       _commandBroker.ExecuteCommand(destroyBuildingCommand);
     }
 
-    public BuildingViewModel GetBuildingById(string id)
+    public void SelectBuilding(int id)
     {
-      if (_currentBuildings.TryGetValue(id, out BuildingViewModel viewModel))
-        return viewModel;
+      UnselectCurrent();
+      BuildingViewModel selectedBuilding = _buildingRepository.GetBuildingById(id);
 
-      _logService.LogError(GetType(), $"Building with ID '{id}' not found in '{nameof(_currentBuildings)} ");
-      return null;
+      if (selectedBuilding == null)
+        return;
+
+      selectedBuilding.Select();
+      _currentSelectedBuilding.OnNext(selectedBuilding);
     }
 
-    public void Dispose()
+    public void UnselectCurrent()
     {
-      _disposable?.Dispose();
-    }
+      if (_currentSelectedBuilding.CurrentValue == null)
+        return;
 
-    private async void CreateView(BuildingDataProxy buildingData)
-    {
-      Vector3 worldBuildingPosition = GridUtils.GetWorldPivot(buildingData.OccupiedCells);
-
-      BuildingViewModel viewModel = await _buildingFactory.CreateBuilding(buildingData.Type, worldBuildingPosition);
-      viewModel.Initialize(buildingData);
-
-      _popUpService
-        .ShowPopUp<BuildingIndicatorsPopUp, BuildingIndicatorsViewModel, BuildingViewModel>(viewModel, false);
-
-      _currentBuildings.Add(buildingData.Id, viewModel);
-    }
-
-    private void DestroyView(BuildingDataProxy buildingData)
-    {
-      if (_currentBuildings.Remove(buildingData.Id, out BuildingViewModel buildingViewModel))
-        buildingViewModel.Destroy();
+      _currentSelectedBuilding.CurrentValue.Unselect();
+      _currentSelectedBuilding.OnNext(null);
     }
   }
 }

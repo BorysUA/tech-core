@@ -2,15 +2,18 @@
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
 using ObservableCollections;
+using R3;
 using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings
 {
   public interface IBuildingService
   {
-    void PlaceBuilding(BuildingType buildingType, List<Vector2Int> position);
-    BuildingViewModel GetBuildingById(string id);
-    void DestroyBuilding(string buildingId);
     IReadOnlyDictionary<BuildingCategory, IEnumerable<BuildingInfo>> AvailableSortedBuildings { get; }
+    ReadOnlyReactiveProperty<BuildingViewModel> CurrentSelectedBuilding { get; }
+    void PlaceBuilding(BuildingType buildingType, List<Vector2Int> position);
+    void DestroyBuilding(int buildingId);
+    void SelectBuilding(int id);
+    void UnselectCurrent();
   }
 }

@@ -1,56 +1,34 @@
-﻿using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.DataProxy;
-using _Project.CodeBase.Gameplay.Services.Command;
-using _Project.CodeBase.Gameplay.Services.Resource.Commands;
-using _Project.CodeBase.Gameplay.Services.Resource.Results;
+﻿using _Project.CodeBase.Extensions;
+using _Project.CodeBase.Gameplay.Constants;
+using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
+using _Project.CodeBase.Gameplay.Models.Session;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.Resource.Behaviours
 {
   public class ConsumableBehaviour : IResourceBehaviour
   {
-    private ResourceProxy _resourceProxy;
+    private IResourceReader _resourceReader;
 
-    private readonly ResourceKind _kind;
-    private readonly ICommandBroker _commandBroker;
+    public ResourceKind Kind { get; }
+    public ReadOnlyReactiveProperty<int> TotalAmount { get; private set; }
+    public ReadOnlyReactiveProperty<int> TotalCapacity { get; private set; }
 
-    public ReadOnlyReactiveProperty<int> AvailableAmount => _resourceProxy.Amount;
-
-    public ConsumableBehaviour(ResourceKind kind, ICommandBroker commandBroker)
+    public ConsumableBehaviour(ResourceKind kind)
     {
-      _kind = kind;
-      _commandBroker = commandBroker;
+      Kind = kind;
     }
 
-    public void Setup(ResourceProxy resourceProxy) =>
-      _resourceProxy = resourceProxy;
-
-    public bool CanSpend(int toSpend) =>
-      AvailableAmount.CurrentValue - toSpend > 0;
-
-    public void Add(int amount)
+    public void Setup(IResourceReader resourceProxy, ResourceSessionModel resourceSessionModel)
     {
-      AddResourceCommand command = new AddResourceCommand(_kind, amount);
-      _commandBroker.ExecuteCommand<AddResourceCommand, AddResourceResult>(command);
-    }
+      _resourceReader = resourceProxy;
 
-    public bool TrySpend(int amount)
-    {
-      SpendResourceCommand command = new SpendResourceCommand(_kind, amount);
-      bool result = _commandBroker.ExecuteCommand<SpendResourceCommand, bool>(command);
-      return result;
-    }
+      TotalAmount = _resourceReader.Amount
+        .ToStabilizedReadOnlyReactiveProperty();
 
-    public bool IncreaseCapacity(int amount)
-    {
-      IncreaseResourceCapacityCommand command = new IncreaseResourceCapacityCommand(_kind, amount);
-      return _commandBroker.ExecuteCommand<IncreaseResourceCapacityCommand, bool>(command);
-    }
-
-    public bool DecreaseCapacity(int amount)
-    {
-      DecreaseResourceCapacityCommand command = new DecreaseResourceCapacityCommand(_kind, amount);
-      return _commandBroker.ExecuteCommand<DecreaseResourceCapacityCommand, bool>(command);
+      TotalCapacity = _resourceReader.Capacity
+        .CombineLatest(resourceSessionModel.RuntimeCapacityBonus, (baseCap, bonus) => baseCap + bonus)
+        .ToStabilizedReadOnlyReactiveProperty();
     }
   }
 }

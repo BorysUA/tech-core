@@ -3,7 +3,6 @@ using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.ConstructionPlot;
-using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.Services.BuildingPlots;
@@ -56,18 +55,8 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
       GridPlacement.Setup(preview, defaultPosition, plotConfig.SizeInCells, IsPlacementValid);
     }
 
-    protected override bool IsPlacementValid(IEnumerable<Vector2Int> placeCells)
-    {
-      foreach (Vector2Int cell in placeCells)
-      {
-        CellContentType contentMask = _gridOccupancyService.GetCellContentMask(cell);
-
-        if (!DoesCellMatchFilter(contentMask, _placementFilter))
-          return false;
-      }
-
-      return true;
-    }
+    protected override bool IsPlacementValid(IEnumerable<Vector2Int> placeCells) =>
+      _gridOccupancyService.DoesCellsMatchFilter(placeCells, _placementFilter);
 
     protected override void ProcessResult(PlacementResult placementResult)
     {

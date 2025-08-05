@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Signals.Domain;
-using _Project.CodeBase.Gameplay.Signals.System;
+using _Project.CodeBase.Infrastructure.Signals;
 using _Project.CodeBase.Services.AnalyticsService.Constants;
 using UnityEngine;
 using Zenject;
@@ -12,12 +12,12 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
   public class ResourceAccumulationTracker : IInitializable, IDisposable
   {
     private const float MinLogInterval = 300f;
+
     private readonly SignalBus _signalBus;
     private readonly IAnalyticsService _analyticsService;
 
     private readonly Dictionary<ResourceKind, int> _gained = new();
     private readonly Dictionary<ResourceKind, int> _spent = new();
-    private readonly Dictionary<ResourceKind, int> _dropsLooted = new();
 
     private float _lastLogTime;
 
@@ -29,23 +29,34 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
 
     public void Initialize()
     {
-      _signalBus.Subscribe<ResourceAmountChanged>(OnResourceChanged);
-      _signalBus.Subscribe<ResourceDropCollected>(OnDropCollected);
-      _signalBus.Subscribe<GameSessionPaused>(OnPause);
-      _signalBus.Subscribe<GameSessionEnded>(OnQuit);
+      _signalBus.Subscribe<ResourcesGained>(OnResourcesGained);
+      _signalBus.Subscribe<ResourcesSpent>(OnResourcesSpent);
+      _signalBus.Subscribe<AppLifecycleChanged>(OnLifecycleChanged);
+    }
+
+    private void OnLifecycleChanged(AppLifecycleChanged lifecycleStatus)
+    {
+      switch (lifecycleStatus.Current)
+      {
+        case AppLifecycleChanged.Phase.Paused:
+          OnPause();
+          break;
+        case AppLifecycleChanged.Phase.Quited:
+          OnQuit();
+          break;
+      }
     }
 
     public void Dispose()
     {
-      _signalBus.Unsubscribe<ResourceAmountChanged>(OnResourceChanged);
-      _signalBus.Unsubscribe<ResourceDropCollected>(OnDropCollected);
-      _signalBus.Unsubscribe<GameSessionPaused>(OnPause);
-      _signalBus.Unsubscribe<GameSessionEnded>(OnQuit);
+      _signalBus.Unsubscribe<ResourcesGained>(OnResourcesGained);
+      _signalBus.Unsubscribe<ResourcesSpent>(OnResourcesSpent);
+      _signalBus.Unsubscribe<AppLifecycleChanged>(OnLifecycleChanged);
     }
 
-    private void OnPause(GameSessionPaused isPaused)
+    private void OnPause()
     {
-      if (isPaused.Status && Time.realtimeSinceStartup - _lastLogTime > MinLogInterval)
+      if (Time.realtimeSinceStartup - _lastLogTime > MinLogInterval)
         SendSnapshot();
     }
 
@@ -55,30 +66,24 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
     private void SendSnapshot()
     {
       foreach ((ResourceKind kind, int amount) in _gained)
-        _analyticsService.LogEvent(EventNames.ResourceGained, (ParameterKeys.Type, kind), (ParameterKeys.Amount, amount));
+        _analyticsService.LogEvent(EventNames.ResourceGained, (ParameterKeys.Type, kind),
+          (ParameterKeys.Amount, amount));
 
       foreach ((ResourceKind kind, int amount) in _spent)
-        _analyticsService.LogEvent(EventNames.ResourceSpent, (ParameterKeys.Type, kind), (ParameterKeys.Amount, amount));
-
-      foreach ((ResourceKind kind, int amount) in _dropsLooted)
-        _analyticsService.LogEvent(EventNames.ResourceDropLooted, (ParameterKeys.Type, kind), (ParameterKeys.Amount, amount));
-
-      _dropsLooted.Clear();
+        _analyticsService.LogEvent(EventNames.ResourceSpent, (ParameterKeys.Type, kind),
+          (ParameterKeys.Amount, amount));
+      
       _gained.Clear();
       _spent.Clear();
 
       _lastLogTime = Time.realtimeSinceStartup;
     }
 
-    private void OnResourceChanged(ResourceAmountChanged resource)
-    {
-      var targetStorage = resource.Delta > 0 ? _gained : _spent;
-      int delta = Mathf.Abs(resource.Delta);
+    private void OnResourcesGained(ResourcesGained gained) =>
+      _gained[gained.Kind] = _gained.GetValueOrDefault(gained.Kind) + gained.Amount;
 
-      targetStorage[resource.Kind] = targetStorage.GetValueOrDefault(resource.Kind) + delta;
-    }
-
-    private void OnDropCollected(ResourceDropCollected drop) =>
-      _dropsLooted[drop.ResourceKind] = _dropsLooted.GetValueOrDefault(drop.ResourceKind) + drop.Amount;
+    private void OnResourcesSpent(ResourcesSpent spent) =>
+      _spent[spent.Kind] = _spent.GetValueOrDefault(spent.Kind) + spent.Amount;
+    
   }
 }

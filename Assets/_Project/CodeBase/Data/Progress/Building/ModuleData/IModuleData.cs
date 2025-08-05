@@ -2,6 +2,5 @@
 {
   public interface IModuleData
   {
-    public string BuildingId { get; }
   }
 }

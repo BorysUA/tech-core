@@ -4,11 +4,11 @@ namespace _Project.CodeBase.Gameplay.Signals.Domain
 {
   public readonly struct ConstructionPlotPlaced
   {
-    public readonly ConstructionPlotType Type;
+    public readonly string PlotId;
 
-    public ConstructionPlotPlaced(ConstructionPlotType type)
+    public ConstructionPlotPlaced(string plotId)
     {
-      Type = type;
+      PlotId = plotId;
     }
   }
 }

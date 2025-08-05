@@ -1,6 +1,6 @@
 ﻿namespace _Project.CodeBase.Infrastructure.StateMachine.Interfaces
 {
-  public interface IExitState
+  public interface IExitState : IState
   {
     public void Exit();
   }

@@ -175,18 +175,20 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
     public async UniTask<BuyButton> CreateBuyButton(BuildingType buildingType, Transform container)
     {
       BuildingConfig config = _staticDataProvider.GetBuildingConfig(buildingType);
+      ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(config.Price.Kind);
 
       return await CreateBuyButtonInternal(
-        buyButton => buyButton.Setup(config.Title, config.Icon, config.Price.Amount, config.Price.Resource.Icon),
+        buyButton => buyButton.Setup(config.Title, config.Icon, config.Price.Amount, resourceConfig.Icon),
         container);
     }
 
     public async UniTask<BuyButton> CreateBuyButton(ConstructionPlotType plotType, Transform container)
     {
       ConstructionPlotConfig config = _staticDataProvider.GetConstructionPlotConfig(plotType);
+      ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(config.Price.Kind);
 
       return await CreateBuyButtonInternal(
-        buyButton => buyButton.Setup(config.Title, config.Icon, config.Price.Amount, config.Price.Resource.Icon),
+        buyButton => buyButton.Setup(config.Title, config.Icon, config.Price.Amount, resourceConfig.Icon),
         container);
     }
 

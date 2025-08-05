@@ -54,18 +54,8 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
       GridPlacement.Setup(preview, defaultPosition, buildingConfig.SizeInCells, IsPlacementValid);
     }
 
-    protected override bool IsPlacementValid(IEnumerable<Vector2Int> placeCells)
-    {
-      foreach (Vector2Int cell in placeCells)
-      {
-        CellContentType contentMask = _gridOccupancyService.GetCellContentMask(cell);
-
-        if (!DoesCellMatchFilter(contentMask, _placementFilter))
-          return false;
-      }
-
-      return true;
-    }
+    protected override bool IsPlacementValid(IEnumerable<Vector2Int> placeCells) => 
+      _gridOccupancyService.DoesCellsMatchFilter(placeCells, _placementFilter);
 
     protected override void ProcessResult(PlacementResult placementResult)
     {

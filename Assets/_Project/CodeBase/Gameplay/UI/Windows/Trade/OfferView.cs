@@ -34,10 +34,10 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
 
     public void Show(TradeOfferData offer, ReadOnlyReactiveProperty<bool> isOfferFulfillable)
     {
-      foreach (ResourceAmountData resource in offer.PurchaseResources)
+      foreach (ResourceAmountData resource in offer.ResourcesToSell)
         CreateResourceItem(resource);
 
-      CreatePaymentItem(offer.Payment);
+      CreatePaymentItem(offer.Reward);
 
       isOfferFulfillable
         .Subscribe(UpdateVisualState)

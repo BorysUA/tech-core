@@ -10,7 +10,7 @@ namespace _Project.CodeBase.Infrastructure.StateMachine
     public GameStatesFactory(IInstantiator instantiator) =>
       _instantiator = instantiator;
 
-    public TState CreateState<TState>() where TState : IExitState =>
+    public TState CreateState<TState>() where TState : IState =>
       _instantiator.Instantiate<TState>();
   }
 }

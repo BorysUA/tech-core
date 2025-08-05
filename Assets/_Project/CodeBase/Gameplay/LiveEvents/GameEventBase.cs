@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Globalization;
 using _Project.CodeBase.Data.Remote;
+using _Project.CodeBase.Gameplay.States;
+using _Project.CodeBase.Gameplay.States.PhaseFlow;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.LiveEvents
 {
-  public abstract class GameEventBase : IDisposable, IGameEvent
+  public abstract class GameEventBase : IDisposable, IGameEvent, IGameplayStartedListener
   {
     private readonly ReactiveProperty<bool> _isActive = new();
     private readonly ReactiveProperty<TimeSpan> _timeUntilStart = new(TimeSpan.Zero);
@@ -26,7 +28,10 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
 
       EventEndUtc = DateTime.ParseExact(eventData.EndUtc, "O", CultureInfo.InvariantCulture,
         DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+    }
 
+    public void OnGameplayStarted()
+    {
       _isActive
         .DistinctUntilChanged()
         .Skip(1)

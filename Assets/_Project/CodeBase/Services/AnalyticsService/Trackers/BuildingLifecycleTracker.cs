@@ -32,14 +32,14 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
 
     private void OnBuildingPlaced(BuildingPlaced data) =>
       _analyticsService.LogEvent(EventNames.BuildingPlaced,
-        (ParameterKeys.Type, data.Type), (ParameterKeys.Level, data.Level));
+        (ParameterKeys.Id, data.BuildingId));
 
     private void OnPlotPlaced(ConstructionPlotPlaced data) =>
       _analyticsService.LogEvent(EventNames.ConstructionPlotPlaced,
-        (ParameterKeys.Type, data.Type));
+        (ParameterKeys.Type, data.PlotId));
 
     private void OnBuildingDestroyed(BuildingDestroyed data) =>
       _analyticsService.LogEvent(EventNames.BuildingDestroyed,
-        (ParameterKeys.Type, data.Type), (ParameterKeys.Level, data.Level));
+        (ParameterKeys.Id, data.Id), (ParameterKeys.Type, data.Type), (ParameterKeys.Level, data.Level));
   }
 }

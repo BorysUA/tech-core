@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.CodeBase.Data.Remote;
 using _Project.CodeBase.Gameplay.States;
+using _Project.CodeBase.Gameplay.States.PhaseFlow;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Services.DateTimeService;
 using _Project.CodeBase.Services.RemoteConfigsService;
@@ -18,6 +19,7 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
     private readonly IDateTimeService _dateTimeService;
     private readonly EventsFactory _eventsFactory;
     private readonly CompositeDisposable _disposable = new();
+    private readonly IGameplayPhaseFlow _gameplayPhaseFlow;
 
     private readonly Dictionary<(string, Type), Type> _eventRegistry = new()
     {
@@ -34,11 +36,12 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
     public ReadOnlyReactiveProperty<IGameEvent> NextEvent => _nextEvent;
 
     public LiveEventsService(IRemoteConfigService remoteConfigService, IDateTimeService dateTimeService,
-      EventsFactory eventsFactory)
+      EventsFactory eventsFactory, IGameplayPhaseFlow gameplayPhaseFlow)
     {
       _remoteConfigService = remoteConfigService;
       _dateTimeService = dateTimeService;
       _eventsFactory = eventsFactory;
+      _gameplayPhaseFlow = gameplayPhaseFlow;
     }
 
     public async UniTask InitializeAsync()
@@ -94,6 +97,7 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
         GameEventBase newEvent = _eventsFactory.CreateGameEvent(eventType);
         newEvent.Initialize(eventData);
         _gameEventsTimeline.Add(newEvent);
+        _gameplayPhaseFlow.Register(newEvent);
       }
 
       _gameEventsTimeline = _gameEventsTimeline.OrderBy(gameEvent => gameEvent.EventStartUtc).ToList();

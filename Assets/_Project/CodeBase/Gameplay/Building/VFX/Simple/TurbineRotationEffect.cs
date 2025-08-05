@@ -21,13 +21,13 @@ namespace _Project.CodeBase.Gameplay.Building.VFX.Simple
         .SetAutoKill(false);
     }
 
-    public override void Play() =>
+    protected override void OnPlay() =>
       _tween.Play();
 
-    protected override void Pause() =>
+    protected override void OnPause() =>
       _tween.Pause();
 
-    public override void Stop() =>
+    protected override void OnStop() =>
       _tween.Pause();
 
     private void OnDestroy() =>

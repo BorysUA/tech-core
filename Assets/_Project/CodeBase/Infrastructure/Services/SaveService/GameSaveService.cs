@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using _Project.CodeBase.Data.Progress.Meta;
-using _Project.CodeBase.Gameplay.Services;
+using _Project.CodeBase.Gameplay.Services.Timers;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -24,19 +23,21 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
     };
 
     private readonly ISaveStorageService _saveStorageService;
-    private readonly IProgressService _progressService;
+    private readonly ISessionTimer _sessionTimer;
+    private readonly IProgressSaver _progressService;
     private readonly ILogService _logService;
     private readonly CompositeDisposable _disposable = new();
 
     private bool _isSaving;
     private float _lastSaveTime;
 
-    public GameSaveService(ISaveStorageService saveStorageService, IProgressService progressService,
-      ILogService logService)
+    public GameSaveService(ISaveStorageService saveStorageService, IProgressSaver progressService,
+      ILogService logService, ISessionTimer sessionTimer)
     {
       _saveStorageService = saveStorageService;
       _progressService = progressService;
       _logService = logService;
+      _sessionTimer = sessionTimer;
     }
 
     public void Initialize()
@@ -46,7 +47,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
 
     private void InitializeAutosave()
     {
-      _progressService.GameStateProxy.SessionInfo.SessionPlayTime
+      _sessionTimer.SessionPlaytime
         .Subscribe(SaveAutoAsync)
         .AddTo(_disposable);
     }
@@ -60,7 +61,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
       try
       {
         SaveSlot slot = await PickManualSlot();
-        await _saveStorageService.SaveGameAsync(_progressService.GameStateProxy.GameStateData, slot, token);
+        await _saveStorageService.SaveGameAsync(_progressService.GameStateModel.GameStateData, slot, token);
       }
       catch (OperationCanceledException)
       {
@@ -93,7 +94,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
       _isSaving = true;
       try
       {
-        await _saveStorageService.SaveGameAsync(_progressService.GameStateProxy.GameStateData, SaveSlot.Auto);
+        await _saveStorageService.SaveGameAsync(_progressService.GameStateModel.GameStateData, SaveSlot.Auto);
         _lastSaveTime = sessionTime;
       }
       catch (Exception ex)

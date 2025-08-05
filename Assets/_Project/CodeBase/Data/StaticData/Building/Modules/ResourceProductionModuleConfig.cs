@@ -12,6 +12,8 @@ namespace _Project.CodeBase.Data.StaticData.Building.Modules
   {
     public ResourceFlowConfig ResourceFlowConfig;
 
+    public override Type ModuleType => typeof(ResourceProductionModule);
+
     protected override BuildingModule InstantiateModule(Func<Type, BuildingModule> instantiator) =>
       instantiator.Invoke(typeof(ResourceProductionModule));
 
@@ -21,6 +23,5 @@ namespace _Project.CodeBase.Data.StaticData.Building.Modules
       ResourceProductionModule resourceProductionModule = (ResourceProductionModule)module;
       resourceProductionModule.Setup(ResourceFlowConfig);
     }
-    
   }
 }

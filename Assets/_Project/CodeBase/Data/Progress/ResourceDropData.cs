@@ -7,14 +7,14 @@ namespace _Project.CodeBase.Data.Progress
   [Serializable]
   public class ResourceDropData
   {
-    public string Id;
+    public int Id;
     public ResourceKind ResourceKind;
     public ResourceDropType ResourceDropType;
     public Vector3 SpawnPosition;
     public Vector3 Position;
     public int Amount;
 
-    public ResourceDropData(string id, ResourceDropType resourceDropType, ResourceKind resourceKind, Vector3 position,
+    public ResourceDropData(int id, ResourceDropType resourceDropType, ResourceKind resourceKind, Vector3 position,
       Vector3 spawnPosition, int amount)
     {
       ResourceKind = resourceKind;

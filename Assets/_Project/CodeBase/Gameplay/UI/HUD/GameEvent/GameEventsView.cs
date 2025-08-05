@@ -12,12 +12,12 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.GameEvent
   {
     [SerializeField] private Transform _container;
 
-    private GameEventViewModel _viewModel;
+    private GameEventsViewModel _viewModel;
     private GameEventIndicator _currentGameEvent;
     private IGameplayUiFactory _uiFactory;
 
     [Inject]
-    public void Construct(GameEventViewModel viewModel, IGameplayUiFactory uiFactory)
+    public void Construct(GameEventsViewModel viewModel, IGameplayUiFactory uiFactory)
     {
       _viewModel = viewModel;
       _uiFactory = uiFactory;

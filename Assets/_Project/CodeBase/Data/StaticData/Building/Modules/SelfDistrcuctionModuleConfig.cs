@@ -11,6 +11,8 @@ namespace _Project.CodeBase.Data.StaticData.Building.Modules
   {
     public float RefundRatio;
 
+    public override Type ModuleType => typeof(SelfDestructionModule);
+
     protected override BuildingModule InstantiateModule(Func<Type, BuildingModule> instantiator) =>
       instantiator.Invoke(typeof(SelfDestructionModule));
 

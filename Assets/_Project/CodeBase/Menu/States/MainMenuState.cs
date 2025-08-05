@@ -8,7 +8,7 @@ using Zenject;
 
 namespace _Project.CodeBase.Menu.States
 {
-  public class MainMenuState : IState
+  public class MainMenuState : IEnterState, IExitState
   {
     private readonly GameStateMachine _gameStateMachine;
     private readonly IDataTransferService _dataTransferService;
@@ -29,16 +29,16 @@ namespace _Project.CodeBase.Menu.States
       _signalBus.Subscribe<GameplaySceneLoadRequested>(OnLoadGameplayState);
     }
 
+    public void Exit()
+    {
+      _signalBus.Unsubscribe<GameplaySceneLoadRequested>(OnLoadGameplayState);
+    }
+
     private void OnLoadGameplayState(GameplaySceneLoadRequested args)
     {
       _dataTransferService.SetData(args.GameplaySettings);
       _assetProvider.CleanUp();
       _gameStateMachine.Enter<LoadSceneState, string>(SceneName.Gameplay);
-    }
-
-    public void Exit()
-    {
-      _signalBus.Unsubscribe<GameplaySceneLoadRequested>(OnLoadGameplayState);
     }
   }
 }

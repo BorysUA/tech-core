@@ -4,8 +4,10 @@ using System.Linq;
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
 using _Project.CodeBase.Gameplay.Building.Modules;
-using _Project.CodeBase.Gameplay.DataProxy;
+using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.Services.Grid;
+using _Project.CodeBase.Gameplay.States;
+using _Project.CodeBase.Gameplay.States.PhaseFlow;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Services.LogService;
 using R3;
@@ -13,7 +15,7 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Building
 {
-  public class BuildingViewModel : IBuildingViewInteractor
+  public class BuildingViewModel : IBuildingViewInteractor, IGameplayStartedListener
   {
     private readonly ContractToModuleRegistry _contractToModuleRegistry;
     private readonly ILogService _logService;
@@ -25,11 +27,11 @@ namespace _Project.CodeBase.Gameplay.Building
     private readonly List<IBuildingIndicatorSource> _indicators = new();
     private readonly List<IBuildingActionsProvider> _actions = new();
 
-    private BuildingDataProxy _buildingDataProxy;
+    private IBuildingDataReader _buildingDataProxy;
     private Dictionary<Type, BuildingModule> _modules;
     private Observable<bool> _buildingOperational;
 
-    public string Id => _buildingDataProxy.Id;
+    public int Id => _buildingDataProxy.Id;
     public Subject<Unit> IsInitialized => _isInitialized;
     public Observable<Unit> Selected => _selected;
     public Observable<Unit> Unselected => _unselected;
@@ -55,12 +57,18 @@ namespace _Project.CodeBase.Gameplay.Building
       }
     }
 
-    public void Initialize(BuildingDataProxy buildingDataProxy)
+    public void Initialize(IBuildingDataReader buildingDataProxy)
     {
       _buildingDataProxy = buildingDataProxy;
 
       InitializeModules();
       _isInitialized.OnNext(Unit.Default);
+    }
+
+    public void OnGameplayStarted()
+    {
+      foreach (BuildingModule module in _modules.Values)
+        module.Run();
     }
 
     public void Select()
@@ -164,12 +172,6 @@ namespace _Project.CodeBase.Gameplay.Building
     {
       if (_buildingDataProxy.ModulesProgress.TryGetValue(progressModule.GetType(), out IModuleData data))
         progressModule.AttachData(data);
-      else
-      {
-        data = progressModule.CreateInitialData(_buildingDataProxy.Id);
-        _buildingDataProxy.ModulesProgress[progressModule.GetType()] = data;
-        progressModule.AttachData(data);
-      }
     }
   }
 }

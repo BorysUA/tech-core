@@ -1,30 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using _Project.CodeBase.Data.Progress;
 using _Project.CodeBase.Data.Progress.Meta;
 using _Project.CodeBase.Data.Settings;
-using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.States.GameplayStates;
 using _Project.CodeBase.Gameplay.States.GameplayStates.Placement;
 using _Project.CodeBase.Gameplay.UI.Factory;
-using _Project.CodeBase.Gameplay.UI.HUD;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
-using _Project.CodeBase.Menu.UI.DifficultySelection;
 using _Project.CodeBase.Services.LogService;
+using _Project.CodeBase.Utility;
 using Cysharp.Threading.Tasks;
 
 namespace _Project.CodeBase.Gameplay.States.GameStates
 {
-  public class LoadGameplayState : IState
+  public class LoadGameplayState : IEnterState
   {
     private readonly GameStateMachine _gameStateMachine;
     private readonly IDataTransferService _dataTransferService;
@@ -35,14 +32,15 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
     private readonly IStartingResourcesProvider _startingResourcesProvider;
     private readonly ILogService _logService;
 
-    private readonly IProgressService _progressService;
+    private readonly PersistentProgressService _persistentProgressService;
 
     private readonly List<IGameplayInit> _onLoadInit;
     private readonly List<IGameplayInitAsync> _onLoadInitAsync;
 
     public LoadGameplayState(IDataTransferService dataTransferService, IGameplayUiFactory gameplayUiFactory,
       GameStateMachine gameStateMachine, GameplayStateMachine gameplayStateMachine, GameStatesFactory gameStatesFactory,
-      List<IGameplayInit> onLoadInit, IProgressService progressService, ISaveStorageService saveStorageService,
+      List<IGameplayInit> onLoadInit, PersistentProgressService persistentProgressService,
+      ISaveStorageService saveStorageService,
       ILogService logService, IStartingResourcesProvider startingResourcesProvider,
       List<IGameplayInitAsync> onLoadInitAsync)
     {
@@ -52,15 +50,17 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
       _gameplayStateMachine = gameplayStateMachine;
       _gameStatesFactory = gameStatesFactory;
       _onLoadInit = onLoadInit;
-
-      _progressService = progressService;
+      _persistentProgressService = persistentProgressService;
       _saveStorageService = saveStorageService;
       _logService = logService;
       _startingResourcesProvider = startingResourcesProvider;
       _onLoadInitAsync = onLoadInitAsync;
     }
 
-    public async void Enter()
+    public void Enter() =>
+      InternalEnterAsync().Forget();
+
+    private async UniTaskVoid InternalEnterAsync()
     {
       if (!_dataTransferService.TryGetData(out GameplaySettings settings))
       {
@@ -71,13 +71,9 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
       await InitializeGameState(settings);
       await InitializeServices();
       await InitializeUI();
-      InitializeGameplayStates();
+      RegisterGameplayStates();
 
       _gameStateMachine.Enter<GameplayState>();
-    }
-
-    public void Exit()
-    {
     }
 
     private async UniTask InitializeGameState(GameplaySettings settings)
@@ -88,7 +84,7 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
 
         if (result.LoadStatus == LoadStatus.Success)
         {
-          _progressService.GameStateProxy.Initialize(result.GameStateData);
+          _persistentProgressService.Initialize(result.GameStateData);
           return;
         }
       }
@@ -98,20 +94,21 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
 
     private void CreateNewGameState(GameplaySettings settings)
     {
-      SessionInfo sessionInfo = new SessionInfo(settings.SessionName, settings.GameDifficulty);
+      SessionInfo sessionInfo = new SessionInfo(settings.SessionName, settings.GameDifficulty,
+        UniqueIdGenerator.GenerateUniqueIntId());
 
       Dictionary<ResourceKind, GameResourceData> initialResources = _startingResourcesProvider
         .GetInitialResources(settings.GameDifficulty)
         .ToDictionary(x => x.Kind, x => x);
 
-      _progressService.GameStateProxy.Initialize(new GameStateData(sessionInfo, initialResources));
+      _persistentProgressService.Initialize(new GameStateData(sessionInfo, initialResources));
     }
 
 
     private UniTask InitializeUI() =>
       _gameplayUiFactory.CreateHud();
 
-    private void InitializeGameplayStates()
+    private void RegisterGameplayStates()
     {
       _gameplayStateMachine.RegisterState(_gameStatesFactory.CreateState<PlaceBuildingState>());
       _gameplayStateMachine.RegisterState(_gameStatesFactory.CreateState<DefaultGameplayState>());

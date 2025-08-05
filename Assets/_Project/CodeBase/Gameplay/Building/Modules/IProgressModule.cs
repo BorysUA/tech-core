@@ -6,6 +6,5 @@ namespace _Project.CodeBase.Gameplay.Building.Modules
   public interface IProgressModule
   {
     void AttachData(IModuleData moduleData);
-    IModuleData CreateInitialData(string buildingId);
   }
 }

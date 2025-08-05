@@ -9,12 +9,15 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.BuildingAction
 {
   public class BuildingActionBarViewModel
   {
-    private BuildingViewModel _buildingViewModel;
     private readonly List<IBuildingAction> _buildingActions = new();
+    
+    private BuildingViewModel _buildingViewModel;
     private DisposableBag _disposable;
+
+    public IEnumerable<IBuildingAction> BuildingActions => _buildingActions;
+    
     public event Action Showed;
     public event Action Hidden;
-    public IEnumerable<IBuildingAction> BuildingActions => _buildingActions;
 
     public void Show(BuildingViewModel buildingViewModel)
     {

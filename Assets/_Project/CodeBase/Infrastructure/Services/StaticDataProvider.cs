@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using _Project.CodeBase.Data.StaticData;
 using _Project.CodeBase.Data.StaticData.Building;
@@ -35,6 +36,8 @@ namespace _Project.CodeBase.Infrastructure.Services
     private Dictionary<BuildingIndicatorType, BuildingIndicatorConfig> _buildingStatusItems = new();
     private Dictionary<MeteoriteType, MeteoriteVFX> _meteoriteVFXs = new();
 
+    private readonly Dictionary<(BuildingType, Type), BuildingModuleConfig> _indexedBuildingModules = new();
+
     private GameMap _gameMap;
     private MeteoriteSpawnerConfig _meteoriteSpawner;
     private BuildingsShopCatalog _buildingsShopCatalog;
@@ -52,6 +55,14 @@ namespace _Project.CodeBase.Infrastructure.Services
       await DownloadAllConfigsAsync();
       await _patcher.WhenReady;
       ApplyRemotePatches();
+      Indexing();
+    }
+
+    public T GetModuleConfig<T>(BuildingType buildingType) where T : BuildingModuleConfig
+    {
+      return _indexedBuildingModules.TryGetValue((buildingType, typeof(T)), out BuildingModuleConfig config)
+        ? (T)config
+        : null;
     }
 
     public BuildingConfig GetBuildingConfig(BuildingType buildingType) =>
@@ -105,6 +116,15 @@ namespace _Project.CodeBase.Infrastructure.Services
     private void ApplyRemotePatches()
     {
       _meteoriteSpawner = _patcher.CreatePatchedProxy(_meteoriteSpawner);
+    }
+
+    private void Indexing()
+    {
+      foreach (var (buildingType, buildingConfig) in _buildings)
+      {
+        foreach (BuildingModuleConfig moduleConfig in buildingConfig.BuildingsModules)
+          _indexedBuildingModules[(buildingType, moduleConfig.GetType())] = moduleConfig;
+      }
     }
 
     private async UniTask DownloadAllConfigsAsync()

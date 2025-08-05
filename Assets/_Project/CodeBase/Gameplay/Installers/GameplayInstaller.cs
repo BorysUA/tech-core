@@ -1,8 +1,10 @@
 ﻿using _Project.CodeBase.Gameplay.Building.Actions.Common;
 using _Project.CodeBase.Gameplay.Building.Modules;
+using _Project.CodeBase.Gameplay.Building.Modules.Spaceport;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.LiveEvents;
 using _Project.CodeBase.Gameplay.Meteorite;
+using _Project.CodeBase.Gameplay.Models.Session;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.Services.BuildingPlots;
 using _Project.CodeBase.Gameplay.Services.Buildings;
@@ -15,6 +17,8 @@ using _Project.CodeBase.Gameplay.Services.Resource.ProductionModifiers;
 using _Project.CodeBase.Gameplay.Services.Timers;
 using _Project.CodeBase.Gameplay.Signals.Command;
 using _Project.CodeBase.Gameplay.Signals.Domain;
+using _Project.CodeBase.Gameplay.States;
+using _Project.CodeBase.Gameplay.States.PhaseFlow;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Gameplay.UI.HUD;
 using _Project.CodeBase.Gameplay.UI.HUD.BuildingAction;
@@ -48,14 +52,24 @@ namespace _Project.CodeBase.Gameplay.Installers
       BindGameplayStateMachine();
       BindEntryPoint();
       BindFactories();
-      BingServices();
-      BindUi();
-      BingCamera();
+      BindInfrastructureServices();
+      BindUiRoot();
+      BindViewModels();
+      BindUiRepositories();
+      BindUiFactories();
+      BindUiSpawners();
+      BindCamera();
       BindSignals();
       BindInputHandlers();
       BindInputService();
       BindTrackers();
       BindGameEvents();
+      BindSessionServices();
+      BindSpawners();
+      BindUtilityServices();
+      BindUiServices();
+      BindModels();
+      BindDomainServices();
     }
 
     private void BindInputService()
@@ -94,28 +108,33 @@ namespace _Project.CodeBase.Gameplay.Installers
     {
       Container.DeclareSignal<BuildingPurchaseRequested>();
       Container.DeclareSignal<ConstructionPlotPurchaseRequested>();
-      Container.DeclareSignal<ResourceAmountChanged>();
-      Container.DeclareSignal<ResourceDropCollected>();
+      Container.DeclareSignal<ResourcesGained>();
+      Container.DeclareSignal<ResourcesSpent>();
       Container.DeclareSignal<BuildingPlaced>();
       Container.DeclareSignal<ConstructionPlotPlaced>();
       Container.DeclareSignal<BuildingDestroyed>();
     }
 
-    private void BingCamera()
+    private void BindCamera()
     {
       Container.Bind<CameraRigAgent>().FromInstance(_cameraRigAgent).AsSingle();
     }
 
-    private void BindUi()
+    private void BindUiRoot()
     {
-      Container.Bind<GameEventsAddressMap>().AsSingle();
-
-      Container.BindInterfacesAndSelfTo<ResourceFlyTextSpawner>().AsSingle();
-      Container.BindInterfacesAndSelfTo<NotificationViewModel>().AsSingle();
-
       Container.Bind<PopUpsCanvas>().FromInstance(_popUpsCanvas).AsSingle();
       Container.Bind<WindowsCanvas>().FromInstance(_windowsCanvas).AsSingle();
+      Container.Bind<GameEventsAddressMap>().AsSingle();
+    }
 
+    private void BindUiRepositories()
+    {
+      Container.Bind<WindowsRepository>().AsSingle();
+      Container.Bind<PopUpRepository>().AsSingle();
+    }
+
+    private void BindViewModels()
+    {
       Container.Bind<PlotsShopViewModel>().AsTransient();
       Container.Bind<BuildingsShopViewModel>().AsTransient();
       Container.Bind<ConfirmPlaceViewModel>().AsTransient();
@@ -123,33 +142,70 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.Bind<HudViewModel>().AsSingle();
       Container.Bind<BuildingActionBarViewModel>().AsSingle();
       Container.Bind<SettingsViewModel>().AsSingle();
-      Container.Bind<NotificationMessage>().AsSingle();
-      Container.Bind<GameEventViewModel>().AsSingle();
+      Container.Bind<GameEventsViewModel>().AsSingle();
+      Container.BindInterfacesAndSelfTo<NotificationViewModel>().AsSingle();
+    }
 
-      Container.Bind<WindowsRepository>().AsSingle();
-      Container.Bind<PopUpRepository>().AsSingle();
-
+    private void BindUiFactories()
+    {
       Container.BindInterfacesTo<WindowsFactory>().AsSingle();
       Container.BindInterfacesTo<PopUpFactory>().AsSingle();
     }
 
-    private void BingServices()
+    private void BindUiSpawners()
     {
-      Container.BindInterfacesAndSelfTo<CommandBroker>().AsSingle();
-      Container.Bind<CoordinateMapper>().AsSingle();
-      Container.Bind<MeteoriteSpawner>().AsSingle();
-      Container.Bind<ContractToModuleRegistry>().AsSingle();
-      Container.BindInterfacesTo<BuildingService>().AsSingle();
+      Container.BindInterfacesAndSelfTo<ResourceFlyTextSpawner>().AsSingle();
+    }
+
+    private void BindSessionServices()
+    {
+      Container.BindInterfacesAndSelfTo<GameplayPhaseFlow>().AsSingle();
       Container.BindInterfacesTo<GameSaveService>().AsSingle();
       Container.BindInterfacesTo<SessionTimer>().AsSingle();
       Container.BindInterfacesTo<StartingResourceProvider>().AsSingle();
+    }
+
+    private void BindUiServices()
+    {
       Container.BindInterfacesTo<WindowsService>().AsSingle();
       Container.BindInterfacesTo<PopUpService>().AsSingle();
-      Container.BindInterfacesTo<ProductionModifierService>().AsSingle();
+    }
+
+    private void BindDomainServices()
+    {
+      Container.BindInterfacesTo<BuildingRepository>().AsSingle();
+      Container.BindInterfacesTo<ResourceDropRepository>().AsSingle();
+
+      Container.BindInterfacesTo<BuildingService>().AsSingle();
       Container.BindInterfacesTo<ConstructionPlotService>().AsSingle();
       Container.BindInterfacesTo<GridOccupancyService>().AsSingle();
       Container.BindInterfacesTo<ResourceService>().AsSingle();
+      Container.BindInterfacesTo<ProductionModifierService>().AsSingle();
       Container.Bind<ResourceBehaviourMap>().AsSingle();
+
+      Container.BindInterfacesTo<ResourceMutator>().AsSingle();
+    }
+
+    private void BindUtilityServices()
+    {
+      Container.Bind<CoordinateMapper>().AsSingle();
+    }
+
+    private void BindInfrastructureServices()
+    {
+      Container.BindInterfacesAndSelfTo<CommandBroker>().AsSingle();
+      Container.Bind<ModuleContextResolver>().AsSingle();
+      Container.Bind<ContractToModuleRegistry>().AsSingle();
+    }
+
+    private void BindSpawners()
+    {
+      Container.Bind<MeteoriteSpawner>().AsSingle();
+    }
+
+    private void BindModels()
+    {
+      Container.BindInterfacesTo<SessionStateModel>().AsSingle();
     }
 
     private void BindEntryPoint()

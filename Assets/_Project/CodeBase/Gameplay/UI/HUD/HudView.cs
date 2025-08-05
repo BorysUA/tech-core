@@ -24,6 +24,8 @@ namespace _Project.CodeBase.Gameplay.UI.HUD
     [Inject]
     public void Setup(HudViewModel hudViewModel)
     {
+      hudViewModel.Initialize();
+      
       _civilianBuildingsShopButton.OnClickAsObservable()
         .Subscribe(_ => hudViewModel.OpenBuildingsShopWindow(BuildingCategory.Civilian))
         .AddTo(this);

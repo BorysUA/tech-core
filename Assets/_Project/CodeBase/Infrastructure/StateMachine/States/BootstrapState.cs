@@ -1,29 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
+using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 
 namespace _Project.CodeBase.Infrastructure.StateMachine.States
 {
-  public class BootstrapState : IState
+  public class BootstrapState : IEnterState
   {
     private readonly GameStateMachine _gameStateMachine;
     private readonly List<IBootstrapInitAsync> _onLoadInitializables;
+    private readonly ILogService _logService;
 
-    public BootstrapState(GameStateMachine gameStateMachine, List<IBootstrapInitAsync> onLoadInitializables)
+    public BootstrapState(GameStateMachine gameStateMachine, List<IBootstrapInitAsync> onLoadInitializables,
+      ILogService logService)
     {
       _gameStateMachine = gameStateMachine;
       _onLoadInitializables = onLoadInitializables;
+      _logService = logService;
     }
 
-    public async void Enter()
+    public void Enter()
     {
-      await InitializeServices();
-      LoadMenuScene();
+      EnterAsync().Forget();
     }
 
-    public void Exit()
+    private async UniTaskVoid EnterAsync()
     {
+      try
+      {
+        await InitializeServices();
+        LoadMenuScene();
+      }
+      catch (Exception exception)
+      {
+        _logService.LogError(GetType(), "Initialization failed", exception);
+      }
     }
 
     private async UniTask InitializeServices()

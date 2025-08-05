@@ -30,9 +30,8 @@ MonoBehaviour:
     m_EditorAssetChanged: 1
   SizeInCells: {x: 2, y: 2}
   Price:
-    Resource: {fileID: 11400000, guid: f6634689ee5966b4daa3837dd9366151, type: 2}
+    Kind: 1
     Amount: 5
-  ShopOrder: 3
   Title: Generator
   Icon: {fileID: 21300000, guid: c651bef5256b184468b1360a533d6600, type: 3}
   StartLevel: 1

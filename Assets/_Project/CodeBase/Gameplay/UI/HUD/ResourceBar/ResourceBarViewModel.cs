@@ -1,4 +1,6 @@
-﻿using _Project.CodeBase.Gameplay.Constants;
+﻿using System;
+using System.Collections.Generic;
+using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using R3;
 
@@ -6,32 +8,33 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.ResourceBar
 {
   public class ResourceBarViewModel
   {
-    public readonly ReadOnlyReactiveProperty<string> Metal;
-    public readonly ReadOnlyReactiveProperty<string> Energy;
-    public readonly ReadOnlyReactiveProperty<string> Population;
-    public readonly ReadOnlyReactiveProperty<string> Coin;
+    private readonly IResourceService _resourceService;
+    private readonly Dictionary<ResourceKind, ReadOnlyReactiveProperty<string>> _amounts = new();
+    private readonly Dictionary<ResourceKind, ReadOnlyReactiveProperty<string>> _capacities = new();
 
     public ResourceBarViewModel(IResourceService resourceService)
     {
-      Metal = resourceService
-        .ObserveResource(ResourceKind.Metal)
-        .Select(value => value.ToString())
-        .ToReadOnlyReactiveProperty();
-
-      Energy = resourceService
-        .ObserveResource(ResourceKind.Energy)
-        .Select(value => value.ToString())
-        .ToReadOnlyReactiveProperty();
-
-      Population = resourceService
-        .ObserveResource(ResourceKind.Population)
-        .Select(value => value.ToString())
-        .ToReadOnlyReactiveProperty();
-      
-      Coin = resourceService
-        .ObserveResource(ResourceKind.Coin)
-        .Select(value => value.ToString())
-        .ToReadOnlyReactiveProperty();
+      _resourceService = resourceService;
     }
+
+    public void Initialize()
+    {
+      foreach (ResourceKind kind in Enum.GetValues(typeof(ResourceKind)))
+      {
+        if (kind == ResourceKind.None)
+          continue;
+
+        _amounts[kind] = _resourceService.ObserveResource(kind)
+          .Select(v => v.ToString())
+          .ToReadOnlyReactiveProperty();
+
+        _capacities[kind] = _resourceService.ObserveCapacity(kind)
+          .Select(v => v.ToString())
+          .ToReadOnlyReactiveProperty();
+      }
+    }
+
+    public ReadOnlyReactiveProperty<string> GetAmount(ResourceKind kind) => _amounts[kind];
+    public ReadOnlyReactiveProperty<string> GetCapacity(ResourceKind kind) => _capacities[kind];
   }
 }

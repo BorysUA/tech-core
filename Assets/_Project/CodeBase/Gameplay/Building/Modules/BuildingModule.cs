@@ -16,11 +16,12 @@ namespace _Project.CodeBase.Gameplay.Building.Modules
     private readonly ReactiveProperty<bool> _isModuleWorking = new();
 
     private bool _ignoreGlobalConditions;
+    private Observable<bool> _buildingOperationalConditions;
 
     public IEnumerable<IBuildingIndicatorSource> Indicators => _indicators;
     public ReadOnlyReactiveProperty<bool> IsModuleWorking => _isModuleWorking;
     public ReadOnlyReactiveProperty<bool> CanBuildingWork => _globalConditionsTracer.AllSatisfied;
-    protected string BuildingId { get; private set; }
+    protected int BuildingId { get; private set; }
 
     public void Setup(bool ignoreGlobalConditions)
     {
@@ -33,24 +34,26 @@ namespace _Project.CodeBase.Gameplay.Building.Modules
       _globalConditionsTracer.AddConditions(global);
     }
 
-    public void Initialize(string buildingId, Observable<bool> buildingOperational)
+    public void Initialize(int buildingId, Observable<bool> buildingOperational)
     {
       BuildingId = buildingId;
+
+      _buildingOperationalConditions = _ignoreGlobalConditions ? Observable.Return(true) : buildingOperational;
+
+      OnInitialize();
 
       _localConditionsTracer.Initialize();
       _globalConditionsTracer.Initialize();
 
       _indicators.AddRange(_localConditionsTracer.Indicators);
       _indicators.AddRange(_globalConditionsTracer.Indicators);
+    }
 
-      Observable<bool> buildingOperationalConditions =
-        _ignoreGlobalConditions ? Observable.Return(true) : buildingOperational;
-
-      OnInitialize();
-
+    public void Run()
+    {
       Observable.CombineLatest(
           _localConditionsTracer.AllSatisfied,
-          buildingOperationalConditions,
+          _buildingOperationalConditions,
           (canModuleRun, canBuildingRun) => canModuleRun && canBuildingRun)
         .DistinctUntilChanged()
         .Subscribe(OnActiveStateChanged)
@@ -84,6 +87,9 @@ namespace _Project.CodeBase.Gameplay.Building.Modules
       foreach (IBuildingIndicatorSource indicator in _indicators)
         if (indicator is IDisposable disposable)
           disposable.Dispose();
+
+      _localConditionsTracer.Dispose();
+      _globalConditionsTracer.Dispose();
     }
 
     protected void GuardActive([CallerMemberName] string method = null)
@@ -97,12 +103,12 @@ namespace _Project.CodeBase.Gameplay.Building.Modules
 
     private void OnActiveStateChanged(bool isActive)
     {
-      _isModuleWorking.Value = isActive;
-
       if (isActive)
         Activate();
       else
         Deactivate();
+
+      _isModuleWorking.OnNext(isActive);
     }
   }
 }

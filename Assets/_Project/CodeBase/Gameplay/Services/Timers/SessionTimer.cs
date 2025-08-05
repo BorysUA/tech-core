@@ -1,48 +1,64 @@
 ﻿using System;
-using _Project.CodeBase.Gameplay.DataProxy;
+using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.States;
-using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Gameplay.States.PhaseFlow;
 using _Project.CodeBase.Services.TimeCounter;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.Services.Timers
 {
-  public class SessionTimer : ISessionTimer, IDisposable, IGameplayInit
+  public class SessionTimer : IDisposable, IGameplayInit, IGameplayStartedListener, IGameplayPausedListener,
+    ISessionTimer
   {
+    private const int PlaytimeSaveInterval = 10;
+
     private readonly ITimerFactory _timerFactory;
-    private readonly IProgressService _progressService;
-    private readonly CompositeDisposable _disposable = new();
+    private readonly ICommandBroker _commandBroker;
+    private readonly CompositeDisposable _subscriptions = new();
+    private readonly ReactiveProperty<float> _sessionPlaytime = new(0);
     private ITimer _playTimer;
 
-    public SessionTimer(ITimerFactory timerFactory, IProgressService progressService)
+    private float _lastSavedPlaytime;
+
+    public ReadOnlyReactiveProperty<float> SessionPlaytime => _sessionPlaytime;
+
+    public SessionTimer(ITimerFactory timerFactory, ICommandBroker commandBroker)
     {
       _timerFactory = timerFactory;
-      _progressService = progressService;
+      _commandBroker = commandBroker;
     }
 
     public void Initialize()
     {
-      SessionInfoProxy sessionInfo = _progressService.GameStateProxy.SessionInfo;
-      float savedTotalTime = sessionInfo.TotalPlayTime.Value;
-
       _playTimer = _timerFactory.Create(autoStart: false);
 
       _playTimer.ElapsedSeconds
-        .Subscribe(sessionTime =>
+        .Subscribe(sessionTime => _sessionPlaytime.Value = sessionTime)
+        .AddTo(_subscriptions);
+
+      Observable
+        .Interval(TimeSpan.FromSeconds(PlaytimeSaveInterval))
+        .Subscribe(_ =>
         {
-          sessionInfo.SessionPlayTime.Value = sessionTime;
-          sessionInfo.TotalPlayTime.Value = savedTotalTime + sessionTime;
+          float delta = _sessionPlaytime.CurrentValue - _lastSavedPlaytime;
+          _lastSavedPlaytime = _sessionPlaytime.CurrentValue;
+
+          UpdateSessionPlaytimeCommand command = new UpdateSessionPlaytimeCommand(delta);
+          _commandBroker.ExecuteCommand(command);
         })
-        .AddTo(_disposable);
+        .AddTo(_subscriptions);
     }
 
-    public void Start() => _playTimer.Start();
+    public void OnGameplayStarted() =>
+      _playTimer.Start();
 
-    public void Pause() => _playTimer.Pause();
+    public void OnGameplayPaused() =>
+      _playTimer.Pause();
 
-    public void Dispose()
-    {
-      _disposable.Dispose();
-    }
+    public void OnGameplayResumed() =>
+      _playTimer.Start();
+
+    public void Dispose() =>
+      _subscriptions.Dispose();
   }
 }

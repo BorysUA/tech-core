@@ -1,57 +1,35 @@
 ﻿using _Project.CodeBase.Data.Progress.ResourceData;
-using _Project.CodeBase.Gameplay.DataProxy;
+using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Resource.Commands;
-using _Project.CodeBase.Gameplay.Signals;
 using _Project.CodeBase.Gameplay.Signals.Domain;
-using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.Services.LogService;
+using _Project.CodeBase.Infrastructure.Services;
 using Zenject;
 
 namespace _Project.CodeBase.Gameplay.Services.Resource.Handlers
 {
-  public class SpendResourcesHandler : ICommandHandler<SpendResourcesCommand, bool>
+  public class SpendResourcesHandler : ICommandHandler<SpendResourcesCommand, ResourceMutationStatus>
   {
-    private readonly IProgressService _progressService;
-    private readonly ILogService _logService;
     private readonly SignalBus _signalBus;
+    private readonly IResourceMutator _resourceMutator;
 
-    public SpendResourcesHandler(IProgressService progressService, ILogService logService, SignalBus signalBus)
+    public SpendResourcesHandler(SignalBus signalBus, IResourceMutator resourceMutator)
     {
-      _progressService = progressService;
-      _logService = logService;
       _signalBus = signalBus;
+      _resourceMutator = resourceMutator;
     }
 
-    public bool Execute(SpendResourcesCommand command)
+    public ResourceMutationStatus Execute(in SpendResourcesCommand command)
     {
-      foreach (ResourceAmountData resourceToSpend in command.Resources)
-      {
-        if (!_progressService.GameStateProxy.Resources.TryGetValue(resourceToSpend.Kind,
-              out ResourceProxy resource))
-        {
-          _logService.LogError(GetType(), $"Resource of type {resourceToSpend.Kind} not found.");
-          return false;
-        }
+      ResourceMutationResult resourceMutationResult = _resourceMutator.TrySpend(command.Resources);
 
-        if (resource.Amount.CurrentValue < resourceToSpend.Amount)
-        {
-          _logService.LogWarning(GetType(),
-            $"Insufficient resource: {resourceToSpend.Kind}, requested {resourceToSpend.Amount} ");
-          return false;
-        }
+      if (resourceMutationResult.IsSuccess)
+      {
+        foreach (ResourceAmountData resourceToSpend in command.Resources)
+          _signalBus.Fire(new ResourcesSpent(command.Sink, resourceToSpend.Kind, resourceToSpend.Amount));
       }
 
-      foreach (ResourceAmountData resourceToSpend in command.Resources)
-      {
-        ResourceProxy resource = _progressService.GameStateProxy.Resources[resourceToSpend.Kind];
-        resource.Amount.OnNext(resource.Amount.CurrentValue - resourceToSpend.Amount);
-
-        _signalBus.Fire(
-          new ResourceAmountChanged(resourceToSpend.Kind, -resourceToSpend.Amount, resource.Amount.CurrentValue));
-      }
-
-      return true;
+      return resourceMutationResult.Code;
     }
   }
 }

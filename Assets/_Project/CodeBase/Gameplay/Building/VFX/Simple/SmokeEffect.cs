@@ -10,17 +10,17 @@ namespace _Project.CodeBase.Gameplay.Building.VFX.Simple
     private void Awake() =>
       _particleSystem = GetComponent<ParticleSystem>();
 
-    public override void Play()
+    protected override void OnPlay()
     {
       _particleSystem.Play();
     }
 
-    protected override void Pause()
+    protected override void OnPause()
     {
       _particleSystem.Pause();
     }
 
-    public override void Stop()
+    protected override void OnStop()
     {
       _particleSystem.Stop();
     }

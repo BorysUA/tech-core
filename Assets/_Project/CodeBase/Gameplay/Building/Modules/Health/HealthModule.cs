@@ -4,6 +4,7 @@ using _Project.CodeBase.Data.StaticData.Building.Modules;
 using _Project.CodeBase.Gameplay.Building.Actions;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
 using _Project.CodeBase.Gameplay.Services.Buildings;
+using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus.Indicators;
 using _Project.CodeBase.Services.LogService;
@@ -12,8 +13,11 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Building.Modules.Health
 {
-  public class HealthModule : BuildingModuleWithProgressData<HealthData>, IDamageable, IBuildingActionsProvider
+  public class HealthModule : BuildingModuleWithProgressData<IReadOnlyHealthData>, IDamageable, IBuildingActionsProvider
   {
+    private const float RatioDamagedThreshold = 0.99f;
+
+    private readonly ICommandBroker _commandBroker;
     private readonly ActionFactory _actionFactory;
     private readonly IBuildingService _buildingService;
     private readonly CompositeDisposable _lifetimeDisposables = new();
@@ -21,15 +25,15 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Health
     private readonly ReactiveProperty<int> _current = new();
 
     private HealthConfig _healthConfig;
-    private DisposableBag _activationScope;
 
     public ReadOnlyReactiveProperty<int> Current => _current;
-    public IEnumerable<IBuildingAction> Actions => _actions;
+    public IReadOnlyList<IBuildingAction> Actions => _actions;
     public ReadOnlyReactiveProperty<float> Ratio { get; private set; }
 
-    public HealthModule(ILogService logService, ActionFactory actionFactory, IBuildingService buildingService) :
-      base(logService)
+    public HealthModule(ICommandBroker commandBroker, ILogService logService, ActionFactory actionFactory,
+      IBuildingService buildingService) : base(logService)
     {
+      _commandBroker = commandBroker;
       _actionFactory = actionFactory;
       _buildingService = buildingService;
     }
@@ -44,12 +48,6 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Health
         .AddTo(_lifetimeDisposables);
     }
 
-    public override IModuleData CreateInitialData(string buildingId)
-    {
-      HealthData healthData = new HealthData(buildingId, _healthConfig.Max);
-      return healthData;
-    }
-
     protected override void OnInitialize()
     {
       _current.Value = Mathf.Clamp(ModuleData.Health, _healthConfig.Min, _healthConfig.Max);
@@ -62,39 +60,34 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.Health
     {
       GuardActive();
 
-      _current.Value = Mathf.Max(_current.CurrentValue - damage, _healthConfig.Min);
+      if (damage <= 0)
+        return;
 
-      if (_current.CurrentValue == _healthConfig.Min)
-        Destroy();
-    }
+      bool isApplied = _commandBroker.ExecuteCommand<ApplyHealthDeltaCommand, bool>(
+        new ApplyHealthDeltaCommand(BuildingId, -damage));
 
-    protected override void Activate()
-    {
-      _current
-        .Subscribe(health => ModuleData.Health = health)
-        .AddTo(ref _activationScope);
-    }
+      if (!isApplied)
+        return;
 
-    protected override void Deactivate()
-    {
-      _activationScope.Clear();
+      _current.Value = ModuleData.Health;
+      if (ModuleData.Health == _healthConfig.Min)
+        DestroyBuilding();
     }
 
     public override void Dispose()
     {
       base.Dispose();
-      _activationScope.Dispose();
       _lifetimeDisposables.Dispose();
     }
 
-    private void Destroy()
+    private void DestroyBuilding()
     {
       _buildingService.DestroyBuilding(BuildingId);
     }
 
     private void CreateIndicators()
     {
-      AddIndicator(new ThresholdIndicator<float>(BuildingIndicatorType.Damaged, Ratio, 0.99f,
+      AddIndicator(new ThresholdIndicator<float>(BuildingIndicatorType.Damaged, Ratio, RatioDamagedThreshold,
         (current, threshold) => current < threshold));
     }
 

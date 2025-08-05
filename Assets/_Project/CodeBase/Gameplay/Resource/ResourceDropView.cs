@@ -17,7 +17,7 @@ namespace _Project.CodeBase.Gameplay.Resource
     [SerializeField] private float _animationArcHeight = 1f;
     [SerializeField] private float _animationDuration = 1f;
 
-    public string Id => _viewModel.Id;
+    public int Id => _viewModel.Id;
 
     [Inject]
     public void Initialize(ITweenFactory tweenFactory)

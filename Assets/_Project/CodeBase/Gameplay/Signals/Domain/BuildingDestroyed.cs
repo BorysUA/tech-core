@@ -4,11 +4,13 @@ namespace _Project.CodeBase.Gameplay.Signals.Domain
 {
   public readonly struct BuildingDestroyed
   {
+    public readonly int Id;
     public readonly BuildingType Type;
     public readonly int Level;
 
-    public BuildingDestroyed(BuildingType type, int level)
+    public BuildingDestroyed(int id, BuildingType type, int level)
     {
+      Id = id;
       Type = type;
       Level = level;
     }

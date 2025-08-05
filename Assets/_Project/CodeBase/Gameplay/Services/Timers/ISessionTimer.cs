@@ -1,8 +1,9 @@
-﻿namespace _Project.CodeBase.Gameplay.Services.Timers
+﻿using R3;
+
+namespace _Project.CodeBase.Gameplay.Services.Timers
 {
   public interface ISessionTimer
   {
-    void Start();       
-    void Pause();        
+    ReadOnlyReactiveProperty<float> SessionPlaytime { get; }
   }
 }

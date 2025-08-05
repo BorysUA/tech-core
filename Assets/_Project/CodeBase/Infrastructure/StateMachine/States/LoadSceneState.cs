@@ -17,15 +17,7 @@ namespace _Project.CodeBase.Infrastructure.StateMachine.States
     public void Enter(string sceneName)
     {
       _gameStateMachine.ClearSceneStates();
-      _sceneLoader.LoadScene(sceneName, SceneLoaded);
-    }
-
-    public void Exit()
-    {
-    }
-
-    private void SceneLoaded()
-    {
+      _sceneLoader.LoadScene(sceneName);
     }
   }
 }

@@ -1,6 +1,4 @@
-﻿using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
-using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus.Indicators;
-using R3;
+﻿using R3;
 
 namespace _Project.CodeBase.Gameplay.Building.Conditions
 {

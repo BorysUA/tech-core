@@ -1,8 +1,7 @@
-﻿using _Project.CodeBase.Gameplay.Services;
-using _Project.CodeBase.Gameplay.Services.Factories;
-using _Project.CodeBase.Gameplay.Signals.System;
+﻿using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
+using _Project.CodeBase.Infrastructure.Signals;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Infrastructure.UI;
 using _Project.CodeBase.Services;
@@ -12,7 +11,6 @@ using _Project.CodeBase.Services.DateTimeService;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Services.RemoteConfigsService;
 using _Project.CodeBase.Services.TimeCounter;
-using _Project.CodeBase.UI.Services;
 using Zenject;
 
 namespace _Project.CodeBase.Infrastructure.Root
@@ -26,44 +24,75 @@ namespace _Project.CodeBase.Infrastructure.Root
       BindEntryPoint();
       BindGameStateMachine();
       BindGameFactory();
-      BindServices();
+      BindInfrastructureServices();
       BindUI();
       BindAnalytics();
       BindRemoteConfigs();
       BindSignals();
       BindTrackers();
+      BindCoreMonoComponents();
+      BindProgressServices();
+      BindUtilityServices();
     }
 
     private void BindSignals()
     {
       SignalBusInstaller.Install(Container);
 
-      Container.DeclareSignal<GameSessionStarted>();
-      Container.DeclareSignal<GameSessionPaused>();
-      Container.DeclareSignal<GameSessionEnded>();
+      Container.DeclareSignal<AppLifecycleChanged>();
     }
 
     private void BindTrackers() =>
       Container.BindInterfacesAndSelfTo<SessionMetadataTracker>().AsSingle();
 
-    private void BindUI() =>
+    private void BindUI()
+    {
       Container.Bind<LoadScreen>().FromInstance(LoadScreen).AsSingle();
+      Container.Bind<AddressMap>().AsSingle();
+    }
 
     private void BindAnalytics()
     {
       Container.BindInterfacesTo<AnalyticsServiceProxy>().AsSingle();
       Container.Bind<FirebaseAnalyticsService>().AsSingle();
       Container.Bind<NoneAnalyticsService>().AsSingle();
+      Container.BindInterfacesTo<FirebaseBootstrap>().AsSingle();
     }
 
     private void BindRemoteConfigs()
     {
+      Container.Bind<RemoteConfigPatcher>().AsSingle();
       Container.BindInterfacesTo<RemoteConfigsProxy>().AsSingle();
       Container.Bind<FirebaseRemoteConfigService>().AsSingle();
       Container.Bind<NoneRemoteConfigService>().AsSingle();
     }
 
-    private void BindServices()
+
+    private void BindProgressServices()
+    {
+      Container.BindInterfacesAndSelfTo<PersistentProgressService>().AsSingle();
+      Container.BindInterfacesTo<JsonSaveStorageService>().AsSingle();
+      Container.BindInterfacesTo<DateTimeService>().AsSingle();
+    }
+
+    private void BindUtilityServices()
+    {
+      Container.Bind<InputSystemActions>().AsSingle();
+      Container.Bind<ObjectFactory>().AsSingle();
+      Container.BindInterfacesTo<TimerFactory>().AsSingle();
+      Container.BindInterfacesTo<TweenFactory>().AsSingle();
+    }
+
+    private void BindInfrastructureServices()
+    {
+      Container.BindInterfacesTo<SceneLoader>().AsSingle();
+      Container.BindInterfacesTo<AssetProvider>().AsSingle();
+      Container.BindInterfacesTo<StaticDataProvider>().AsSingle();
+      Container.BindInterfacesTo<DataTransferService>().AsSingle();
+      Container.BindInterfacesTo<LogService>().AsSingle();
+    }
+
+    private void BindCoreMonoComponents()
     {
       Container.BindInterfacesAndSelfTo<CoroutineRunner>()
         .FromNewComponentOnNewGameObject()
@@ -71,34 +100,16 @@ namespace _Project.CodeBase.Infrastructure.Root
         .UnderTransform(transform)
         .AsSingle();
 
-      Container.Bind<GameLifecycleBroadcaster>()
+      Container.Bind<UnityAppLifecycleBroadcaster>()
         .FromNewComponentOnNewGameObject()
         .WithGameObjectName("GAME LIFECYCLE")
         .UnderTransform(transform)
         .AsSingle()
         .NonLazy();
-
-      Container.BindInterfacesTo<SceneLoader>().AsSingle();
-      Container.BindInterfacesTo<TweenFactory>().AsSingle();
-      Container.BindInterfacesTo<AssetProvider>().AsSingle();
-      Container.BindInterfacesTo<StaticDataProvider>().AsSingle();
-      Container.BindInterfacesTo<DataTransferService>().AsSingle();
-      Container.BindInterfacesTo<TimerFactory>().AsSingle();
-      Container.BindInterfacesTo<LogService>().AsSingle();
-      Container.BindInterfacesTo<ProgressService>().AsSingle();
-      Container.BindInterfacesTo<JsonSaveStorageService>().AsSingle();
-      Container.BindInterfacesTo<FirebaseBootstrap>().AsSingle();
-      Container.BindInterfacesTo<DateTimeService>().AsSingle();
-      Container.Bind<InputSystemActions>().AsSingle();
-      Container.Bind<RemoteConfigPatcher>().AsSingle();
-      Container.Bind<AddressMap>().AsSingle();
-      Container.Bind<ObjectFactory>().AsSingle();
     }
 
-    private void BindEntryPoint()
-    {
+    private void BindEntryPoint() =>
       Container.BindInterfacesAndSelfTo<EntryPoint>().AsSingle().NonLazy();
-    }
 
     private void BindGameStateMachine() =>
       Container.Bind<GameStateMachine>().AsSingle();

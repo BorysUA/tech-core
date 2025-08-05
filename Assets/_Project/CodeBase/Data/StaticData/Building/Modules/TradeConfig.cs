@@ -1,6 +1,5 @@
 ﻿using System;
 using _Project.CodeBase.Gameplay.Constants;
-using UnityEngine.Serialization;
 
 namespace _Project.CodeBase.Data.StaticData.Building.Modules
 {
@@ -10,7 +9,7 @@ namespace _Project.CodeBase.Data.StaticData.Building.Modules
     public ResourceRange[] PurchaseResources;
     public ResourceKind PaymentResource;
 
-    public float ResourceCountCoeffPerLevel;
+    public float ResourceAmountPerLevelMultiplier;
     public int MinResourcesCount;
     public int MaxResourcesCount => PurchaseResources?.Length ?? 0;
     public float OfferCloseCountdown;

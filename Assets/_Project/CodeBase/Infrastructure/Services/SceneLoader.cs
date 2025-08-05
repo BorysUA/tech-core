@@ -23,8 +23,6 @@ namespace _Project.CodeBase.Infrastructure.Services
 
     public void LoadScene(string sceneName, Action completed = null)
     {
-      _logService.LogInfo(GetType(), $"Start loading {sceneName}");
-
       AsyncOperation loadSceneOperation = SceneManager.LoadSceneAsync(sceneName);
 
       if (loadSceneOperation == null)

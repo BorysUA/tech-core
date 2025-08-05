@@ -1,4 +1,4 @@
-﻿using _Project.CodeBase.Data.StaticData.Resource;
+﻿using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Gameplay.Constants;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -14,7 +14,7 @@ namespace _Project.CodeBase.Data.StaticData.Building
     public AssetReferenceGameObject PrefabReference;
     public AssetReferenceT<Mesh> MeshReference;
     public Vector2Int SizeInCells;
-    public ResourceCostConfig Price;
+    public ResourceAmountData Price;
     public string Title;
     public Sprite Icon;
     public int StartLevel;

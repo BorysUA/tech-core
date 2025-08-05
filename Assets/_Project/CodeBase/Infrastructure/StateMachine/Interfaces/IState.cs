@@ -1,7 +1,6 @@
 ﻿namespace _Project.CodeBase.Infrastructure.StateMachine.Interfaces
 {
-  public interface IState : IExitState
+  public interface IState
   {
-    public void Enter();
   }
 }

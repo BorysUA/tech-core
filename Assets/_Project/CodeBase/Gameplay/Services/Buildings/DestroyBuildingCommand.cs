@@ -2,11 +2,11 @@
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings
 {
-  public readonly struct DestroyBuildingCommand : ICommand
+  public readonly struct DestroyBuildingCommand : ICommand<Unit>
   {
-    public string BuildingId { get; }
+    public int BuildingId { get; }
 
-    public DestroyBuildingCommand(string buildingId)
+    public DestroyBuildingCommand(int buildingId)
     {
       BuildingId = buildingId;
     }

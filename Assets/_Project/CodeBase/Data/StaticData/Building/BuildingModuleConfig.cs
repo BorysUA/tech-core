@@ -13,6 +13,8 @@ namespace _Project.CodeBase.Data.StaticData.Building
     public OperationalConditionConfig[] OperationalConditions;
     public bool IgnoreGlobalConditions;
 
+    public abstract Type ModuleType { get; }
+
     public BuildingModule CreateModule(Func<Type, BuildingModule> moduleInstantiator,
       Func<Type, OperationalCondition> conditionInstantiator, BuildingConfig buildingConfig, ILogService logService)
     {

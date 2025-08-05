@@ -11,24 +11,24 @@ namespace _Project.CodeBase.Gameplay.Services.Resource
     {
       [GameDifficulty.Easy] = new[]
       {
-        new GameResourceData(ResourceKind.Coin, 300, 1000),
-        new GameResourceData(ResourceKind.Metal, 300, 1000),
-        new GameResourceData(ResourceKind.Energy, 300, 1000),
-        new GameResourceData(ResourceKind.Population, 300, 1000),
+        new GameResourceData(ResourceKind.Coin, 300, 600),
+        new GameResourceData(ResourceKind.Metal, 300, 600),
+        new GameResourceData(ResourceKind.Energy, 300, 600),
+        new GameResourceData(ResourceKind.Population, 300, 600),
       },
       [GameDifficulty.Medium] = new[]
       {
-        new GameResourceData(ResourceKind.Coin, 200, 700),
-        new GameResourceData(ResourceKind.Metal, 200, 700),
-        new GameResourceData(ResourceKind.Energy, 200, 700),
-        new GameResourceData(ResourceKind.Population, 200, 700),
+        new GameResourceData(ResourceKind.Coin, 200, 500),
+        new GameResourceData(ResourceKind.Metal, 200, 500),
+        new GameResourceData(ResourceKind.Energy, 200, 500),
+        new GameResourceData(ResourceKind.Population, 200, 500),
       },
       [GameDifficulty.Hard] = new[]
       {
-        new GameResourceData(ResourceKind.Coin, 100, 500),
-        new GameResourceData(ResourceKind.Metal, 100, 500),
-        new GameResourceData(ResourceKind.Energy, 100, 500),
-        new GameResourceData(ResourceKind.Population, 100, 500),
+        new GameResourceData(ResourceKind.Coin, 100, 400),
+        new GameResourceData(ResourceKind.Metal, 100, 400),
+        new GameResourceData(ResourceKind.Energy, 100, 400),
+        new GameResourceData(ResourceKind.Population, 100, 400),
       }
     };
 

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using _Project.CodeBase.Data.StaticData.Building.Modules;
+﻿using _Project.CodeBase.Data.StaticData.Building.Modules;
 using Cysharp.Threading.Tasks;
 using R3;
 

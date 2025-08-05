@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using _Project.CodeBase.Data.StaticData.Resource;
+using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Gameplay.Building.Actions;
 using _Project.CodeBase.Gameplay.Building.Actions.Common;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.Services.Resource;
-using R3;
 using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Building.Modules.SelfDestruction
@@ -17,9 +16,9 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.SelfDestruction
     private readonly IResourceService _resourceService;
 
     private float _refundRatio;
-    private ResourceCostConfig _buildingPrice;
+    private ResourceAmountData _buildingPrice;
 
-    public IEnumerable<IBuildingAction> Actions => _actions;
+    public IReadOnlyList<IBuildingAction> Actions => _actions;
 
     public SelfDestructionModule(IBuildingService buildingService, ActionFactory actionFactory,
       IResourceService resourceService)
@@ -29,7 +28,7 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.SelfDestruction
       _resourceService = resourceService;
     }
 
-    public void Setup(float refundRatio, ResourceCostConfig buildingPrice)
+    public void Setup(float refundRatio, ResourceAmountData buildingPrice)
     {
       _refundRatio = refundRatio;
       _buildingPrice = buildingPrice;
@@ -42,7 +41,7 @@ namespace _Project.CodeBase.Gameplay.Building.Modules.SelfDestruction
 
     public void SelfDestruct()
     {
-      _resourceService.AddResource(_buildingPrice.Resource.Kind,
+      _resourceService.AddResource(_buildingPrice.Kind,
         Mathf.RoundToInt(_buildingPrice.Amount * _refundRatio));
       _buildingService.DestroyBuilding(BuildingId);
     }

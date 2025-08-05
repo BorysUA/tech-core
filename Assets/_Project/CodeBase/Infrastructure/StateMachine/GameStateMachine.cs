@@ -8,14 +8,14 @@ namespace _Project.CodeBase.Infrastructure.StateMachine
   public class GameStateMachine : BaseStateMachine
   {
     private readonly List<Type> _sceneStateKeys = new();
-    private ILogService _logService;
+    private readonly ILogService _logService;
 
     public GameStateMachine(ILogService logService)
     {
       _logService = logService;
     }
 
-    public void RegisterSceneState<TState>(TState gameState) where TState : IExitState
+    public void RegisterSceneState<TState>(TState gameState) where TState : IState
     {
       RegisterState(gameState);
       _sceneStateKeys.Add(typeof(TState));
@@ -29,10 +29,10 @@ namespace _Project.CodeBase.Infrastructure.StateMachine
       _sceneStateKeys.Clear();
     }
 
-    protected override void OnStateEnter(IExitState state) =>
+    protected override void OnStateEnter(IState state) =>
       _logService.LogInfo(GetType(), $"Enter {state.GetType().Name}");
 
-    protected override void OnStateExit(IExitState state) =>
+    protected override void OnStateExit(IState state) =>
       _logService.LogInfo(GetType(), $"Exit  {state.GetType().Name}");
   }
 }

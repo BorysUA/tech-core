@@ -10,23 +10,23 @@ namespace _Project.CodeBase.Gameplay.Building.Actions
     public ActionType Type => ActionType.Trade;
 
     private readonly IWindowsService _windowsService;
-    private SpaceportTradeModule _tradeModule;
+    private TradeModule _tradeModule;
 
     public TradeAction(IWindowsService windowsService)
     {
       _windowsService = windowsService;
     }
 
-    public void Setup(SpaceportTradeModule spaceportTradeModule)
+    public void Setup(TradeModule tradeModule)
     {
-      _tradeModule = spaceportTradeModule;
+      _tradeModule = tradeModule;
     }
 
     public void Execute()
     {
       if (_tradeModule.IsModuleWorking.CurrentValue)
       {
-        _windowsService.OpenWindow<TradeWindow, TradeViewModel, SpaceportTradeModule>(_tradeModule,
+        _windowsService.OpenWindow<TradeWindow, TradeViewModel, TradeModule>(_tradeModule,
           token: _tradeModule.Lifetime);
       }
     }

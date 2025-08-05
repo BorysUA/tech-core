@@ -8,12 +8,14 @@ namespace _Project.CodeBase.Data.Progress.Meta
   {
     public string ColonyName;
     public float Playtime;
+    public int Seed;
     public GameDifficulty Difficulty;
 
-    public SessionInfo(string colonyName, GameDifficulty difficulty)
+    public SessionInfo(string colonyName, GameDifficulty difficulty, int seed)
     {
       ColonyName = colonyName;
       Difficulty = difficulty;
+      Seed = seed;
     }
   }
 }

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Map;
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.Markers;
 using _Project.CodeBase.Gameplay.Markers.Baked;
 using _Project.CodeBase.Gameplay.Markers.Baked.Payloads;
+using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.States;
+using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using ObservableCollections;
 using R3;
@@ -18,13 +20,13 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
 {
   public class GridOccupancyService : IGridOccupancyService, IDisposable, IGameplayInit
   {
-    private readonly IProgressService _progressService;
+    private readonly IProgressReader _progressService;
     private readonly IStaticDataProvider _staticDataProvider;
     private readonly CompositeDisposable _disposable = new();
 
     private Dictionary<Vector2Int, CellData> OccupiedCells { get; } = new();
 
-    public GridOccupancyService(IProgressService progressService, IStaticDataProvider staticDataProvider)
+    public GridOccupancyService(IProgressReader progressService, IStaticDataProvider staticDataProvider)
     {
       _progressService = progressService;
       _staticDataProvider = staticDataProvider;
@@ -42,6 +44,22 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
       OccupiedCells.TryGetValue(position, out CellData cellData)
         ? cellData.ContentMask
         : CellContentType.None;
+
+    public bool DoesCellMatchFilter(Vector2Int cellPosition, PlacementFilter filter)
+    {
+      CellContentType contentMask = GetCellContentMask(cellPosition);
+
+      if ((contentMask & filter.MustHave) != filter.MustHave)
+        return false;
+
+      if ((contentMask & filter.MustBeEmpty) != 0)
+        return false;
+
+      return true;
+    }
+
+    public bool DoesCellsMatchFilter(IEnumerable<Vector2Int> cellsPosition, PlacementFilter filter) =>
+      cellsPosition.All(position => DoesCellMatchFilter(position, filter));
 
     public bool TryGetCell(Vector2Int position, out ICellStatus cellStatus)
     {
@@ -62,11 +80,11 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
 
     private void FillOccupiedCellsFromProgress()
     {
-      foreach (var constructionPlot in _progressService.GameStateProxy.ConstructionPlotsCollection)
+      foreach (var constructionPlot in _progressService.GameStateModel.ReadOnlyPlots.Values)
         RegisterConstructionPlotInGrid(constructionPlot);
 
-      foreach (var buildingEntry in _progressService.GameStateProxy.BuildingsCollection)
-        RegisterBuildingInGrid(buildingEntry.Value);
+      foreach (var buildingEntry in _progressService.GameStateModel.ReadOnlyBuildings.Values)
+        RegisterBuildingInGrid(buildingEntry);
     }
 
     private void FillOccupiedCellsFromStaticData()
@@ -88,25 +106,25 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
 
     private void ObserveBuildingsCollection()
     {
-      _progressService.GameStateProxy.BuildingsCollection
+      _progressService.GameStateModel.ReadOnlyBuildings
         .ObserveAdd()
-        .Subscribe(addEvent => RegisterBuildingInGrid(addEvent.Value.Value))
+        .Subscribe(addEvent => RegisterBuildingInGrid(addEvent.Value))
         .AddTo(_disposable);
 
-      _progressService.GameStateProxy.BuildingsCollection
+      _progressService.GameStateModel.ReadOnlyBuildings
         .ObserveRemove()
-        .Subscribe(removeEvent => UnregisterBuildingInGrid(removeEvent.Value.Value))
+        .Subscribe(removeEvent => UnregisterBuildingInGrid(removeEvent.Value))
         .AddTo(_disposable);
     }
 
     private void ObserveConstructionPlotsCollection()
     {
-      _progressService.GameStateProxy.ConstructionPlotsCollection
+      _progressService.GameStateModel.ReadOnlyPlots
         .ObserveAdd()
         .Subscribe(addEvent => { RegisterConstructionPlotInGrid(addEvent.Value); })
         .AddTo(_disposable);
 
-      _progressService.GameStateProxy.ConstructionPlotsCollection
+      _progressService.GameStateModel.ReadOnlyPlots
         .ObserveRemove()
         .Subscribe(removeEvent => { UnregisterConstructionPlotInGrid(removeEvent.Value); })
         .AddTo(_disposable);
@@ -134,13 +152,13 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
         GetOrCreate(cellPosition).SetObstacle();
     }
 
-    private void RegisterConstructionPlotInGrid(ConstructionPlotDataProxy proxy)
+    private void RegisterConstructionPlotInGrid(IPlotDataReader proxy)
     {
       foreach (Vector2Int cellPosition in proxy.OccupiedCells)
         GetOrCreate(cellPosition).SetConstructionPlot(proxy.Id);
     }
 
-    private void UnregisterConstructionPlotInGrid(ConstructionPlotDataProxy proxy)
+    private void UnregisterConstructionPlotInGrid(IPlotDataReader proxy)
     {
       foreach (Vector2Int cellPosition in proxy.OccupiedCells)
       {
@@ -151,13 +169,13 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
       }
     }
 
-    private void RegisterBuildingInGrid(BuildingDataProxy proxy)
+    private void RegisterBuildingInGrid(IBuildingDataReader proxy)
     {
       foreach (Vector2Int cellPosition in proxy.OccupiedCells)
         GetOrCreate(cellPosition).SetBuilding(proxy.Id);
     }
 
-    private void UnregisterBuildingInGrid(BuildingDataProxy proxy)
+    private void UnregisterBuildingInGrid(IBuildingDataReader proxy)
     {
       foreach (Vector2Int cellPosition in proxy.OccupiedCells)
       {

@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Gameplay.Services.Command;
 
 namespace _Project.CodeBase.Gameplay.Services.Resource.Commands
 {
-  public readonly struct SpendResourcesCommand : ICommand
+  public readonly struct SpendResourcesCommand : ICommand<ResourceMutationStatus>
   {
-    public IEnumerable<ResourceAmountData> Resources { get; }
+    private readonly ResourceAmountData[] _resources;
 
-    public SpendResourcesCommand(IEnumerable<ResourceAmountData> resources)
+    public readonly ResourceSink Sink;
+    public ReadOnlySpan<ResourceAmountData> Resources => _resources;
+
+    public SpendResourcesCommand(ResourceAmountData[] resources, ResourceSink sink)
     {
-      Resources = resources;
+      _resources = resources;
+      Sink = sink;
     }
   }
 }

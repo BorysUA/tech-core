@@ -19,5 +19,5 @@ MonoBehaviour:
     Amount: 200
   ResourceFlow:
     ResourceConfig: {fileID: 11400000, guid: 757612a8c2ecf7b49ab3b3130d8f2fe6, type: 2}
-    AmountPerTick: 40
+    AmountPerTick: 50
     TickInterval: 1

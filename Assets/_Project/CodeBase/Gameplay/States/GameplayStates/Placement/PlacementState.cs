@@ -2,7 +2,6 @@
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Building;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.DataProxy;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.UI.PopUps.ConfirmPlace;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
@@ -13,25 +12,35 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
 {
-  public abstract class PlacementState<T> : IPayloadState<T>
+  public abstract class PlacementState<T> : IPayloadState<T>, IExitState
   {
     protected readonly GridPlacement GridPlacement;
     private readonly IInputService _inputService;
     private readonly IPopUpService _popUpService;
 
-    public PlacementState(GridPlacement gridPlacement, IInputService inputService, IPopUpService popUpService)
+    protected PlacementState(GridPlacement gridPlacement, IInputService inputService, IPopUpService popUpService)
     {
       GridPlacement = gridPlacement;
       _inputService = inputService;
       _popUpService = popUpService;
     }
 
-    public virtual async void Enter(T type)
+    public virtual void Enter(T type)
+    {
+      InternalEnterAsync(type).Forget();
+    }
+
+    private async UniTaskVoid InternalEnterAsync(T type)
     {
       await SetupPlacement(type);
       _inputService.SubscribeWithUiFilter(GridPlacement);
       _popUpService.ShowPopUp<ConfirmPlacePopUp, ConfirmPlaceViewModel>();
-      RunPlacement();
+      RunPlacement().Forget();
+    }
+
+    public virtual void Exit()
+    {
+      _inputService.Unsubscribe(GridPlacement);
     }
 
     protected abstract UniTask SetupPlacement(T type);
@@ -40,27 +49,11 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
 
     protected abstract bool IsPlacementValid(IEnumerable<Vector2Int> placeCells);
 
-    protected bool DoesCellMatchFilter(CellContentType contentMask, PlacementFilter filter)
-    {
-      if ((contentMask & filter.MustHave) != filter.MustHave)
-        return false;
-
-      if ((contentMask & filter.MustBeEmpty) != 0)
-        return false;
-
-      return true;
-    }
-
-    private async void RunPlacement()
+    private async UniTaskVoid RunPlacement()
     {
       PlacementResult placementResult = await GridPlacement.ExecutePlacementAsync();
 
       ProcessResult(placementResult);
-    }
-
-    public virtual void Exit()
-    {
-      _inputService.Unsubscribe(GridPlacement);
     }
   }
 }

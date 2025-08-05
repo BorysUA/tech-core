@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 {
-  public readonly struct PlaceConstructionPlotCommand : ICommand
+  public readonly struct PlaceConstructionPlotCommand : ICommand<Unit>
   {
     public ConstructionPlotType Type { get; }
     public List<Vector2Int> OccupiedCells { get; }

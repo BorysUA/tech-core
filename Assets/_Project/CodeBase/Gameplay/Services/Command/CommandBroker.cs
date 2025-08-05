@@ -1,43 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.CodeBase.Services.LogService;
 
 namespace _Project.CodeBase.Gameplay.Services.Command
 {
   public class CommandBroker : ICommandBroker
   {
     private readonly Dictionary<Type, object> _handlers = new();
-    private readonly ILogService _logService;
 
-    public CommandBroker(ILogService logService)
+    public void Register<TCommand, TResult>(ICommandHandler<TCommand, TResult> handler)
+      where TCommand : struct, ICommand<TResult> =>
+      _handlers.Add(typeof(TCommand), handler);
+
+    public TResult ExecuteCommand<TCommand, TResult>(in TCommand command)
+      where TCommand : struct, ICommand<TResult>
     {
-      _logService = logService;
+      if (_handlers.TryGetValue(typeof(TCommand), out object value) &&
+          value is ICommandHandler<TCommand, TResult> handler)
+        return handler.Execute(command);
+
+      throw new InvalidOperationException(
+        $"Handler for {typeof(TCommand).Name} with result {typeof(TResult).Name} is not registered.");
     }
 
-    public void Register<TCommand>(ICommandHandler<TCommand> commandHandler) where TCommand : ICommand =>
-      _handlers.Add(typeof(TCommand), commandHandler);
-
-    public void Register<TCommand, TResult>(ICommandHandler<TCommand, TResult> commandHandler)
-      where TCommand : ICommand =>
-      _handlers.Add(typeof(TCommand), commandHandler);
-
-    public void ExecuteCommand<TCommand>(in TCommand command) where TCommand : struct, ICommand
-    {
-      if (_handlers.TryGetValue(typeof(TCommand), out object value))
-      {
-        ICommandHandler<TCommand> commandHandler = value as ICommandHandler<TCommand>;
-        commandHandler?.Execute(command);
-      }
-    }
-
-    public TResult ExecuteCommand<TCommand, TResult>(in TCommand command) where TCommand : struct, ICommand
-    {
-      if (_handlers.TryGetValue(typeof(TCommand), out object value))
-        if (value is ICommandHandler<TCommand, TResult> commandHandler)
-          return commandHandler.Execute(command);
-
-      _logService.LogError(GetType(), $"Unexpected command {typeof(TCommand)}");
-      return default;
-    }
+    public Unit ExecuteCommand<TCommand>(in TCommand command)
+      where TCommand : struct, ICommand<Unit> =>
+      ExecuteCommand<TCommand, Unit>(command);
   }
 }

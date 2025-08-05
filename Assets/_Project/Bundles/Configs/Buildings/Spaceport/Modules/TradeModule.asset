@@ -15,6 +15,7 @@ MonoBehaviour:
   OperationalConditions:
   - {fileID: 11400000, guid: 325f617f58f5394488dcdeb164c7dc59, type: 2}
   - {fileID: 11400000, guid: ac3e4d73ca3d9e544956053c18d92024, type: 2}
+  IgnoreGlobalConditions: 0
   TradeConfig:
     PurchaseResources:
     - Resource: {fileID: 11400000, guid: 757612a8c2ecf7b49ab3b3130d8f2fe6, type: 2}
@@ -26,7 +27,7 @@ MonoBehaviour:
         Min: 5
         Max: 30
     PaymentResource: 4
-    ResourceCountCoeffPerLevel: 0.2
+    ResourceAmountPerLevelMultiplier: 0.2
     MinResourcesCount: 1
     OfferCloseCountdown: 300
     NextOfferOpenCountdown: 60

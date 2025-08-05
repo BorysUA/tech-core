@@ -2,7 +2,6 @@
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Building;
-using _Project.CodeBase.Gameplay.Building.Modules.EnergyShield;
 using _Project.CodeBase.Gameplay.Building.Modules.Health;
 using _Project.CodeBase.Gameplay.Building.VFX.Module;
 using _Project.CodeBase.Gameplay.Constants;
@@ -23,7 +22,6 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     private const float Tolerance = 0.1f;
 
     private readonly IResourceService _resourceService;
-    private readonly IBuildingService _buildingService;
 
     private readonly ReactiveProperty<Vector3> _position = new();
     private readonly ReactiveProperty<Quaternion> _rotation = new();
@@ -36,6 +34,7 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     private MeteoriteConfig _meteoriteConfig;
     private Vector3 _target;
     private Vector3 _randomRotationAxis;
+    private bool _explosionProcessed;
 
     public MeteoriteType Type => _meteoriteConfig.Type;
     public ReadOnlyReactiveProperty<Vector3> Position => _position;
@@ -44,13 +43,11 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     public Observable<Unit> Initialized => _initialized;
     public Observable<Unit> Activated => _activated;
     public Observable<Unit> Deactivated => _deactivated;
-
     public Observable<Unit> Exploded => _exploded;
 
-    public MeteoriteViewModel(IResourceService resourceService, IBuildingService buildingService)
+    public MeteoriteViewModel(IResourceService resourceService)
     {
       _resourceService = resourceService;
-      _buildingService = buildingService;
     }
 
     public void Setup(Vector3 target, Vector3 startPosition, MeteoriteConfig meteoriteConfig)
@@ -76,6 +73,7 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     {
       _position.OnNext(Vector3.zero);
       _target = Vector3.zero;
+      _explosionProcessed = false;
       _meteoriteConfig = null;
     }
 
@@ -87,25 +85,31 @@ namespace _Project.CodeBase.Gameplay.Meteorite
 
     public async UniTask HandleMeteorCollision(Collider other)
     {
+      if (_explosionProcessed)
+        return;
+
       if (other.TryGetComponent(out Ground ground))
       {
+        _explosionProcessed = true;
         DropResources();
         Explode();
+        return;
       }
 
-      if (other.TryGetComponent(out EnergyShieldEffect shieldEffect))
+      if (other.TryGetComponent(out EnergyShieldEffect shieldEffect) &&
+          await shieldEffect.DamageInterceptor.TryInterceptDamage(_meteoriteConfig.Damage))
       {
-        if (await shieldEffect.DamageInterceptor.TryInterceptDamage(_meteoriteConfig.Damage))
-          Explode();
+        _explosionProcessed = true;
+        Explode();
+        return;
       }
 
       if (other.TryGetComponent(out BuildingView building))
       {
-        IBuildingViewInteractor buildingInteractor = building.BuildingViewInteractor;
-
-        if (buildingInteractor.TryGetPublicModuleContract(out IDamageable damageable))
+        if (building.BuildingViewInteractor.TryGetPublicModuleContract(out IDamageable damageable))
           damageable.TakeDamage(_meteoriteConfig.Damage);
 
+        _explosionProcessed = true;
         Explode();
       }
     }
@@ -140,15 +144,11 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     {
       foreach (ResourceDropConfig resourceDrop in _meteoriteConfig.ResourceDrops)
       {
-        int amount = Range(resourceDrop.ResourceRange.Amount.Min, resourceDrop.ResourceRange.Amount.Max);
-
         Vector3 resourceDropPosition = _position.CurrentValue.ToXZ() +
                                        VectorUtils.GetRandomXZDirection() *
                                        _meteoriteConfig.ExplosionArea.magnitude / 2;
 
-        _resourceService.AddResourceDrop(resourceDrop.Type, resourceDrop.ResourceRange.Resource.Kind,
-          _position.CurrentValue,
-          resourceDropPosition, amount);
+        _resourceService.AddResourceDrop(resourceDrop.Type, _position.CurrentValue, resourceDropPosition);
       }
     }
   }

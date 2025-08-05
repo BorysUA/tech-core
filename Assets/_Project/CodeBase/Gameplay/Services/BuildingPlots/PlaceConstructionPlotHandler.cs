@@ -1,62 +1,71 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using _Project.CodeBase.Data.Progress;
+using _Project.CodeBase.Data.Progress.ResourceData;
+using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.DataProxy;
+using _Project.CodeBase.Gameplay.Models.Persistent;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Grid;
-using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Gameplay.Signals.Domain;
+using _Project.CodeBase.Infrastructure.Services;
 using Zenject;
 using UnityEngine;
 using static _Project.CodeBase.Utility.UniqueIdGenerator;
 
 namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 {
-  public class PlaceConstructionPlotHandler : ICommandHandler<PlaceConstructionPlotCommand>
+  public class PlaceConstructionPlotHandler : ICommandHandler<PlaceConstructionPlotCommand, Unit>
   {
-    private readonly IProgressService _progressService;
+    private readonly IProgressWriter _progressService;
     private readonly ILogService _logService;
     private readonly IGridOccupancyService _gridOccupancyService;
     private readonly SignalBus _signalBus;
+    private readonly IResourceMutator _resourceMutator;
+    private readonly IStaticDataProvider _staticDataProvider;
 
-    public PlaceConstructionPlotHandler(IProgressService progressService, ILogService logService,
-      IGridOccupancyService gridOccupancyService, SignalBus signalBus)
+    public PlaceConstructionPlotHandler(IProgressWriter progressService, ILogService logService,
+      IGridOccupancyService gridOccupancyService, SignalBus signalBus, IResourceMutator resourceMutator,
+      IStaticDataProvider staticDataProvider)
     {
       _progressService = progressService;
       _logService = logService;
       _gridOccupancyService = gridOccupancyService;
       _signalBus = signalBus;
+      _resourceMutator = resourceMutator;
+      _staticDataProvider = staticDataProvider;
     }
 
-    public void Execute(PlaceConstructionPlotCommand command)
+    public Unit Execute(in PlaceConstructionPlotCommand command)
     {
-      if (IsCellsOccupied(command.OccupiedCells))
+      ConstructionPlotConfig config = _staticDataProvider.GetConstructionPlotConfig(command.Type);
+
+      if (!_gridOccupancyService.DoesCellsMatchFilter(command.OccupiedCells, config.PlacementFilter))
       {
-        _logService.LogError(GetType(), " Attempt to place a constructionPlot on already occupied cells");
-        return;
+        _logService.LogError(GetType(),
+          $"Attempt to place constructionPlot {config.Type} on invalid cells: [{string.Join(", ", command.OccupiedCells)}]");
+        return Unit.Default;
       }
 
+      Span<ResourceAmountData> toSpend = stackalloc ResourceAmountData[1] { config.Price };
+      ResourceMutationResult result = _resourceMutator.TrySpend(toSpend);
+
+      if (result.IsFailure)
+        return Unit.Default;
+
+      string plotId = GenerateUniqueStringId();
+      
       ConstructionPlotData data =
-        new ConstructionPlotData(GenerateUniqueStringId(), command.Type, command.OccupiedCells);
-      ConstructionPlotDataProxy proxy = new ConstructionPlotDataProxy(data);
+        new ConstructionPlotData(plotId, command.Type, command.OccupiedCells);
+      ConstructionPlotModel proxy = new ConstructionPlotModel(data);
 
-      _progressService.GameStateProxy.ConstructionPlotsCollection.Add(proxy);
-      _signalBus.Fire(new ConstructionPlotPlaced(command.Type));
-    }
-
-    private bool IsCellsOccupied(List<Vector2Int> cells)
-    {
-      foreach (Vector2Int cell in cells)
-      {
-        if (_gridOccupancyService.TryGetCell(cell, out ICellStatus occupiedCell))
-          if (occupiedCell.HasContent(CellContentType.ConstructionPlot))
-            return true;
-      }
-
-      return false;
+      _progressService.GameStateModel.WriteOnlyPlots.Add(proxy);
+      _signalBus.Fire(new ConstructionPlotPlaced(plotId));
+      
+      return Unit.Default;
     }
   }
 }

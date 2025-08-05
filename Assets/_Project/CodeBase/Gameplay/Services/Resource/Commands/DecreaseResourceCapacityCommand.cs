@@ -3,7 +3,7 @@ using _Project.CodeBase.Gameplay.Services.Command;
 
 namespace _Project.CodeBase.Gameplay.Services.Resource.Commands
 {
-  public struct DecreaseResourceCapacityCommand : ICommand
+  public struct DecreaseResourceCapacityCommand : ICommand<bool>
   {
     public ResourceKind ResourceKind { get; }
     public int CapacityDelta { get; }

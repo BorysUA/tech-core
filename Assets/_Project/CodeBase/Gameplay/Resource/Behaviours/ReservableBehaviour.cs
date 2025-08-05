@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Constants;
-using _Project.CodeBase.Gameplay.DataProxy;
+using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
+using _Project.CodeBase.Gameplay.Models.Session;
+using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Utility;
 using R3;
 using UnityEngine;
@@ -11,49 +14,47 @@ namespace _Project.CodeBase.Gameplay.Resource.Behaviours
   public class ReservableBehaviour : IReservableResourceBehaviour, IDisposable
   {
     private readonly IResourceBehaviour _innerBehaviour;
-    private readonly ResourceKind _kind;
+
     private readonly ReactiveProperty<int> _reservedAmount = new();
     private readonly Dictionary<Guid, ReservationToken> _reservations = new();
+
+    private readonly ILogService _logService;
     private readonly CompositeDisposable _disposable = new();
 
-    public ReadOnlyReactiveProperty<int> AvailableAmount { get; private set; }
-
-    public ReservableBehaviour(IResourceBehaviour innerBehaviour) =>
-      _innerBehaviour = innerBehaviour;
-
-    public void Setup(ResourceProxy resourceProxy)
+    public ResourceKind Kind => _innerBehaviour.Kind;
+    public ReadOnlyReactiveProperty<int> TotalAmount { get; private set; }
+    public ReadOnlyReactiveProperty<int> TotalCapacity => _innerBehaviour.TotalCapacity;
+    
+    public ReservableBehaviour(IResourceBehaviour innerBehaviour, ILogService logService)
     {
-      _innerBehaviour.Setup(resourceProxy);
-
-      AvailableAmount = _innerBehaviour.AvailableAmount
-        .CombineLatest(_reservedAmount, (current, reserved) => current - reserved)
-        .ToReadOnlyReactiveProperty()
-        .AddTo(_disposable);
-
-      AvailableAmount
-        .Where(value => value < 0)
-        .Subscribe(_ => ForcedRelease(Mathf.Abs(AvailableAmount.CurrentValue)))
-        .AddTo(_disposable);
+      _innerBehaviour = innerBehaviour;
+      _logService = logService;
     }
 
-    public void Add(int amount) =>
-      _innerBehaviour.Add(amount);
+    public void Setup(IResourceReader resourceProxy, ResourceSessionModel resourceSessionModel)
+    {
+      _innerBehaviour.Setup(resourceProxy, resourceSessionModel);
 
-    public bool CanSpend(int amount) =>
-      _innerBehaviour.CanSpend(amount);
+      TotalAmount = _innerBehaviour.TotalAmount
+        .CombineLatest(_reservedAmount, resourceSessionModel.RuntimeAmount,
+          (current, reserved, runtime) => current + runtime - reserved)
+        .ToStabilizedReadOnlyReactiveProperty()
+        .AddTo(_disposable);
+      
+      TotalAmount
+        .Where(value => value < 0)
+        .Subscribe(value => ForcedRelease(Mathf.Abs(value)))
+        .AddTo(_disposable);
 
-    public bool TrySpend(int amount) =>
-      _innerBehaviour.TrySpend(amount);
-
-    public bool IncreaseCapacity(int amount) =>
-      _innerBehaviour.IncreaseCapacity(amount);
-
-    public bool DecreaseCapacity(int amount) =>
-      _innerBehaviour.DecreaseCapacity(amount);
+      resourceSessionModel.RuntimeAmount
+        .Where(value => value < 0)
+        .Subscribe(value => _logService.LogError(GetType(),
+          $"Runtime resource value is below zero: {value}. This indicates a logic error in the reserve/release system."));
+    }
 
     public bool TryReserve(int amount, out ReservationToken token)
     {
-      if (AvailableAmount.CurrentValue < amount)
+      if (TotalAmount.CurrentValue < amount)
       {
         token = null;
         return false;

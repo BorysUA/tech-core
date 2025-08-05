@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.ConstructionPlot;
-using _Project.CodeBase.Gameplay.DataProxy;
+using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.Services.Resource;
+using _Project.CodeBase.Gameplay.States;
+using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using Cysharp.Threading.Tasks;
 using ObservableCollections;
 using R3;
 using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 {
-  public class ConstructionPlotService : IConstructionPlotService, IDisposable
+  public class ConstructionPlotService : IConstructionPlotService, IDisposable, IGameplayInit
   {
     private readonly IConstructionPlotFactory _constructionPlotFactory;
+    private readonly IProgressReader _progressService;
     private readonly IStaticDataProvider _staticDataProvider;
     private readonly ICommandBroker _commandBroker;
     private readonly IResourceService _resourceService;
@@ -27,27 +31,31 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
 
     public IObservableCollection<ConstructionPlotInfo> AvailablePlots => _availablePlots;
 
-    public ConstructionPlotService(IProgressService progressService, IStaticDataProvider staticDataProvider,
+    public ConstructionPlotService(IProgressReader progressService, IStaticDataProvider staticDataProvider,
       ICommandBroker commandBroker, IConstructionPlotFactory constructionPlotFactory,
       IResourceService resourceService)
     {
+      _progressService = progressService;
       _staticDataProvider = staticDataProvider;
       _commandBroker = commandBroker;
       _constructionPlotFactory = constructionPlotFactory;
       _resourceService = resourceService;
+    }
 
-      foreach (ConstructionPlotConfig config in staticDataProvider.GetAllBuildingPlots())
+    public void Initialize()
+    {
+      foreach (ConstructionPlotConfig config in _staticDataProvider.GetAllBuildingPlots())
         _availablePlots.Add(new ConstructionPlotInfo(config.Type, config.SizeInCells));
 
-      foreach (ConstructionPlotDataProxy data in progressService.GameStateProxy.ConstructionPlotsCollection)
-        CreateView(data);
+      foreach (IPlotDataReader plotDataReader in _progressService.GameStateModel.ReadOnlyPlots.Values) 
+        CreateView(plotDataReader).Forget();
 
-      progressService.GameStateProxy.ConstructionPlotsCollection
+      _progressService.GameStateModel.ReadOnlyPlots
         .ObserveAdd()
-        .Subscribe(addEvent => CreateView(addEvent.Value))
+        .Subscribe(addEvent => CreateView(addEvent.Value).Forget())
         .AddTo(_disposable);
 
-      progressService.GameStateProxy.ConstructionPlotsCollection
+      _progressService.GameStateModel.ReadOnlyPlots
         .ObserveRemove()
         .Subscribe(removeValue => DestroyView(removeValue.Value))
         .AddTo(_disposable);
@@ -57,14 +65,14 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
     {
       ConstructionPlotConfig config = _staticDataProvider.GetConstructionPlotConfig(type);
 
-      if (_resourceService.TrySpend(config.Price.Resource.Kind, config.Price.Amount))
+      if (_resourceService.TrySpend(config.Price.Kind, ResourceSink.Construction, config.Price.Amount))
       {
         PlaceConstructionPlotCommand command = new(type, placementResultCells);
         _commandBroker.ExecuteCommand(command);
       }
     }
 
-    private async void CreateView(ConstructionPlotDataProxy data)
+    private async UniTaskVoid CreateView(IPlotDataReader data)
     {
       Vector3 worldPivot = GridUtils.GetWorldPivot(data.OccupiedCells);
       ConstructionPlotViewModel
@@ -73,7 +81,7 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
       _constructionPlots.Add(data.Id, viewModel);
     }
 
-    private void DestroyView(ConstructionPlotDataProxy data)
+    private void DestroyView(IPlotDataReader data)
     {
       if (_constructionPlots.Remove(data.Id, out ConstructionPlotViewModel viewModel))
         viewModel.Destroy();

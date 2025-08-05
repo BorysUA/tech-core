@@ -23,10 +23,7 @@ namespace _Project.CodeBase.Gameplay.Building.Actions
 
     public void Execute()
     {
-      // if (_resourceService.TrySpend())
-      // {
-      //   _healthModule.Repair();
-      // }
+      
     }
   }
 }

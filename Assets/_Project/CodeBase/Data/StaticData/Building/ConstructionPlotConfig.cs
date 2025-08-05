@@ -1,4 +1,4 @@
-﻿using _Project.CodeBase.Data.StaticData.Resource;
+﻿using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Gameplay.Constants;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -12,14 +12,13 @@ namespace _Project.CodeBase.Data.StaticData.Building
   {
     public ConstructionPlotType Type;
     public Vector2Int SizeInCells;
-    public ResourceCostConfig Price;
+    public ResourceAmountData Price;
     public AssetReferenceGameObject PrefabReference;
 
     [FormerlySerializedAs("RequiredContent")] [Header("Requirements for building construction")]
     public PlacementFilter PlacementFilter;
 
-    [Header("UI")] 
-    public string Title;
+    [Header("UI")] public string Title;
     public Sprite Icon;
   }
 }

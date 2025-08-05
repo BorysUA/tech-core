@@ -1,33 +1,31 @@
-﻿using _Project.CodeBase.Gameplay.Meteorite;
-using _Project.CodeBase.Gameplay.Services;
-using _Project.CodeBase.Gameplay.Services.Timers;
+﻿using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.States.GameplayStates;
+using _Project.CodeBase.Gameplay.States.PhaseFlow;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
 
 namespace _Project.CodeBase.Gameplay.States.GameStates
 {
-  public class GameplayState : IState
+  public class GameplayState : IEnterState, IExitState
   {
     private readonly GameplayStateMachine _gameplayStateMachine;
-    private readonly ISessionTimer _sessionTimer;
+    private readonly GameplayPhaseFlow _gameplayPhaseFlow;
 
-    public GameplayState(GameplayStateMachine gameplayStateMachine,
-      ISessionTimer sessionTimer)
+    public GameplayState(GameplayStateMachine gameplayStateMachine, GameplayPhaseFlow gameplayPhaseFlow)
     {
       _gameplayStateMachine = gameplayStateMachine;
-      _sessionTimer = sessionTimer;
+      _gameplayPhaseFlow = gameplayPhaseFlow;
     }
 
     public void Enter()
     {
-      _sessionTimer.Start();
+      _gameplayPhaseFlow.SetPhase(GameplayPhase.Started);
       _gameplayStateMachine.Enter<DefaultGameplayState>();
     }
 
     public void Exit()
     {
-      _sessionTimer.Pause();
       _gameplayStateMachine.ExitCurrentState();
+      _gameplayPhaseFlow.SetPhase(GameplayPhase.Ended);
     }
   }
 }

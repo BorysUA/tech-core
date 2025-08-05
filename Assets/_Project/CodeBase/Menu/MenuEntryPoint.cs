@@ -6,8 +6,8 @@ namespace _Project.CodeBase.Menu
 {
   public class MenuEntryPoint : IInitializable
   {
-    private GameStatesFactory _gameStatesFactory;
-    private GameStateMachine _stateMachine;
+    private readonly GameStatesFactory _gameStatesFactory;
+    private readonly GameStateMachine _stateMachine;
 
     public MenuEntryPoint(GameStatesFactory gameStatesFactory, GameStateMachine stateMachine)
     {
@@ -19,7 +19,7 @@ namespace _Project.CodeBase.Menu
     {
       _stateMachine.RegisterSceneState(_gameStatesFactory.CreateState<LoadMainMenuState>());
       _stateMachine.RegisterSceneState(_gameStatesFactory.CreateState<MainMenuState>());
-      
+
       _stateMachine.Enter<LoadMainMenuState>();
     }
   }

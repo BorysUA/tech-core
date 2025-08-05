@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.CodeBase.Infrastructure.StateMachine.Interfaces;
-using _Project.CodeBase.Services.LogService;
 
 namespace _Project.CodeBase.Infrastructure.StateMachine
 {
   public abstract class BaseStateMachine
   {
-    protected Dictionary<Type, IExitState> States { get; } = new();
-    private IExitState _currentState;
+    protected Dictionary<Type, IState> States { get; } = new();
+    private IState _currentState;
 
     public void Enter<TState>() where TState : class, IState
     {
       IState state = GetState<TState>();
       ChangeState(state);
-      state.Enter();
+
+      if (state is IEnterState enterState)
+        enterState.Enter();
     }
 
     public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadState<TPayload>
@@ -24,7 +25,7 @@ namespace _Project.CodeBase.Infrastructure.StateMachine
       gameState.Enter(payload);
     }
 
-    public void RegisterState<TState>(TState gameState) where TState : IExitState
+    public void RegisterState<TState>(TState gameState) where TState : IState
     {
       States.Add(typeof(TState), gameState);
 
@@ -34,22 +35,25 @@ namespace _Project.CodeBase.Infrastructure.StateMachine
 
     public void ExitCurrentState()
     {
-      _currentState?.Exit();
+      if (_currentState is IExitState exitState)
+        exitState.Exit();
     }
 
-    protected virtual void OnStateEnter(IExitState state)
+    protected virtual void OnStateEnter(IState state)
     {
     }
 
-    protected virtual void OnStateExit(IExitState state)
+    protected virtual void OnStateExit(IState state)
     {
     }
 
-    private void ChangeState(IExitState nextState)
+    private void ChangeState(IState nextState)
     {
       if (_currentState != null)
       {
-        _currentState.Exit();
+        if (_currentState is IExitState exitState)
+          exitState.Exit();
+
         OnStateExit(_currentState);
       }
 
@@ -57,7 +61,7 @@ namespace _Project.CodeBase.Infrastructure.StateMachine
       OnStateEnter(_currentState);
     }
 
-    private TState GetState<TState>() where TState : class, IExitState =>
+    private TState GetState<TState>() where TState : class, IState =>
       States[typeof(TState)] as TState;
   }
 }

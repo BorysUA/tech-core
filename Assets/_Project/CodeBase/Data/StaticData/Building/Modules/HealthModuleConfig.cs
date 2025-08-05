@@ -1,4 +1,5 @@
 ﻿using System;
+using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using _Project.CodeBase.Gameplay.Building.Modules;
 using _Project.CodeBase.Gameplay.Building.Modules.Health;
 using UnityEngine;
@@ -6,9 +7,11 @@ using UnityEngine;
 namespace _Project.CodeBase.Data.StaticData.Building.Modules
 {
   [CreateAssetMenu(fileName = "HealthModule", menuName = "ScriptableObjects/BuildingModules/HealthModule", order = 0)]
-  public class HealthModuleConditionsConfig : BuildingModuleConfig
+  public class HealthModuleConfig : BuildingModuleConfig, IModuleProgressFactory
   {
     public HealthConfig HealthConfig;
+
+    public override Type ModuleType => typeof(HealthModule);
 
     protected override BuildingModule InstantiateModule(Func<Type, BuildingModule> instantiator) =>
       instantiator.Invoke(typeof(HealthModule));
@@ -18,6 +21,11 @@ namespace _Project.CodeBase.Data.StaticData.Building.Modules
       base.SetupModule(module, buildingConfig);
       HealthModule healthModule = (HealthModule)module;
       healthModule.Setup(HealthConfig);
+    }
+
+    public (Type moduleType, IModuleData data) CreateInitialData()
+    {
+      return (typeof(HealthModule), new HealthData(HealthConfig.Max));
     }
   }
 }
