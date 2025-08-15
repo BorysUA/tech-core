@@ -16,6 +16,7 @@ MonoBehaviour:
   Category: 1
   BuildingsModules:
   - {fileID: 11400000, guid: 76f6783f950fa40438d63d680f533689, type: 2}
+  - {fileID: 11400000, guid: 5652503ee790f6c4d980fbf078b876fe, type: 2}
   PrefabReference:
     m_AssetGUID: 277e0f71c79d6d3439346bf02ffb2025
     m_SubObjectName: 

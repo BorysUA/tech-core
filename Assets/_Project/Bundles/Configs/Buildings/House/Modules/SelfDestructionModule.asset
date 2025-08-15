@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 194269985ab5475da03cba14abbe0c02, type: 3}
-  m_Name: MeteoriteSpawner
+  m_Script: {fileID: 11500000, guid: 97f12aa215dd4772a0af051700e34535, type: 3}
+  m_Name: SelfDestructionModule
   m_EditorClassIdentifier: 
-  SpawnInterval: 5
-  SpawnCount: 1
-  SpawnPointOffset: {x: 8, y: 20, z: -8}
-  PossibleMeteorites:
-  - {fileID: 11400000, guid: d8eb84dd1b07b274ab1973c50573cb14, type: 2}
+  OperationalConditions: []
+  IgnoreGlobalConditions: 1
+  RefundRatio: 0.5
