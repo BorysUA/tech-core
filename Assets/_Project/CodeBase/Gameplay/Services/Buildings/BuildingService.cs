@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services.Command;
-using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Gameplay.States.PhaseFlow;
-using _Project.CodeBase.Gameplay.UI.HUD;
-using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
-using _Project.CodeBase.UI.Services;
 using R3;
 using UnityEngine;
 
@@ -21,7 +17,6 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     private readonly ICommandBroker _commandBroker;
     private readonly IStaticDataProvider _staticDataProvider;
     private readonly IBuildingRepository _buildingRepository;
-    private readonly IPopUpService _popUpService;
     private readonly IGameplayPhaseFlow _gameplayPhaseFlow;
     private readonly CompositeDisposable _subscriptions = new();
 
@@ -31,20 +26,24 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     public IReadOnlyDictionary<BuildingCategory, IEnumerable<BuildingInfo>> AvailableSortedBuildings =>
       _availableSortedBuildings;
 
-    public ReadOnlyReactiveProperty<BuildingViewModel> CurrentSelectedBuilding => _currentSelectedBuilding;
+    public ReadOnlyReactiveProperty<IBuildingActionReader> CurrentSelectedBuilding { get; private set; }
 
     public BuildingService(ICommandBroker commandBroker, IStaticDataProvider staticDataProvider,
-      IBuildingRepository buildingRepository, IPopUpService popUpService, IGameplayPhaseFlow gameplayPhaseFlow)
+      IBuildingRepository buildingRepository, IGameplayPhaseFlow gameplayPhaseFlow)
     {
       _commandBroker = commandBroker;
       _staticDataProvider = staticDataProvider;
       _buildingRepository = buildingRepository;
-      _popUpService = popUpService;
       _gameplayPhaseFlow = gameplayPhaseFlow;
     }
 
     public void Initialize()
     {
+      CurrentSelectedBuilding = _currentSelectedBuilding
+        .Select(viewModel => (IBuildingActionReader)viewModel)
+        .ToReadOnlyReactiveProperty()
+        .AddTo(_subscriptions);
+
       foreach (var categoryGroup in _staticDataProvider.GetBuildingsShopCatalog().Categories)
       {
         _availableSortedBuildings.Add(categoryGroup.Category, categoryGroup.Buildings.Select(buildingType =>
@@ -54,16 +53,12 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
         }).ToList());
       }
 
-      _buildingRepository.BuildingsAdded.Subscribe(viewModel =>
-        {
-          _gameplayPhaseFlow.Register(viewModel);
-
-          _popUpService
-            .ShowPopUp<BuildingIndicatorsPopUp, BuildingIndicatorsViewModel, BuildingViewModel>(viewModel, false);
-        })
+      _buildingRepository.BuildingsAdded
+        .Subscribe(viewModel => _gameplayPhaseFlow.Register(viewModel))
         .AddTo(_subscriptions);
 
-      _buildingRepository.BuildingsRemoved.Subscribe(viewModel => _gameplayPhaseFlow.Unregister(viewModel))
+      _buildingRepository.BuildingsRemoved
+        .Subscribe(viewModel => _gameplayPhaseFlow.Unregister(viewModel))
         .AddTo(_subscriptions);
     }
 

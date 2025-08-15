@@ -10,7 +10,7 @@ namespace _Project.CodeBase.Gameplay.Models.Persistent
   {
     public ConstructionPlotData Source { get; }
     
-    public string Id { get; }
+    public int Id { get; }
     public ConstructionPlotType Type { get; }
     public List<Vector2Int> OccupiedCells { get; }
 

@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Constants;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings
 {

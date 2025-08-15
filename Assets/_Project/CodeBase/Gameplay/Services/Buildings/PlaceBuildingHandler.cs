@@ -4,9 +4,7 @@ using System.Linq;
 using _Project.CodeBase.Data.Progress.Building;
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using _Project.CodeBase.Data.Progress.ResourceData;
-using _Project.CodeBase.Data.StaticData;
 using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Models.Persistent;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Grid;
@@ -14,6 +12,7 @@ using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.Signals.Domain;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Services.LogService;
 using Zenject;
 using UnityEngine;
@@ -25,17 +24,17 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
   {
     private readonly IProgressWriter _progressService;
     private readonly ILogService _logService;
-    private readonly IGridOccupancyService _gridOccupancyService;
+    private readonly IGridOccupancyQuery _gridOccupancyQuery;
     private readonly SignalBus _signalBus;
     private readonly IStaticDataProvider _staticDataProvider;
     private readonly IResourceMutator _resourceMutator;
 
     public PlaceBuildingHandler(IProgressWriter progressService, ILogService logService,
-      IGridOccupancyService gridOccupancyService, SignalBus signalBus, IStaticDataProvider staticDataProvider,
+      IGridOccupancyQuery gridOccupancyQuery, SignalBus signalBus, IStaticDataProvider staticDataProvider,
       IResourceMutator resourceMutator)
     {
       _logService = logService;
-      _gridOccupancyService = gridOccupancyService;
+      _gridOccupancyQuery = gridOccupancyQuery;
       _progressService = progressService;
       _signalBus = signalBus;
       _staticDataProvider = staticDataProvider;
@@ -46,7 +45,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     {
       BuildingConfig buildingConfig = _staticDataProvider.GetBuildingConfig(command.Type);
 
-      if (!_gridOccupancyService.DoesCellsMatchFilter(command.OccupiedCells, buildingConfig.PlacementFilter))
+      if (!_gridOccupancyQuery.DoesCellsMatchFilter(command.OccupiedCells, buildingConfig.PlacementFilter))
       {
         _logService.LogError(GetType(),
           $"Attempt to place building {buildingConfig.Type} on invalid cells: [{string.Join(", ", command.OccupiedCells)}]");

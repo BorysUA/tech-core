@@ -8,11 +8,11 @@ namespace _Project.CodeBase.Data.Progress
   [Serializable]
   public class ConstructionPlotData
   {
-    public string Id;
+    public int Id;
     public ConstructionPlotType Type;
     public List<Vector2Int> OccupiedCells;
 
-    public ConstructionPlotData(string id, ConstructionPlotType type, List<Vector2Int> occupiedCells)
+    public ConstructionPlotData(int id, ConstructionPlotType type, List<Vector2Int> occupiedCells)
     {
       Id = id;
       Type = type;

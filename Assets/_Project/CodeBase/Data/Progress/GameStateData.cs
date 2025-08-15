@@ -17,7 +17,7 @@ namespace _Project.CodeBase.Data.Progress
 
     public GameStateData(SessionInfo sessionInfo, Dictionary<ResourceKind, GameResourceData> resources)
     {
-      Resources = new Dictionary<ResourceKind, GameResourceData>(resources);
+      Resources = resources;
       SessionInfo = sessionInfo;
     }
   }

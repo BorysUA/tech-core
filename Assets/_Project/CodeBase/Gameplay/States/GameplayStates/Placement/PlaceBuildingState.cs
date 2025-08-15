@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services;
@@ -12,6 +12,7 @@ using _Project.CodeBase.Services.InputService;
 using _Project.CodeBase.UI.Services;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
 {
@@ -21,7 +22,7 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
     private readonly IBuildingFactory _buildingFactory;
     private readonly IStaticDataProvider _staticDataProvider;
     private readonly GameplayStateMachine _gameplayStateMachine;
-    private readonly IGridOccupancyService _gridOccupancyService;
+    private readonly IGridOccupancyQuery _gridOccupancyQuery;
     private readonly CoordinateMapper _coordinateMapper;
 
     private PlacementFilter _placementFilter;
@@ -30,14 +31,14 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
     public PlaceBuildingState(IPopUpService popUpService, IInputService inputService, IBuildingService buildingService,
       GridPlacement gridPlacement, IStaticDataProvider staticDataProvider,
       GameplayStateMachine gameplayStateMachine, IBuildingFactory buildingFactory,
-      IGridOccupancyService gridOccupancyService, CoordinateMapper coordinateMapper) : base(gridPlacement,
+      IGridOccupancyQuery gridOccupancyQuery, CoordinateMapper coordinateMapper) : base(gridPlacement,
       inputService, popUpService)
     {
       _buildingService = buildingService;
       _staticDataProvider = staticDataProvider;
       _gameplayStateMachine = gameplayStateMachine;
       _buildingFactory = buildingFactory;
-      _gridOccupancyService = gridOccupancyService;
+      _gridOccupancyQuery = gridOccupancyQuery;
       _coordinateMapper = coordinateMapper;
     }
 
@@ -55,7 +56,7 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
     }
 
     protected override bool IsPlacementValid(IEnumerable<Vector2Int> placeCells) => 
-      _gridOccupancyService.DoesCellsMatchFilter(placeCells, _placementFilter);
+      _gridOccupancyQuery.DoesCellsMatchFilter(placeCells, _placementFilter);
 
     protected override void ProcessResult(PlacementResult placementResult)
     {

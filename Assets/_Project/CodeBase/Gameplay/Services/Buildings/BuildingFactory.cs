@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Data.StaticData.Building.Conditions;
-using _Project.CodeBase.Data.StaticData.Building.Modules;
-using _Project.CodeBase.Gameplay.Building;
-using _Project.CodeBase.Gameplay.Building.Conditions;
-using _Project.CodeBase.Gameplay.Building.Modules;
+using _Project.CodeBase.Gameplay.Buildings;
+using _Project.CodeBase.Gameplay.Buildings.Conditions;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Constants;
@@ -18,6 +15,7 @@ using UnityEngine.AddressableAssets;
 using Zenject;
 using IAssetProvider = _Project.CodeBase.Infrastructure.Services.Interfaces.IAssetProvider;
 using Object = UnityEngine.Object;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings
 {

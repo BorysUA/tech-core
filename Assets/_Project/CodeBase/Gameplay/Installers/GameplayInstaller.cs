@@ -1,6 +1,5 @@
-﻿using _Project.CodeBase.Gameplay.Building.Actions.Common;
-using _Project.CodeBase.Gameplay.Building.Modules;
-using _Project.CodeBase.Gameplay.Building.Modules.Spaceport;
+﻿using _Project.CodeBase.Gameplay.Buildings.Actions.Common;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.LiveEvents;
 using _Project.CodeBase.Gameplay.Meteorite;
@@ -19,6 +18,7 @@ using _Project.CodeBase.Gameplay.Signals.Command;
 using _Project.CodeBase.Gameplay.Signals.Domain;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Gameplay.States.PhaseFlow;
+using _Project.CodeBase.Gameplay.UI.Effects;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.Gameplay.UI.HUD;
 using _Project.CodeBase.Gameplay.UI.HUD.BuildingAction;
@@ -27,7 +27,6 @@ using _Project.CodeBase.Gameplay.UI.HUD.Notification;
 using _Project.CodeBase.Gameplay.UI.HUD.ResourceBar;
 using _Project.CodeBase.Gameplay.UI.PopUps.ConfirmPlace;
 using _Project.CodeBase.Gameplay.UI.Root;
-using _Project.CodeBase.Gameplay.UI.Spawner;
 using _Project.CodeBase.Gameplay.UI.Windows.Settings;
 using _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
@@ -57,7 +56,6 @@ namespace _Project.CodeBase.Gameplay.Installers
       BindViewModels();
       BindUiRepositories();
       BindUiFactories();
-      BindUiSpawners();
       BindCamera();
       BindSignals();
       BindInputHandlers();
@@ -68,6 +66,7 @@ namespace _Project.CodeBase.Gameplay.Installers
       BindSpawners();
       BindUtilityServices();
       BindUiServices();
+      BindUiEffects();
       BindModels();
       BindDomainServices();
     }
@@ -151,24 +150,24 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.BindInterfacesTo<WindowsFactory>().AsSingle();
       Container.BindInterfacesTo<PopUpFactory>().AsSingle();
     }
-
-    private void BindUiSpawners()
-    {
-      Container.BindInterfacesAndSelfTo<ResourceFlyTextSpawner>().AsSingle();
-    }
-
+    
     private void BindSessionServices()
     {
       Container.BindInterfacesAndSelfTo<GameplayPhaseFlow>().AsSingle();
       Container.BindInterfacesTo<GameSaveService>().AsSingle();
       Container.BindInterfacesTo<SessionTimer>().AsSingle();
-      Container.BindInterfacesTo<StartingResourceProvider>().AsSingle();
     }
 
     private void BindUiServices()
     {
       Container.BindInterfacesTo<WindowsService>().AsSingle();
       Container.BindInterfacesTo<PopUpService>().AsSingle();
+    }
+
+    private void BindUiEffects()
+    {
+      Container.BindInterfacesTo<BuildingIndicatorsUiEffect>().AsSingle();
+      Container.BindInterfacesAndSelfTo<ResourceFlyTextUiEffect>().AsSingle();
     }
 
     private void BindDomainServices()
@@ -178,7 +177,7 @@ namespace _Project.CodeBase.Gameplay.Installers
 
       Container.BindInterfacesTo<BuildingService>().AsSingle();
       Container.BindInterfacesTo<ConstructionPlotService>().AsSingle();
-      Container.BindInterfacesTo<GridOccupancyService>().AsSingle();
+      Container.BindInterfacesTo<GridOccupancyQuery>().AsSingle();
       Container.BindInterfacesTo<ResourceService>().AsSingle();
       Container.BindInterfacesTo<ProductionModifierService>().AsSingle();
       Container.Bind<ResourceBehaviourMap>().AsSingle();

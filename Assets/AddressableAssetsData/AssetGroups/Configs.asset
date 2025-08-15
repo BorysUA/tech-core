@@ -33,6 +33,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - ConstructionPlotConfigs
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48ea527e7b514734c9bfffa60846dd20
+    m_Address: Configs/GameStartProfiles
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - GameStartProfiles
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4d2e4522559813c439b9a63020de98fd
     m_Address: Configs/BuildingIndicators
     m_ReadOnly: 0

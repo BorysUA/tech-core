@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using _Project.CodeBase.Data.StaticData.Building.StatusItems;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
@@ -10,12 +10,13 @@ using _Project.CodeBase.UI.Core;
 using _Project.CodeBase.UI.Services;
 using R3;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
 {
-  public class BuildingIndicatorsViewModel : BasePopUpViewModel, IParameterizedPopUp<BuildingViewModel>
+  public class BuildingIndicatorsViewModel : BasePopUpViewModel, IParameterizedPopUp<IBuildingIndicatorReader>
   {
-    private BuildingViewModel _buildingViewModel;
+    private IBuildingIndicatorReader _buildingViewModel;
 
     private readonly ICameraMovement _cameraMovement;
     private readonly CoordinateMapper _coordinateMapper;
@@ -43,7 +44,7 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
       _staticDataProvider = staticDataProvider;
     }
 
-    public void Initialize(BuildingViewModel viewModel)
+    public void Initialize(IBuildingIndicatorReader viewModel)
     {
       _buildingViewModel = viewModel;
 

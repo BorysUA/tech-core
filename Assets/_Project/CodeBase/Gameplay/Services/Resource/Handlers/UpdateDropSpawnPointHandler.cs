@@ -4,6 +4,7 @@ using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Resource.Commands;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Services.LogService;
 
 namespace _Project.CodeBase.Gameplay.Services.Resource.Handlers

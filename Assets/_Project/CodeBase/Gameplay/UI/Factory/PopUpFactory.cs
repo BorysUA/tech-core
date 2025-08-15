@@ -1,5 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.AssetsPipeline;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.UI;
 using _Project.CodeBase.UI.Core;
@@ -17,7 +18,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
     private readonly PopUpRepository _popUpRepository;
     private readonly IInstantiator _instantiator;
 
-    private PopUpsCanvas _popUpsCanvas;
+    private readonly PopUpsCanvas _popUpsCanvas;
 
     public PopUpFactory(AddressMap addressMap, IAssetProvider assetProvider, IInstantiator instantiator,
       PopUpsCanvas popUpsCanvas, PopUpRepository popUpRepository)

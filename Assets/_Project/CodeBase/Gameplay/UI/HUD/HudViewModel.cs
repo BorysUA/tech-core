@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.UI.HUD.BuildingAction;
@@ -16,17 +16,17 @@ namespace _Project.CodeBase.Gameplay.UI.HUD
   public class HudViewModel : IDisposable
   {
     private readonly IWindowsService _windowsService;
-    private readonly ResourceBarViewModel _resourceBarViewModel;
-    private readonly BuildingActionBarViewModel _buildingActionBarViewModel;
+    private readonly ResourceBarViewModel _resourceBar;
+    private readonly BuildingActionBarViewModel _buildingActionBar;
     private readonly IBuildingService _buildingService;
     private readonly CompositeDisposable _subscriptions = new();
 
-    public HudViewModel(IWindowsService windowsService, ResourceBarViewModel resourceBarViewModel,
-      BuildingActionBarViewModel buildingActionBarViewModel, IBuildingService buildingService)
+    public HudViewModel(IWindowsService windowsService, ResourceBarViewModel resourceBar,
+      BuildingActionBarViewModel buildingActionBar, IBuildingService buildingService)
     {
       _windowsService = windowsService;
-      _resourceBarViewModel = resourceBarViewModel;
-      _buildingActionBarViewModel = buildingActionBarViewModel;
+      _resourceBar = resourceBar;
+      _buildingActionBar = buildingActionBar;
       _buildingService = buildingService;
     }
 
@@ -55,18 +55,18 @@ namespace _Project.CodeBase.Gameplay.UI.HUD
     public void Dispose() =>
       _subscriptions.Dispose();
 
-    private void OnBuildingSelectionChanged(BuildingViewModel buildingViewModel)
+    private void OnBuildingSelectionChanged(IBuildingActionReader buildingActionReader)
     {
-      if (buildingViewModel != null)
-        ShowBuildingActionPanel(buildingViewModel);
+      if (buildingActionReader != null)
+        ShowBuildingActionPanel(buildingActionReader);
       else
         HideBuildingActionPanel();
     }
 
-    private void ShowBuildingActionPanel(BuildingViewModel building) =>
-      _buildingActionBarViewModel.Show(building);
+    private void ShowBuildingActionPanel(IBuildingActionReader buildingActionReader) =>
+      _buildingActionBar.Show(buildingActionReader);
 
     private void HideBuildingActionPanel() =>
-      _buildingActionBarViewModel.Hide();
+      _buildingActionBar.Hide();
   }
 }

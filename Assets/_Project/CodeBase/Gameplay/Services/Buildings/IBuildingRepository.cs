@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using R3;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
-using _Project.CodeBase.Gameplay.Building.Actions;
-using _Project.CodeBase.Gameplay.Building.Actions.Common;
+using _Project.CodeBase.Gameplay.Buildings.Actions.Common;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.LiveEvents;
 using _Project.CodeBase.Gameplay.UI.HUD;
@@ -22,7 +21,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
     UniTask<FlyText> CreateFlyText();
     UniTask<BuildingActionButton> CreateBuildingActionButton(ActionType actionType, Transform container);
 
-    UniTask<BuildingIndicatorView> CreateBuildingIndicator(BuildingIndicatorType indicatorType,
+    Task<BuildingIndicatorView> CreateBuildingIndicator(BuildingIndicatorType indicatorType,
       Transform statusIconsContainer);
 
     UniTask<ResourceAmountItem> CreateResourceAmountItem(ResourceKind resourceKind, int amount,

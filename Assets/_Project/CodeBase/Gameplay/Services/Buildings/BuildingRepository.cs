@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings
 {

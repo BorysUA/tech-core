@@ -1,7 +1,7 @@
 ﻿using System;
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
-using _Project.CodeBase.Gameplay.Building.Modules;
-using _Project.CodeBase.Gameplay.Building.Modules.Health;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
+using _Project.CodeBase.Gameplay.Buildings.Modules.Health;
 using UnityEngine;
 
 namespace _Project.CodeBase.Data.StaticData.Building.Modules

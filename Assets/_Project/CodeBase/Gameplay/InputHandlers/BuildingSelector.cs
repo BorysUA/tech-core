@@ -1,10 +1,10 @@
-﻿using _Project.CodeBase.Gameplay.Building;
-using _Project.CodeBase.Gameplay.Constants;
+﻿using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Services.InputService;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.InputHandlers
 {
@@ -12,14 +12,14 @@ namespace _Project.CodeBase.Gameplay.InputHandlers
   {
     private readonly CoordinateMapper _coordinateMapper;
     private readonly IBuildingService _buildingService;
-    private readonly IGridOccupancyService _gridOccupancyService;
+    private readonly IGridOccupancyQuery _gridOccupancyQuery;
 
     public BuildingSelector(CoordinateMapper coordinateMapper, IBuildingService buildingService,
-      IGridOccupancyService gridOccupancyService)
+      IGridOccupancyQuery gridOccupancyQuery)
     {
       _coordinateMapper = coordinateMapper;
       _buildingService = buildingService;
-      _gridOccupancyService = gridOccupancyService;
+      _gridOccupancyQuery = gridOccupancyQuery;
     }
 
     public override void OnTap(Vector2 inputPoint)
@@ -28,8 +28,10 @@ namespace _Project.CodeBase.Gameplay.InputHandlers
       Vector3 snappedPosition = GridUtils.GetSnappedPosition(worldPosition);
       Vector2Int cell = GridUtils.GetCell(snappedPosition);
 
-      if (_gridOccupancyService.TryGetCell(cell, out ICellStatus status) && status.HasContent(CellContentType.Building))
-        _buildingService.SelectBuilding(status.BuildingId);
+      CellStatus cellStatus = _gridOccupancyQuery.GetCellOrEmpty(cell);
+
+      if (!cellStatus.IsEmpty && cellStatus.HasContent(CellContentType.Building))
+        _buildingService.SelectBuilding(cellStatus.BuildingId);
       else
         _buildingService.UnselectCurrent();
     }

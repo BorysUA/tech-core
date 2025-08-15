@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.UI.PopUps.ConfirmPlace;
@@ -41,6 +41,7 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates.Placement
     public virtual void Exit()
     {
       _inputService.Unsubscribe(GridPlacement);
+      GridPlacement.StopPlacing();
     }
 
     protected abstract UniTask SetupPlacement(T type);

@@ -1,7 +1,7 @@
 ﻿using System;
 using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using _Project.CodeBase.Data.Progress.ResourceData;
-using _Project.CodeBase.Gameplay.Building.Modules.Spaceport;
+using _Project.CodeBase.Gameplay.Buildings.Modules.Trade;
 using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.UI.Core;

@@ -6,6 +6,7 @@ using _Project.CodeBase.Gameplay.Services.Resource.Commands;
 using _Project.CodeBase.Gameplay.Services.Resource.Results;
 using _Project.CodeBase.Gameplay.Signals.Domain;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Services.LogService;
 using Zenject;
 

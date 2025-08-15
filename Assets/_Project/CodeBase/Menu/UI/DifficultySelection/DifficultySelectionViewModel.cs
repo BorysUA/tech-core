@@ -1,5 +1,4 @@
 ﻿using _Project.CodeBase.Data.Settings;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Menu.Services;
 using _Project.CodeBase.Menu.Signals;
 using _Project.CodeBase.Menu.UI.Menu;

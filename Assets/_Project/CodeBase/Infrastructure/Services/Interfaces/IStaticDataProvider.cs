@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
+using _Project.CodeBase.Data.StaticData;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.InteractionButtons;
 using _Project.CodeBase.Data.StaticData.Building.StatusItems;
 using _Project.CodeBase.Data.StaticData.Map;
 using _Project.CodeBase.Data.StaticData.Meteorite;
 using _Project.CodeBase.Data.StaticData.Resource;
-using _Project.CodeBase.Gameplay.Building.Actions.Common;
+using _Project.CodeBase.Gameplay.Buildings.Actions.Common;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
+using _Project.CodeBase.Menu.UI.DifficultySelection;
 
 namespace _Project.CodeBase.Infrastructure.Services.Interfaces
 {
   public interface IStaticDataProvider
   {
     BuildingConfig GetBuildingConfig(BuildingType buildingType);
-    IEnumerable<BuildingConfig> GetAllBuildings();
-    IEnumerable<ResourceConfig> GetAllResources();
     ResourceConfig GetResourceConfig(ResourceKind resourceKind);
-    IEnumerable<MeteoriteConfig> GetAllMeteorites();
     MeteoriteConfig GetMeteoriteConfig(MeteoriteType meteoriteType);
     MeteoriteSpawnerConfig GetMeteoriteSpawnerConfig();
     ResourceDropConfig GetResourceDropConfig(ResourceDropType resourceDropType);
@@ -30,5 +29,6 @@ namespace _Project.CodeBase.Infrastructure.Services.Interfaces
     IEnumerable<MapEntityData> GetMapEntities();
     BuildingsShopCatalog GetBuildingsShopCatalog();
     T GetModuleConfig<T>(BuildingType buildingType) where T : BuildingModuleConfig;
+    GameStartProfile GetGameStartProfile(GameDifficulty gameDifficulty);
   }
 }

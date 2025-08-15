@@ -1,8 +1,8 @@
 ﻿using System;
 using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Data.StaticData.Resource;
-using _Project.CodeBase.Gameplay.Building.Conditions;
-using _Project.CodeBase.Gameplay.Building.Modules;
+using _Project.CodeBase.Gameplay.Buildings.Conditions;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
 using UnityEngine;
 
 namespace _Project.CodeBase.Data.StaticData.Building.Conditions

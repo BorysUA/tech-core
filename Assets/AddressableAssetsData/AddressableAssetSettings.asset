@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 2e9bf2263ec7b9049a136f61a9d2ce14
   m_currentHash:
     serializedVersion: 2
-    Hash: 3296e1c76450c4a1e2eae6bb516f652b
+    Hash: 1de980c55d558ce37e556fe6415eada3
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -119,6 +119,7 @@ MonoBehaviour:
     - BuildingActionButtonConfigs
     - BuildingIndicatorConfigs
     - VFX
+    - GameStartProfiles
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 1119d1440ee219f4891ea15a9eddd45a, type: 2}

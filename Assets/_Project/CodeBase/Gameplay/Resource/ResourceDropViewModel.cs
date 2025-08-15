@@ -1,7 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Pool;
-using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.Services.Resource.Commands;
 using _Project.CodeBase.Utility;
 using R3;

@@ -13,5 +13,6 @@
     public const string GameMap = "Configs/GameMap";
     public const string MeteoriteVFXs = "Configs/MeteoriteVFX";
     public const string BuildingsShopCatalog = "Configs/BuildingsShopCatalog";
+    public const string GameStartProfiles = "GameStartProfiles";
   }
 }

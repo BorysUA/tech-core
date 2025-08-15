@@ -1,4 +1,5 @@
-﻿using _Project.CodeBase.Gameplay.Building;
+﻿using System;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.InputHandlers;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.Services.CameraSystem;
@@ -6,10 +7,11 @@ using _Project.CodeBase.UI.Core;
 using _Project.CodeBase.UI.Services;
 using R3;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.UI.PopUps.ConfirmPlace
 {
-  public class ConfirmPlaceViewModel : BasePopUpViewModel
+  public class ConfirmPlaceViewModel : BasePopUpViewModel, IDisposable
   {
     private readonly GridPlacement _gridPlacement;
     private readonly CompositeDisposable _compositeDisposable = new();

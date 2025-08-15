@@ -1,9 +1,9 @@
 ﻿using _Project.CodeBase.Data.StaticData.Meteorite;
 using _Project.CodeBase.Data.StaticData.Resource;
 using _Project.CodeBase.Extensions;
-using _Project.CodeBase.Gameplay.Building;
-using _Project.CodeBase.Gameplay.Building.Modules.Health;
-using _Project.CodeBase.Gameplay.Building.VFX.Module;
+using _Project.CodeBase.Gameplay.Buildings;
+using _Project.CodeBase.Gameplay.Buildings.Modules.Health;
+using _Project.CodeBase.Gameplay.Buildings.VFX.Module;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Markers;
 using _Project.CodeBase.Gameplay.Services.Buildings;
@@ -14,6 +14,7 @@ using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using static UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.Meteorite
 {

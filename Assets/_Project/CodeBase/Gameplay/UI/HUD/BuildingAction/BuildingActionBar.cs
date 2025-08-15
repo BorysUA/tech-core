@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.CodeBase.Gameplay.Building.Actions;
-using _Project.CodeBase.Gameplay.Building.Actions.Common;
+using _Project.CodeBase.Gameplay.Buildings.Actions.Common;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using Cysharp.Threading.Tasks;
 using R3;

@@ -3,6 +3,7 @@ using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Gameplay.Signals.Domain;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using Zenject;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings

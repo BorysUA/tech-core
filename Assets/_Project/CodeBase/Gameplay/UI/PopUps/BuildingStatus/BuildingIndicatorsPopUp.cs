@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using _Project.CodeBase.Gameplay.UI.Factory;
 using _Project.CodeBase.UI.Core;
 using Cysharp.Threading.Tasks;
@@ -14,8 +15,8 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
     [SerializeField] private RectTransform _rectTransform;
 
     private IGameplayUiFactory _uiFactory;
-    private readonly Dictionary<BuildingIndicatorType, BuildingIndicatorView> _indicatorViews = new();
-    private readonly HashSet<BuildingIndicatorType> _pending = new();
+
+    private readonly Dictionary<BuildingIndicatorType, Task<BuildingIndicatorView>> _indicatorViewTasks = new();
 
     [Inject]
     public void Construct(IGameplayUiFactory uiFactory) =>
@@ -36,7 +37,7 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
         .AddTo(this);
 
       ViewModel.IndicatorChanged
-        .Subscribe(indicator => OnIndicatorChanged(indicator).Forget())
+        .Subscribe(indicator => OnIndicatorChanged(indicator))
         .AddTo(this);
 
       ViewModel.Initialized -= OnInitialize;
@@ -52,20 +53,21 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
 
     private async UniTask OnIndicatorChanged(IndicatorVisibility indicator)
     {
-      if (!_indicatorViews.TryGetValue(indicator.Type, out BuildingIndicatorView indicatorView))
-      {
-        if (!_pending.Add(indicator.Type))
-          return;
-
-        indicatorView = await _uiFactory.CreateBuildingIndicator(indicator.Type, _indicatorsContainer);
-        _indicatorViews.TryAdd(indicator.Type, indicatorView);
-        _pending.Remove(indicator.Type);
-      }
-
-      indicatorView.SetVisible(indicator.Visible);
+      BuildingIndicatorView view = await GetViewAsync(indicator.Type);
+      view.SetVisible(indicator.Visible);
     }
 
     private void SetPosition(Vector2 position) =>
       _rectTransform.anchoredPosition = position;
+
+    private Task<BuildingIndicatorView> GetViewAsync(BuildingIndicatorType type)
+    {
+      if (_indicatorViewTasks.TryGetValue(type, out Task<BuildingIndicatorView> existingTask))
+        return existingTask;
+
+      Task<BuildingIndicatorView> task = _uiFactory.CreateBuildingIndicator(type, _indicatorsContainer);
+      _indicatorViewTasks[type] = task;
+      return task;
+    }
   }
 }

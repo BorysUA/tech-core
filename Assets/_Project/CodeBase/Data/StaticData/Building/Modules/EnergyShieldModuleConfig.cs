@@ -1,6 +1,6 @@
 ﻿using System;
-using _Project.CodeBase.Gameplay.Building.Modules;
-using _Project.CodeBase.Gameplay.Building.Modules.EnergyShield;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
+using _Project.CodeBase.Gameplay.Buildings.Modules.EnergyShield;
 using UnityEngine;
 
 namespace _Project.CodeBase.Data.StaticData.Building.Modules

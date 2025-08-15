@@ -5,6 +5,7 @@ using _Project.CodeBase.Gameplay.Resource;
 using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using R3;

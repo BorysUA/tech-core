@@ -4,6 +4,7 @@ using System.Threading;
 using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Infrastructure.Exceptions;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.AssetsPipeline;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.UI;

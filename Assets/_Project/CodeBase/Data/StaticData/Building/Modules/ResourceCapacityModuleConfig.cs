@@ -1,7 +1,7 @@
 ﻿using System;
 using _Project.CodeBase.Data.Progress.ResourceData;
-using _Project.CodeBase.Gameplay.Building.Modules;
-using _Project.CodeBase.Gameplay.Building.Modules.Resource;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
+using _Project.CodeBase.Gameplay.Buildings.Modules.Resource;
 using UnityEngine;
 using UnityEngine.Serialization;
 

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using _Project.CodeBase.Data.StaticData.Building;
 using _Project.CodeBase.Data.StaticData.Building.InteractionButtons;
 using _Project.CodeBase.Data.StaticData.Building.StatusItems;
 using _Project.CodeBase.Data.StaticData.Resource;
-using _Project.CodeBase.Gameplay.Building.Actions.Common;
+using _Project.CodeBase.Gameplay.Buildings.Actions.Common;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.LiveEvents;
 using _Project.CodeBase.Gameplay.Services.Pool;
@@ -92,7 +93,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       return actionButton;
     }
 
-    public async UniTask<BuildingIndicatorView> CreateBuildingIndicator(BuildingIndicatorType indicatorType,
+    public async Task<BuildingIndicatorView> CreateBuildingIndicator(BuildingIndicatorType indicatorType,
       Transform itemsContainer)
     {
       BuildingIndicatorConfig itemConfig = _staticDataProvider.GetBuildingIndicatorConfig(indicatorType);

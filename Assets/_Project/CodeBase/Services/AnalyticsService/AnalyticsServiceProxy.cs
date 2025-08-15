@@ -11,18 +11,16 @@ namespace _Project.CodeBase.Services.AnalyticsService
     private const int BufferLimit = 20;
 
     private readonly FirebaseAnalyticsService _firebaseAnalytics;
-    private readonly NoneAnalyticsService _noneAnalytics;
     private readonly ILogService _logService;
+    private readonly IAnalyticsService _current;
 
     private readonly Queue<Action<IAnalyticsService>> _buffer = new(BufferLimit);
 
-    private IAnalyticsService _current;
 
     public AnalyticsServiceProxy(FirebaseAnalyticsService firebaseAnalytics, NoneAnalyticsService noneAnalytics,
       ILogService logService)
     {
       _firebaseAnalytics = firebaseAnalytics;
-      _noneAnalytics = noneAnalytics;
       _logService = logService;
 
       _current = noneAnalytics;
@@ -40,7 +38,7 @@ namespace _Project.CodeBase.Services.AnalyticsService
 #endif
     }
 
-    public void Dispose() => 
+    public void Dispose() =>
       _current.Dispose();
 
     public void LogEvent(string name, params (string key, object value)[] parameters)

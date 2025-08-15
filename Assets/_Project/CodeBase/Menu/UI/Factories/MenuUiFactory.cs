@@ -2,6 +2,7 @@
 using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.AssetsPipeline;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Menu.UI.SaveSelection;
 using _Project.CodeBase.UI.Services;

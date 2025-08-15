@@ -1,5 +1,5 @@
-﻿using _Project.CodeBase.Gameplay.Building.Modules.Health;
-using _Project.CodeBase.Gameplay.Building.Modules.Spaceport;
+﻿using _Project.CodeBase.Gameplay.Buildings.Modules.Health;
+using _Project.CodeBase.Gameplay.Buildings.Modules.Trade;
 using _Project.CodeBase.Gameplay.Services.BuildingPlots;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.Services.Command;

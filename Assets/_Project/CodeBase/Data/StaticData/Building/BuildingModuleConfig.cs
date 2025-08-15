@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Project.CodeBase.Data.StaticData.Building.Conditions;
-using _Project.CodeBase.Gameplay.Building.Conditions;
-using _Project.CodeBase.Gameplay.Building.Modules;
+using _Project.CodeBase.Gameplay.Buildings.Conditions;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
 using _Project.CodeBase.Services.LogService;
 using UnityEngine;
 

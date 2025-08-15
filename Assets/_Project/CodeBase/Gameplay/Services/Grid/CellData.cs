@@ -4,7 +4,7 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
 {
   public class CellData : ICellStatus
   {
-    public string ConstructionPlotId { get; private set; }
+    public int ConstructionPlotId { get; private set; }
     public int BuildingId { get; private set; }
     public ResourceKind ResourceSpotKind { get; private set; } = ResourceKind.None;
     public CellContentType ContentMask { get; private set; } = CellContentType.None;
@@ -12,7 +12,7 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
     public bool HasContent(CellContentType content) =>
       (ContentMask & content) != 0;
 
-    public void SetConstructionPlot(string id)
+    public void SetConstructionPlot(int id)
     {
       ConstructionPlotId = id;
       AddContentToMask(CellContentType.ConstructionPlot);
@@ -37,13 +37,13 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
 
     public void RemoveBuilding()
     {
-      BuildingId = -1;
+      BuildingId = 0;
       RemoveContentFromMask(CellContentType.Building);
     }
 
     public void RemoveConstructionPlot()
     {
-      ConstructionPlotId = null;
+      ConstructionPlotId = 0;
       RemoveContentFromMask(CellContentType.ConstructionPlot);
     }
 

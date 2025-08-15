@@ -8,11 +8,11 @@ namespace _Project.CodeBase.Infrastructure.Guards
 {
   public static class TaskCycleGuard
   {
-    private static readonly AsyncLocal<Stack<object>> _asyncLocal = new();
+    private static readonly AsyncLocal<Stack<object>> AsyncLocal = new();
 
     public static async UniTask WithCycleGuard(this UniTask task, object owner)
     {
-      Stack<object> stack = _asyncLocal.Value ??= new Stack<object>();
+      Stack<object> stack = AsyncLocal.Value ??= new Stack<object>();
 
       if (stack.Contains(owner))
       {

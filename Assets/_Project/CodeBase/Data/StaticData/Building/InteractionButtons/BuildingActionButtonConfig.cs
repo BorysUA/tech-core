@@ -1,5 +1,4 @@
-﻿using _Project.CodeBase.Gameplay.Building.Actions;
-using _Project.CodeBase.Gameplay.Building.Actions.Common;
+﻿using _Project.CodeBase.Gameplay.Buildings.Actions.Common;
 using UnityEngine;
 
 namespace _Project.CodeBase.Data.StaticData.Building.InteractionButtons

@@ -1,6 +1,6 @@
-﻿using _Project.CodeBase.Gameplay.Building;
-using _Project.CodeBase.Gameplay.InputHandlers;
+﻿using _Project.CodeBase.Gameplay.InputHandlers;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.ConstructionPlot
 {

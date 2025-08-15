@@ -10,6 +10,7 @@ using _Project.CodeBase.Gameplay.Services.Resource;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using Cysharp.Threading.Tasks;
 using ObservableCollections;
 using R3;
@@ -26,7 +27,7 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
     private readonly IResourceService _resourceService;
     private readonly CompositeDisposable _disposable = new();
 
-    private readonly Dictionary<string, ConstructionPlotViewModel> _constructionPlots = new();
+    private readonly Dictionary<int, ConstructionPlotViewModel> _constructionPlots = new();
     private readonly ObservableList<ConstructionPlotInfo> _availablePlots = new();
 
     public IObservableCollection<ConstructionPlotInfo> AvailablePlots => _availablePlots;

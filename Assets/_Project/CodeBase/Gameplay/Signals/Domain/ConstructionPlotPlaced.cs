@@ -1,12 +1,10 @@
-using _Project.CodeBase.Gameplay.Constants;
-
 namespace _Project.CodeBase.Gameplay.Signals.Domain
 {
   public readonly struct ConstructionPlotPlaced
   {
-    public readonly string PlotId;
+    public readonly int PlotId;
 
-    public ConstructionPlotPlaced(string plotId)
+    public ConstructionPlotPlaced(int plotId)
     {
       PlotId = plotId;
     }

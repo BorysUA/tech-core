@@ -1,7 +1,7 @@
 ﻿using System;
-using _Project.CodeBase.Gameplay.Building.Conditions;
-using _Project.CodeBase.Gameplay.Building.Modules;
-using _Project.CodeBase.Gameplay.Building.Modules.Health;
+using _Project.CodeBase.Gameplay.Buildings.Conditions;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
+using _Project.CodeBase.Gameplay.Buildings.Modules.Health;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using UnityEngine;
 

@@ -1,5 +1,7 @@
 ﻿using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Infrastructure.Services;
+using _Project.CodeBase.Infrastructure.Services.AssetsPipeline;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.Signals;
 using _Project.CodeBase.Infrastructure.StateMachine;
@@ -70,7 +72,7 @@ namespace _Project.CodeBase.Infrastructure.Root
 
     private void BindProgressServices()
     {
-      Container.BindInterfacesAndSelfTo<PersistentProgressService>().AsSingle();
+      Container.BindInterfacesAndSelfTo<PersistentProgressProvider>().AsSingle();
       Container.BindInterfacesTo<JsonSaveStorageService>().AsSingle();
       Container.BindInterfacesTo<DateTimeService>().AsSingle();
     }

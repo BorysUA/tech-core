@@ -1,7 +1,7 @@
 ﻿using System;
 using _Project.CodeBase.Data.StaticData.Resource;
-using _Project.CodeBase.Gameplay.Building.Modules;
-using _Project.CodeBase.Gameplay.Building.Modules.Resource;
+using _Project.CodeBase.Gameplay.Buildings.Modules;
+using _Project.CodeBase.Gameplay.Buildings.Modules.Resource;
 using UnityEngine;
 
 namespace _Project.CodeBase.Data.StaticData.Building.Modules

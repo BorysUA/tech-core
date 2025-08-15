@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.CodeBase.Gameplay.Building;
+using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Services.InputService;
 using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.InputHandlers
 {
@@ -56,10 +57,10 @@ namespace _Project.CodeBase.Gameplay.InputHandlers
     }
 
     public void ConfirmPlace() =>
-      _state.OnNext(PlacementState.Confirmed);
+      _state.Value = PlacementState.Confirmed;
 
     public void StopPlacing() =>
-      _state.OnNext(PlacementState.Cancelled);
+      _state.Value = PlacementState.Cancelled;
 
     private void Reset()
     {
@@ -91,9 +92,9 @@ namespace _Project.CodeBase.Gameplay.InputHandlers
 
       bool canBePlaced = _isPlacementValid(_currentPlace);
 
-      _state.OnNext(canBePlaced
+      _state.Value = canBePlaced
         ? PlacementState.PlacingValid
-        : PlacementState.PlacingInvalid);
+        : PlacementState.PlacingInvalid;
     }
   }
 }

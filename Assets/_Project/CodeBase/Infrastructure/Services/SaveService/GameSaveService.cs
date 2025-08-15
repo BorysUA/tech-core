@@ -6,6 +6,7 @@ using _Project.CodeBase.Data.Progress.Meta;
 using _Project.CodeBase.Gameplay.Services.Timers;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -48,7 +49,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
     private void InitializeAutosave()
     {
       _sessionTimer.SessionPlaytime
-        .Subscribe(SaveAutoAsync)
+        .Subscribe(sessionTime => SaveAutoAsync(sessionTime).Forget())
         .AddTo(_disposable);
     }
 
@@ -83,7 +84,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
       _disposable?.Dispose();
     }
 
-    private async void SaveAutoAsync(float sessionTime)
+    private async UniTaskVoid SaveAutoAsync(float sessionTime)
     {
       if (_isSaving)
         return;
