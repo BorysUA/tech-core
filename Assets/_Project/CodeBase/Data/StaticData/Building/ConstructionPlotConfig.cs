@@ -19,6 +19,6 @@ namespace _Project.CodeBase.Data.StaticData.Building
     public PlacementFilter PlacementFilter;
 
     [Header("UI")] public string Title;
-    public Sprite Icon;
+    public AssetReferenceAtlasedSprite Icon;
   }
 }

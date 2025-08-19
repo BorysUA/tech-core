@@ -20,10 +20,10 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
       _signalBus = signalBus;
     }
 
-    public void Initialize() => 
+    public void Initialize() =>
       _signalBus.Subscribe<AppLifecycleChanged>(OnAppLifecycleChanged);
 
-    public void Dispose() => 
+    public void Dispose() =>
       _signalBus.Unsubscribe<AppLifecycleChanged>(OnAppLifecycleChanged);
 
     private void OnAppLifecycleChanged(AppLifecycleChanged lifecycleStatus)
@@ -65,7 +65,8 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
     private void LogSessionMetadata()
     {
       float duration = Time.realtimeSinceStartup - _sessionStartTime;
-      _analyticsService.LogEvent(EventNames.GamePaused, parameters: (ParameterKeys.ElapsedTime, duration));
+      _analyticsService.LogEvent(EventNames.GamePaused,
+        parameters: EventParameter.Create(ParameterKeys.ElapsedTime, duration));
     }
   }
 }

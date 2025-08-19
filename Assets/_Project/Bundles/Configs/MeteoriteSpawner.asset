@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 194269985ab5475da03cba14abbe0c02, type: 3}
   m_Name: MeteoriteSpawner
   m_EditorClassIdentifier: 
-  SpawnInterval: 5
+  SpawnInterval: 30
   SpawnCount: 1
   SpawnPointOffset: {x: 8, y: 20, z: -8}
   PossibleMeteorites:

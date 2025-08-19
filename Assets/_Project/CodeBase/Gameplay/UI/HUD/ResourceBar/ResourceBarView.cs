@@ -23,14 +23,14 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.ResourceBar
       Bind(_populationResource, ResourceKind.Population, viewModel);
       Bind(_coinResource, ResourceKind.Coin, viewModel);
     }
-    
+
     private void Bind(TextMeshProUGUI textMeshPro, ResourceKind kind, ResourceBarViewModel viewModel)
     {
       Observable.CombineLatest(
           viewModel.GetAmount(kind),
           viewModel.GetCapacity(kind),
-          (amount, capacity) => $"{amount}/{capacity}")
-        .Subscribe(result => textMeshPro.text = result)
+          (amount, capacity) => (amount, capacity))
+        .Subscribe(resource => textMeshPro.SetText("{0}/{1}", resource.amount, resource.capacity))
         .AddTo(this);
     }
   }

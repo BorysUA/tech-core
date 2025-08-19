@@ -8,9 +8,9 @@ namespace _Project.CodeBase.Gameplay.Markers.Baked
   public class ResourceSpotMarker : MapEntityMarker<ResourceSpotData>
   {
     public ResourceKind Kind;
+    protected override MapEntityType EntityType => MapEntityType.ResourceSpot;
 
 #if UNITY_EDITOR
-    protected override MapEntityType EntityType => MapEntityType.ResourceSpot;
 
     protected override ResourceSpotData FillPayload() =>
       new(Kind);

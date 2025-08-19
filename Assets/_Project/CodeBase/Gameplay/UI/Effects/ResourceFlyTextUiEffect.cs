@@ -65,8 +65,7 @@ namespace _Project.CodeBase.Gameplay.UI.Effects
 
     private async void SpawnFlyText(ResourceDropCollectedArgs resourceDropInfo)
     {
-      ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(resourceDropInfo.ResourceKind);
-      FlyText flyText = await _gameplayUiFactory.CreateFlyText();
+      FlyText flyText = await _gameplayUiFactory.CreateFlyText(resourceDropInfo.ResourceKind);
 
       Vector2 screenPoint = _coordinateMapper.WorldToScreenPoint(resourceDropInfo.Position);
       if (_popUpService.ScreenToCanvasPoint(screenPoint, out Vector2 localPoint))
@@ -78,7 +77,7 @@ namespace _Project.CodeBase.Gameplay.UI.Effects
         .Subscribe(_ => _activeFlyTexts.Remove(flyText))
         .AddTo(_disposable);
 
-      flyText.Setup(resourceDropInfo.Position, resourceDropInfo.Amount, resourceConfig.Icon);
+      flyText.Initialize(resourceDropInfo.Position, resourceDropInfo.Amount);
     }
   }
 }

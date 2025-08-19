@@ -25,13 +25,6 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
     }
 
     private void UpdateTimer(float time) =>
-      _timerText.text = FormatTime(time);
-
-    private string FormatTime(float totalSeconds)
-    {
-      int minutes = (int)(totalSeconds / 60);
-      int seconds = (int)(totalSeconds % 60);
-      return $"{minutes:D2}:{seconds:D2}";
-    }
+      _timerText.SetText("{0:00}:{1:00}", (int)(time / 60), (int)(time % 60));
   }
 }

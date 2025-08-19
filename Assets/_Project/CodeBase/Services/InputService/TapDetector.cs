@@ -31,17 +31,16 @@ namespace _Project.CodeBase.Services.InputService
 
       float displacement = CalculateNormalizedDistance(_startPosition, position);
 
-      if (displacement > TapDistanceThreshold) 
+      if (displacement > TapDistanceThreshold)
         _isTapCandidate = false;
     }
 
     public override void OnTouchEnded()
     {
       float duration = Time.time - _startTime;
+
       if (_isTapCandidate && duration <= TapDurationThreshold)
-      {
         _onTapDetected.OnNext(_lastPosition);
-      }
 
       _isTapCandidate = false;
     }

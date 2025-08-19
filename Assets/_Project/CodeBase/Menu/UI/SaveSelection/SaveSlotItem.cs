@@ -27,16 +27,12 @@ namespace _Project.CodeBase.Menu.UI.SaveSelection
     {
       _saveSlotText.SetText($"Save slot: {saveSlot}");
       _displayNameText.SetText($"Location: {displayName}");
-      _inGameTimeText.SetText($"Playtime: {FormatTime(inGameTime)}");
+      _inGameTimeText.SetText("Playtime: {0:00}:{1:00}:{2:00}", (int)inGameTime.TotalHours, inGameTime.Minutes,
+        inGameTime.Seconds);
       _lastModifiedUtcText.SetText($"Last modified: {lastModifiedTime}");
     }
 
     public void Hide() =>
       Destroy(gameObject);
-
-    private string FormatTime(TimeSpan time)
-    {
-      return $"{(int)time.TotalHours:D2}:{time.Minutes:D2}:{time.Seconds:D2}";
-    }
   }
 }

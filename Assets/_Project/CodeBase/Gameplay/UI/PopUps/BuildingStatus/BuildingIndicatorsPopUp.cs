@@ -37,7 +37,7 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
         .AddTo(this);
 
       ViewModel.IndicatorChanged
-        .Subscribe(indicator => OnIndicatorChanged(indicator))
+        .Subscribe(indicator => OnIndicatorChanged(indicator).Forget())
         .AddTo(this);
 
       ViewModel.Initialized -= OnInitialize;
@@ -51,7 +51,7 @@ namespace _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus
       Destroy(gameObject);
     }
 
-    private async UniTask OnIndicatorChanged(IndicatorVisibility indicator)
+    private async UniTaskVoid OnIndicatorChanged(IndicatorVisibility indicator)
     {
       BuildingIndicatorView view = await GetViewAsync(indicator.Type);
       view.SetVisible(indicator.Visible);

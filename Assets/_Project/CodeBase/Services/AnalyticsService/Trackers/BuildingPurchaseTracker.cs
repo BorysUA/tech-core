@@ -29,9 +29,11 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
     }
 
     private void OnBuildingPurchaseRequested(BuildingPurchaseRequested request) =>
-      _analyticsService.LogEvent(EventNames.BuildingPurchaseRequested, (ParameterKeys.Type, request.Type));
+      _analyticsService.LogEvent(EventNames.BuildingPurchaseRequested,
+        EventParameter.Create(ParameterKeys.Type, request.Type));
 
     private void OnPlotPurchaseRequested(ConstructionPlotPurchaseRequested request) =>
-      _analyticsService.LogEvent(EventNames.ConstructionPlotPurchaseRequested, (ParameterKeys.Type, request.Type));
+      _analyticsService.LogEvent(EventNames.ConstructionPlotPurchaseRequested,
+        EventParameter.Create(ParameterKeys.Type, request.Type));
   }
 }

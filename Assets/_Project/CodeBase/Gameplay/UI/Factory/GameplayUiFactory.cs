@@ -62,16 +62,22 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       return _instantiator.InstantiatePrefabForComponent<HudView>(hudPrefab, _uiRoot);
     }
 
-    public async UniTask<FlyText> CreateFlyText()
+    public async UniTask<FlyText> CreateFlyText(ResourceKind resourceKind)
     {
+      ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(resourceKind);
+      Sprite resourceIcon = await _assetProvider.LoadAssetAsync<Sprite>(resourceConfig.Icon);
+
       if (_flyTextPool.TryGet(out FlyText cachedFlyText))
+      {
+        cachedFlyText.Setup(resourceIcon);
         return cachedFlyText;
+      }
 
       GameObject flyTextPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.FlyText);
       FlyText flyText = _instantiator.InstantiatePrefabForComponent<FlyText>(flyTextPrefab, _popUpsCanvas.Root);
+      flyText.Setup(resourceIcon);
 
       _flyTextPool.Add(flyText);
-
       return flyText;
     }
 
@@ -87,7 +93,9 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       BuildingActionButton actionButton =
         _instantiator.InstantiatePrefabForComponent<BuildingActionButton>(buttonPrefab, container);
 
-      actionButton.Setup(config.Title, config.Icon);
+      Sprite icon = await _assetProvider.LoadAssetAsync<Sprite>(config.Icon);
+
+      actionButton.Setup(config.Title, icon);
       _actionButtonPool.Add(actionType, actionButton);
 
       return actionButton;
@@ -104,7 +112,9 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       BuildingIndicatorView item =
         _instantiator.InstantiatePrefabForComponent<BuildingIndicatorView>(itemPrefab, itemsContainer);
 
-      item.Setup(itemConfig.Icon);
+      Sprite icon = await _assetProvider.LoadAssetAsync<Sprite>(itemConfig.Icon);
+
+      item.Setup(icon);
 
       return item;
     }
@@ -113,10 +123,11 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       Transform itemsContainer)
     {
       ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(resourceKind);
+      Sprite resourceIcon = await _assetProvider.LoadAssetAsync<Sprite>(resourceConfig.Icon);
 
       if (_resourceItemPool.TryGet(out ResourceAmountItem cachedResourceItem))
       {
-        cachedResourceItem.Setup(resourceConfig.Icon, amount);
+        cachedResourceItem.Setup(resourceIcon, amount);
         return cachedResourceItem;
       }
 
@@ -125,7 +136,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       ResourceAmountItem item =
         _instantiator.InstantiatePrefabForComponent<ResourceAmountItem>(itemPrefab, itemsContainer);
 
-      item.Setup(resourceConfig.Icon, amount);
+      item.Setup(resourceIcon, amount);
       _resourceItemPool.Add(item);
 
       return item;
@@ -135,10 +146,11 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
       Transform paymentsContainer)
     {
       ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(resourceKind);
+      Sprite resourceIcon = await _assetProvider.LoadAssetAsync<Sprite>(resourceConfig.Icon);
 
       if (_cachedPaymentItem is not null)
       {
-        _cachedPaymentItem.Setup(resourceConfig.Icon, amount);
+        _cachedPaymentItem.Setup(resourceIcon, amount);
         _cachedPaymentItem.Activate();
         return _cachedPaymentItem;
       }
@@ -147,7 +159,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
 
       PaymentItem item = _instantiator.InstantiatePrefabForComponent<PaymentItem>(itemPrefab, paymentsContainer);
 
-      item.Setup(resourceConfig.Icon, amount);
+      item.Setup(resourceIcon, amount);
       _cachedPaymentItem = item;
 
       return item;
@@ -175,21 +187,27 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
 
     public async UniTask<BuyButton> CreateBuyButton(BuildingType buildingType, Transform container)
     {
-      BuildingConfig config = _staticDataProvider.GetBuildingConfig(buildingType);
-      ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(config.Price.Kind);
+      BuildingConfig buildingConfig = _staticDataProvider.GetBuildingConfig(buildingType);
+      ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(buildingConfig.Price.Kind);
+
+      Sprite buildingIcon = await _assetProvider.LoadAssetAsync<Sprite>(buildingConfig.Icon);
+      Sprite resourceIcon = await _assetProvider.LoadAssetAsync<Sprite>(resourceConfig.Icon);
 
       return await CreateBuyButtonInternal(
-        buyButton => buyButton.Setup(config.Title, config.Icon, config.Price.Amount, resourceConfig.Icon),
+        buyButton => buyButton.Setup(buildingConfig.Title, buildingIcon, buildingConfig.Price.Amount, resourceIcon),
         container);
     }
 
     public async UniTask<BuyButton> CreateBuyButton(ConstructionPlotType plotType, Transform container)
     {
-      ConstructionPlotConfig config = _staticDataProvider.GetConstructionPlotConfig(plotType);
-      ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(config.Price.Kind);
+      ConstructionPlotConfig plotConfig = _staticDataProvider.GetConstructionPlotConfig(plotType);
+      ResourceConfig resourceConfig = _staticDataProvider.GetResourceConfig(plotConfig.Price.Kind);
+
+      Sprite plotIcon = await _assetProvider.LoadAssetAsync<Sprite>(plotConfig.Icon);
+      Sprite resourceIcon = await _assetProvider.LoadAssetAsync<Sprite>(resourceConfig.Icon);
 
       return await CreateBuyButtonInternal(
-        buyButton => buyButton.Setup(config.Title, config.Icon, config.Price.Amount, resourceConfig.Icon),
+        buyButton => buyButton.Setup(plotConfig.Title, plotIcon, plotConfig.Price.Amount, resourceIcon),
         container);
     }
 

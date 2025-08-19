@@ -9,8 +9,8 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.ResourceBar
   public class ResourceBarViewModel
   {
     private readonly IResourceService _resourceService;
-    private readonly Dictionary<ResourceKind, ReadOnlyReactiveProperty<string>> _amounts = new();
-    private readonly Dictionary<ResourceKind, ReadOnlyReactiveProperty<string>> _capacities = new();
+    private readonly Dictionary<ResourceKind, ReadOnlyReactiveProperty<int>> _amounts = new();
+    private readonly Dictionary<ResourceKind, ReadOnlyReactiveProperty<int>> _capacities = new();
 
     public ResourceBarViewModel(IResourceService resourceService)
     {
@@ -24,17 +24,12 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.ResourceBar
         if (kind == ResourceKind.None)
           continue;
 
-        _amounts[kind] = _resourceService.ObserveResource(kind)
-          .Select(v => v.ToString())
-          .ToReadOnlyReactiveProperty();
-
-        _capacities[kind] = _resourceService.ObserveCapacity(kind)
-          .Select(v => v.ToString())
-          .ToReadOnlyReactiveProperty();
+        _amounts[kind] = _resourceService.ObserveResource(kind);
+        _capacities[kind] = _resourceService.ObserveCapacity(kind);
       }
     }
 
-    public ReadOnlyReactiveProperty<string> GetAmount(ResourceKind kind) => _amounts[kind];
-    public ReadOnlyReactiveProperty<string> GetCapacity(ResourceKind kind) => _capacities[kind];
+    public ReadOnlyReactiveProperty<int> GetAmount(ResourceKind kind) => _amounts[kind];
+    public ReadOnlyReactiveProperty<int> GetCapacity(ResourceKind kind) => _capacities[kind];
   }
 }

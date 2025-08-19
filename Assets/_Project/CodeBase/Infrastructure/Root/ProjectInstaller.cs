@@ -87,6 +87,7 @@ namespace _Project.CodeBase.Infrastructure.Root
 
     private void BindInfrastructureServices()
     {
+      Container.BindInterfacesTo<AtlasResolver>().AsSingle();
       Container.BindInterfacesTo<SceneLoader>().AsSingle();
       Container.BindInterfacesTo<AssetProvider>().AsSingle();
       Container.BindInterfacesTo<StaticDataProvider>().AsSingle();

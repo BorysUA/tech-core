@@ -1,5 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.Buildings.Actions.Common;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace _Project.CodeBase.Data.StaticData.Building.InteractionButtons
 {
@@ -9,6 +10,6 @@ namespace _Project.CodeBase.Data.StaticData.Building.InteractionButtons
   {
     public ActionType Type;
     public string Title;
-    public Sprite Icon;
+    public AssetReferenceAtlasedSprite Icon;
   }
 }

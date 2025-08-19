@@ -66,13 +66,15 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
     private void SendSnapshot()
     {
       foreach ((ResourceKind kind, int amount) in _gained)
-        _analyticsService.LogEvent(EventNames.ResourceGained, (ParameterKeys.Type, kind),
-          (ParameterKeys.Amount, amount));
+        _analyticsService.LogEvent(EventNames.ResourceGained,
+          EventParameter.Create(ParameterKeys.Type, kind),
+          EventParameter.Create(ParameterKeys.Amount, amount));
 
       foreach ((ResourceKind kind, int amount) in _spent)
-        _analyticsService.LogEvent(EventNames.ResourceSpent, (ParameterKeys.Type, kind),
-          (ParameterKeys.Amount, amount));
-      
+        _analyticsService.LogEvent(EventNames.ResourceSpent,
+          EventParameter.Create(ParameterKeys.Type, kind),
+          EventParameter.Create(ParameterKeys.Amount, amount));
+
       _gained.Clear();
       _spent.Clear();
 
@@ -84,6 +86,5 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
 
     private void OnResourcesSpent(ResourcesSpent spent) =>
       _spent[spent.Kind] = _spent.GetValueOrDefault(spent.Kind) + spent.Amount;
-    
   }
 }

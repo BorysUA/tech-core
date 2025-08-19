@@ -34,7 +34,7 @@ namespace _Project.CodeBase.Gameplay.States.GameplayStates
     {
       _inputService.SubscribeWithUiFilter(_resourceCollector);
       _inputService.SubscribeWithUiFilter(_buildingSelector);
-      _inputService.Subscribe(_cameraMovement);
+      _inputService.SubscribeWithUiFilter(_cameraMovement);
 
       _signalBus.Subscribe<BuildingPurchaseRequested>(EnterPlaceBuildingState);
       _signalBus.Subscribe<ConstructionPlotPurchaseRequested>(EnterPlaceConstructionPlotState);

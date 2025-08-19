@@ -16,7 +16,7 @@ namespace _Project.CodeBase.Data.StaticData.Building
     public Vector2Int SizeInCells;
     public ResourceAmountData Price;
     public string Title;
-    public Sprite Icon;
+    public AssetReferenceAtlasedSprite Icon;
     public int StartLevel;
     public int MaxLevel;
 

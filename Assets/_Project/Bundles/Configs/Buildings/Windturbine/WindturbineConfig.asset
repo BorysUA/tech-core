@@ -33,8 +33,14 @@ MonoBehaviour:
   Price:
     Kind: 4
     Amount: 30
-  Title: Windturbine
-  Icon: {fileID: 21300000, guid: 51fe3e65c04af4240bfd80411d1ad3f9, type: 3}
+  Title: Turbine
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: WindturbineIcon
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: 51fe3e65c04af4240bfd80411d1ad3f9
+    m_EditorAssetChanged: 1
   StartLevel: 1
   MaxLevel: 1
   PlacementFilter:

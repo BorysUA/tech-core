@@ -45,7 +45,7 @@ namespace _Project.CodeBase.Infrastructure.Services.AssetsPipeline
     public async UniTask<T> LoadAssetAsync<T>(AssetReference assetReference, CancellationToken token,
       int retryCount = 1)
       where T : class =>
-      await InternalLoadAssetAsync(MakeKey(assetReference.AssetGUID, typeof(T)),
+      await InternalLoadAssetAsync(MakeKey($"{assetReference.RuntimeKey}", typeof(T)),
         () => Addressables.LoadAssetAsync<T>(assetReference), token, retryCount);
 
     public async UniTask<IList<T>> LoadAssetsAsync<T>(string address, CancellationToken token = default,

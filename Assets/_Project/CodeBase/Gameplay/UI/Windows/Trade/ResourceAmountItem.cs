@@ -17,7 +17,7 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Trade
     public void Setup(Sprite resourceIcon, int amount)
     {
       _resourceIcon.sprite = resourceIcon;
-      _amountText.text = amount.ToString();
+      _amountText.SetText("{0}", amount);
     }
 
     public void Activate(PoolUnit param) =>

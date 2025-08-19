@@ -16,5 +16,11 @@ MonoBehaviour:
   Usage: 2
   Price: 0
   Capacity: 500
-  Icon: {fileID: 21300000, guid: 6d64015914d298a418d266dde7156ddc, type: 3}
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: PopulationIcon
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: 6d64015914d298a418d266dde7156ddc
+    m_EditorAssetChanged: 1
   ResourceName: Population

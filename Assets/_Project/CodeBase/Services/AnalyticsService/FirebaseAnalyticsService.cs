@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using Firebase;
 using Firebase.Analytics;
 
@@ -25,7 +26,7 @@ namespace _Project.CodeBase.Services.AnalyticsService
         : ServiceInitializationStatus.Failed;
     }
 
-    public void LogEvent(string name, params (string key, object value)[] parameters)
+    public void LogEvent(string name, params EventParameter[] parameters)
     {
       if (parameters.Length == 0)
       {
@@ -37,17 +38,12 @@ namespace _Project.CodeBase.Services.AnalyticsService
 
       for (int i = 0; i < parameters.Length; i++)
       {
-        (string key, object value) = parameters[i];
-
-        builder[i] = value switch
+        builder[i] = parameters[i].ParameterType switch
         {
-          int intValue => new Parameter(key, intValue),
-          long longValue => new Parameter(key, longValue),
-          float floatValue => new Parameter(key, floatValue),
-          double doubleValue => new Parameter(key, doubleValue),
-          bool boolValue => new Parameter(key, boolValue ? "true" : "false"),
-          null => new Parameter(key, "null"),
-          _ => new Parameter(key, value.ToString())
+          EventParameterType.Long => new Parameter(parameters[i].Key, parameters[i].Long),
+          EventParameterType.Double => new Parameter(parameters[i].Key, parameters[i].Double),
+          EventParameterType.String => new Parameter(parameters[i].Key, parameters[i].String),
+          _ => throw new ArgumentOutOfRangeException()
         };
       }
 

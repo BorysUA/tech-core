@@ -18,7 +18,7 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
   public interface IGameplayUiFactory
   {
     UniTask<HudView> CreateHud();
-    UniTask<FlyText> CreateFlyText();
+    UniTask<FlyText> CreateFlyText(ResourceKind resourceKind);
     UniTask<BuildingActionButton> CreateBuildingActionButton(ActionType actionType, Transform container);
 
     Task<BuildingIndicatorView> CreateBuildingIndicator(BuildingIndicatorType indicatorType,

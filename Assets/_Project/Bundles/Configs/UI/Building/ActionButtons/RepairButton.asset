@@ -14,4 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 1
   Title: Repair
-  Icon: {fileID: 21300000, guid: dcddf0172a7a88d4987051e4605a2e06, type: 3}
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: RepairIcon
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: dcddf0172a7a88d4987051e4605a2e06
+    m_EditorAssetChanged: 1

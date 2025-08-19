@@ -15,4 +15,10 @@ MonoBehaviour:
   Type: 4
   SlotType: 3
   Priority: 10
-  Icon: {fileID: 21300000, guid: b954dfc825d3b5b4a85c00f0fa8122f4, type: 3}
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: MetalIcon
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: b954dfc825d3b5b4a85c00f0fa8122f4
+    m_EditorAssetChanged: 1

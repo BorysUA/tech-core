@@ -21,6 +21,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - InGamePreload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 274c1c168e5361548910c80999d716f1
+    m_Address: UI_InGame/CoreAtlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 372eee1295229064b93f194b1be8c0a8
     m_Address: UI_InGame/BuildingsShopWindow
     m_ReadOnly: 0

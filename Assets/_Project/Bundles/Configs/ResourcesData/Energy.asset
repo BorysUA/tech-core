@@ -16,5 +16,11 @@ MonoBehaviour:
   Usage: 1
   Price: 5
   Capacity: 500
-  Icon: {fileID: 21300000, guid: 10052693244fbb449883affabc78d0a9, type: 3}
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: EnergyIcon
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: 10052693244fbb449883affabc78d0a9
+    m_EditorAssetChanged: 1
   ResourceName: Energy

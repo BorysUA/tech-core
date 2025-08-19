@@ -45,11 +45,13 @@ namespace _Project.CodeBase.Gameplay.UI.Indicators
       SetupContentSequence();
     }
 
-    public void Setup(Vector3 worldPosition, int amount, Sprite icon)
+    public void Setup(Sprite icon) =>
+      _icon.sprite = icon;
+
+    public void Initialize(Vector3 worldPosition, int amount)
     {
       WorldSpawnPoint = worldPosition;
-      _title.text = amount.ToString("+#;-#;0");
-      _icon.sprite = icon;
+      _title.SetText("{0:+#;-#;0}", amount);
 
       _contentSequence.Play();
     }

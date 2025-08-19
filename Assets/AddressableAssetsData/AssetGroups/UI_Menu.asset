@@ -39,12 +39,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - MenuPreload
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: da5c35af7e43e9e40af85f0abf606f00
-    m_Address: UI_Menu/Background
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - MenuPreload
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 1365f6cf93b86064c8a35644b412ad29, type: 2}
   m_SchemaSet:

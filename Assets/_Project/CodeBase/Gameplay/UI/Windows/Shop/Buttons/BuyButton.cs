@@ -20,8 +20,8 @@ namespace _Project.CodeBase.Gameplay.UI.Windows.Shop.Buttons
 
     public void Setup(string title, Sprite itemIcon, int cost, Sprite priceIcon)
     {
-      _title.text = title;
-      _price.text = cost.ToString();
+      _title.SetText(title);
+      _price.SetText("{0}", cost);
       _itemIcon.sprite = itemIcon;
       _priceIcon.sprite = priceIcon;
     }

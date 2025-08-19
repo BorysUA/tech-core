@@ -15,4 +15,10 @@ MonoBehaviour:
   Type: 2
   SlotType: 1
   Priority: 10
-  Icon: {fileID: 21300000, guid: f34da630801d8fd45aa717c6a7add8ac, type: 3}
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: HighDamageIndicator
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: f34da630801d8fd45aa717c6a7add8ac
+    m_EditorAssetChanged: 1

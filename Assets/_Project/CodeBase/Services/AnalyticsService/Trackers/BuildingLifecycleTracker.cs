@@ -30,16 +30,19 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
       _signalBus.Unsubscribe<BuildingDestroyed>(OnBuildingDestroyed);
     }
 
-    private void OnBuildingPlaced(BuildingPlaced data) =>
-      _analyticsService.LogEvent(EventNames.BuildingPlaced,
-        (ParameterKeys.Id, data.BuildingId));
+    private void OnBuildingPlaced(BuildingPlaced data)
+    {
+      _analyticsService.LogEvent(EventNames.BuildingPlaced, EventParameter.Create(ParameterKeys.Id, data.BuildingId));
+    }
 
     private void OnPlotPlaced(ConstructionPlotPlaced data) =>
       _analyticsService.LogEvent(EventNames.ConstructionPlotPlaced,
-        (ParameterKeys.Type, data.PlotId));
+        EventParameter.Create(ParameterKeys.Type, data.PlotId));
 
     private void OnBuildingDestroyed(BuildingDestroyed data) =>
       _analyticsService.LogEvent(EventNames.BuildingDestroyed,
-        (ParameterKeys.Id, data.Id), (ParameterKeys.Type, data.Type), (ParameterKeys.Level, data.Level));
+        EventParameter.Create(ParameterKeys.Id, data.Id),
+        EventParameter.Create(ParameterKeys.Type, data.Type),
+        EventParameter.Create(ParameterKeys.Level, data.Level));
   }
 }

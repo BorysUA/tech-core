@@ -2,8 +2,6 @@
 {
   public static class AssetAddress
   {
-    public const string RootCanvas = "UI_Common/RootCanvas";
-    public const string MenuBackground = "UI_Menu/Background";
     public const string MenuMainWindow = "UI_Menu/MainWindow";
     public const string MenuDifficultySelectionWindow = "UI_Menu/DifficultySelectionWindow";
     public const string BuyButton = "UI_InGame/BuyBuildingButton";
@@ -26,5 +24,6 @@
     public const string ProductionBoostEventIndicator = "UI_InGame/ProductionBoostEventIndicator";
     public const string BuildingsShopWindow = "UI_InGame/BuildingsShopWindow";
     public const string PlotsShopWindow = "UI_InGame/PlotsShopWindow";
+    public const string CoreAtlas = "UI_InGame/CoreAtlas";
   }
 }

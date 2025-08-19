@@ -13,10 +13,13 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.GameEvent
     public void Initialize(bool isActive, ReadOnlyReactiveProperty<TimeSpan> gameEventCountdown)
     {
       gameEventCountdown
-        .Subscribe(timeNow => _countdownText.text = timeNow.ToString(@"hh\:mm\:ss"))
+        .Subscribe(timeNow =>
+        {
+          _countdownText.SetText("{0:00}:{1:00}:{2:00}", timeNow.Hours, timeNow.Minutes, timeNow.Seconds);
+        })
         .AddTo(this);
 
-      _statusText.text = isActive ? "NOW" : "SOON";
+      _statusText.SetText(isActive ? "NOW" : "SOON");
     }
 
     public void Destroy()

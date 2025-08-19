@@ -12,7 +12,8 @@ namespace _Project.CodeBase.Services.AnalyticsService
 
     private readonly FirebaseAnalyticsService _firebaseAnalytics;
     private readonly ILogService _logService;
-    private readonly IAnalyticsService _current;
+
+    private IAnalyticsService _current;
 
     private readonly Queue<Action<IAnalyticsService>> _buffer = new(BufferLimit);
 
@@ -30,7 +31,7 @@ namespace _Project.CodeBase.Services.AnalyticsService
     {
       ServiceInitializationStatus status = await _firebaseAnalytics.InitializeAsync();
 #if !UNITY_EDITOR
-      if (status == ServiceInitializationStatus.Success)
+      if (status == ServiceInitializationStatus.Succeeded)
       {
         _current = _firebaseAnalytics;
         FlushBuffer();
@@ -41,8 +42,8 @@ namespace _Project.CodeBase.Services.AnalyticsService
     public void Dispose() =>
       _current.Dispose();
 
-    public void LogEvent(string name, params (string key, object value)[] parameters)
-      => ForwardOrBuffer(service => service.LogEvent(name, parameters));
+    public void LogEvent(string name, params EventParameter[] parameters) =>
+      ForwardOrBuffer(service => service.LogEvent(name, parameters));
 
     public void SetUserProperty(string name, string value)
       => ForwardOrBuffer(service => service.SetUserProperty(name, value));

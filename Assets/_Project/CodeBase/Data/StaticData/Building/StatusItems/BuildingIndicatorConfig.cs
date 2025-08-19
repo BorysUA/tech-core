@@ -1,5 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Serialization;
 
 namespace _Project.CodeBase.Data.StaticData.Building.StatusItems
@@ -11,6 +12,6 @@ namespace _Project.CodeBase.Data.StaticData.Building.StatusItems
     public BuildingIndicatorType Type;
     public IndicatorSlotType SlotType;
     public int Priority;
-    public Sprite Icon;
+    public AssetReferenceAtlasedSprite Icon;
   }
 }

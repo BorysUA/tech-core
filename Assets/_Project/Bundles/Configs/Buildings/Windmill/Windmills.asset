@@ -34,7 +34,13 @@ MonoBehaviour:
     Kind: 4
     Amount: 10
   Title: Windmill
-  Icon: {fileID: 21300000, guid: c2ca9b66507ace7408de8b04e06f437d, type: 3}
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: WindmillIcon
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: c2ca9b66507ace7408de8b04e06f437d
+    m_EditorAssetChanged: 1
   StartLevel: 1
   MaxLevel: 1
   PlacementFilter:

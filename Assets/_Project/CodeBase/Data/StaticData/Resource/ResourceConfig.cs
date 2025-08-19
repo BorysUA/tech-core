@@ -1,5 +1,6 @@
 ﻿using _Project.CodeBase.Gameplay.Constants;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace _Project.CodeBase.Data.StaticData.Resource
 {
@@ -10,7 +11,7 @@ namespace _Project.CodeBase.Data.StaticData.Resource
     public ResourceUsage Usage;
     public int Price;
     public int Capacity;
-    public Sprite Icon;
+    public AssetReferenceAtlasedSprite Icon;
     public string ResourceName;
   }
 }

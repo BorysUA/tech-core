@@ -26,7 +26,7 @@ namespace _Project.CodeBase.Services.AnalyticsService.Trackers
     {
       _analyticsService.SetUserProperty(UserProperties.Difficulty, request.GameplaySettings.GameDifficulty.ToString());
       _analyticsService.LogEvent(EventNames.DifficultySelected,
-        (ParameterKeys.Difficulty, request.GameplaySettings.GameDifficulty));
+        EventParameter.Create(ParameterKeys.Difficulty, request.GameplaySettings.GameDifficulty));
     }
   }
 }

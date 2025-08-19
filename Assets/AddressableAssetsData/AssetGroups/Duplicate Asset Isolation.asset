@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Duplicate Asset Isolation
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
-  m_GUID: 2e9bf2263ec7b9049a136f61a9d2ce14
+  m_GroupName: Duplicate Asset Isolation
+  m_GUID: 9d634f51c0a63114bad0ab6f6cfcfc49
   m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 1365f6cf93b86064c8a35644b412ad29, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 411a38ddcffdc6c42b93b4baafdc4e73, type: 2}
-    - {fileID: 11400000, guid: c6d4f779bcf22e84184f6b651f2424c4, type: 2}
+    - {fileID: 11400000, guid: 042608a99dac481468799b06c8354eb9, type: 2}
+    - {fileID: 11400000, guid: 29fab986084b23c4d9317258664ee2b8, type: 2}

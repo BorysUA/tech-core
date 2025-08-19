@@ -5,6 +5,8 @@ namespace _Project.CodeBase.Gameplay.Markers.Baked
 {
   public abstract class BaseMarker : MonoBehaviour
   {
+#if UNITY_EDITOR
     public abstract MapEntityData Bake();
+#endif
   }
 }

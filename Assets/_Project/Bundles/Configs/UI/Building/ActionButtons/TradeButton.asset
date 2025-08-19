@@ -14,4 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 2
   Title: Trade
-  Icon: {fileID: 21300000, guid: 62a0da10fc23ae14a9b75724d4f17d9b, type: 3}
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: TradeIcon
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: 62a0da10fc23ae14a9b75724d4f17d9b
+    m_EditorAssetChanged: 1

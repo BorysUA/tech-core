@@ -15,4 +15,10 @@ MonoBehaviour:
   Type: 1
   SlotType: 1
   Priority: 5
-  Icon: {fileID: 21300000, guid: b961fc92836609f44a2e5e02a233a6ce, type: 3}
+  Icon:
+    m_AssetGUID: 274c1c168e5361548910c80999d716f1
+    m_SubObjectName: LowGamageIndicator
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: b961fc92836609f44a2e5e02a233a6ce
+    m_EditorAssetChanged: 1

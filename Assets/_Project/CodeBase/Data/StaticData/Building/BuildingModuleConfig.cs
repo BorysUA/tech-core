@@ -22,11 +22,7 @@ namespace _Project.CodeBase.Data.StaticData.Building
       SetupModule(module, buildingConfig);
 
       if (OperationalConditions is null)
-      {
-        logService.LogWarning(GetType(),
-          $"Module {module.GetType().Name} does not support condition binding or OperationalConditions is null.");
         return module;
-      }
 
       List<OperationalCondition> localConditions = new();
       List<OperationalCondition> globalConditions = new();
