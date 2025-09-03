@@ -14,5 +14,6 @@
     public const string MeteoriteVFXs = "Configs/MeteoriteVFX";
     public const string BuildingsShopCatalog = "Configs/BuildingsShopCatalog";
     public const string GameStartProfiles = "GameStartProfiles";
+    public const string ActionButtonsOrder = "Configs/ActionButtonsOrder";
   }
 }

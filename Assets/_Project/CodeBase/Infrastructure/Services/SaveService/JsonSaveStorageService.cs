@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using _Project.CodeBase.Data.Progress;
@@ -11,6 +12,8 @@ using _Project.CodeBase.Data.Progress.Building.ModuleData;
 using _Project.CodeBase.Data.Progress.Meta;
 using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
+using _Project.CodeBase.Menu.States;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
@@ -18,27 +21,30 @@ using UnityEngine;
 
 namespace _Project.CodeBase.Infrastructure.Services.SaveService
 {
-  public class JsonSaveStorageService : ISaveStorageService
+  public class JsonSaveStorageService : ISaveStorageService, IMenuInitAsync
   {
     private const string JsonExtension = ".json";
     private const string BakExtension = ".bak";
     private const string TmpExtension = ".tmp";
     private const string MetaExtension = ".meta";
+    private const int GateTimeoutMs = 30000;
 
-    private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly SemaphoreSlim _writeGate = new(1, 1);
+    private readonly SemaphoreSlim _readGate = new(1, 1);
     private readonly string _saveRootPath = Application.persistentDataPath;
     private readonly string _applicationVersion = Application.version;
     private readonly ILogService _logService;
+    private readonly JsonSerializer _writeSerializer;
+    private readonly JsonSerializer _readSerializer;
 
-    private readonly Dictionary<SaveSlot, WeakReference<GameStateData>> _cache = new();
-
-    private readonly JsonSerializerSettings _settings;
+    private readonly Dictionary<SaveSlot, WeakReference<GameStateData>> _gameStateCache = new();
+    private readonly Dictionary<SaveSlot, SaveMetaData> _savesMetaCache = new();
 
     public JsonSaveStorageService(ILogService logService)
     {
       _logService = logService;
 
-      _settings = new JsonSerializerSettings
+      var settings = new JsonSerializerSettings
       {
         Formatting = Formatting.None,
         TypeNameHandling = TypeNameHandling.Auto,
@@ -54,12 +60,28 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
           new TypeKeyDictionaryConverter<IModuleData>(_logService),
         }
       };
+
+      _writeSerializer = JsonSerializer.Create(settings);
+      _readSerializer = JsonSerializer.Create(settings);
+
+      Directory.CreateDirectory(_saveRootPath);
     }
+
+    public async UniTask InitializeAsync()
+    {
+      await PreloadGameSavesMetaAsync();
+    }
+
+    public IEnumerable<SaveMetaData> GetSavedGamesMeta() =>
+      _savesMetaCache.Values;
+
+    public bool TryGetSaveMeta(SaveSlot saveSlot, out SaveMetaData saveMeta) =>
+      _savesMetaCache.TryGetValue(saveSlot, out saveMeta);
 
     public async UniTask SaveGameAsync(GameStateData data, SaveSlot saveSlot, CancellationToken token = default)
     {
-      _cache.Remove(saveSlot);
-      string baseName = GetFileKey(saveSlot);
+      _gameStateCache.Remove(saveSlot);
+      string baseName = saveSlot.ToStringKey();
 
       string saveFilePath = Path.Combine(_saveRootPath, baseName + JsonExtension);
       string backupFilePath = Path.Combine(_saveRootPath, baseName + BakExtension);
@@ -69,18 +91,18 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
       string tempBackupFilePath = backupFilePath + TmpExtension;
       string tempMetaFilePath = metaFilePath + TmpExtension;
 
-      Directory.CreateDirectory(_saveRootPath);
-
-      string json = JsonConvert.SerializeObject(data, _settings);
-
-      await _semaphore.WaitAsync(token)
-        .WaitAsync(TimeSpan.FromSeconds(30), TimeProvider.System, cancellationToken: token);
+      bool entered = false;
 
       try
       {
+        entered = await _writeGate.WaitAsync(GateTimeoutMs, cancellationToken: token);
+
+        if (!entered)
+          throw new TimeoutException("Write gate timeout");
+
         try
         {
-          await SaveProgress(json, tempFilePath, backupFilePath, tempBackupFilePath, saveFilePath, token);
+          await SaveProgress(data, tempFilePath, backupFilePath, tempBackupFilePath, saveFilePath, token);
         }
         catch (IOException ioException)
         {
@@ -102,7 +124,8 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
       }
       finally
       {
-        _semaphore.Release();
+        if (entered)
+          _writeGate.Release();
 
         try
         {
@@ -118,27 +141,44 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
 
     public async UniTask<LoadResult> LoadGameAsync(SaveSlot saveSlot, CancellationToken token = default)
     {
-      if (_cache.TryGetValue(saveSlot, out WeakReference<GameStateData> weakReference))
+      if (_gameStateCache.TryGetValue(saveSlot, out WeakReference<GameStateData> weakReference))
         if (weakReference.TryGetTarget(out GameStateData gameStateData))
           return new LoadResult(LoadStatus.Success, gameStateData);
 
-      string baseName = GetFileKey(saveSlot);
+      string baseName = saveSlot.ToStringKey();
 
       string saveFilePath = Path.Combine(_saveRootPath, baseName + JsonExtension);
 
+      bool entered = false;
+
       try
       {
+        entered = await _readGate.WaitAsync(GateTimeoutMs, cancellationToken: token);
+
+        if (!entered)
+          throw new TimeoutException("Read gate timeout");
+
         if (File.Exists(saveFilePath))
         {
-          string json = await File.ReadAllTextAsync(saveFilePath, token)
-            .AsUniTask()
-            .ContinueOnMainThread();
-          
-          token.ThrowIfCancellationRequested();
+          LoadResult result = await UniTask.RunOnThreadPool(() =>
+          {
+            using FileStream fileStream = new FileStream(
+              saveFilePath, FileMode.Open, FileAccess.Read,
+              FileShare.Read, 32 * 1024, FileOptions.SequentialScan);
 
-          GameStateData gameStateData = JsonConvert.DeserializeObject<GameStateData>(json, _settings);
-          _cache.Add(saveSlot, new WeakReference<GameStateData>(gameStateData));
-          return new LoadResult(LoadStatus.Success, gameStateData);
+            using StreamReader streamReader = new StreamReader(
+              fileStream, new UTF8Encoding(false), true, 32 * 1024);
+
+            using JsonReader reader = new JsonTextReader(streamReader);
+
+            token.ThrowIfCancellationRequested();
+
+            GameStateData gameStateData = _readSerializer.Deserialize<GameStateData>(reader);
+            return new LoadResult(LoadStatus.Success, gameStateData);
+          }, cancellationToken: token).ContinueOnMainThread();
+
+          _gameStateCache[saveSlot] = new WeakReference<GameStateData>(result.GameStateData);
+          return result;
         }
 
         return new LoadResult(LoadStatus.Failed, null);
@@ -152,41 +192,16 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
         _logService.LogError(GetType(), "Failed to load player progress", exception);
         throw;
       }
-    }
-
-    public async UniTask<IEnumerable<SaveMetaData>> GetAllSavesMeta()
-    {
-      List<SaveMetaData> metaDataList = new();
-
-      foreach (string filePath in Directory.EnumerateFiles(_saveRootPath, "*.meta"))
+      finally
       {
-        try
-        {
-          string json = await File.ReadAllTextAsync(filePath)
-            .AsUniTask()
-            .ContinueOnMainThread();
-
-          SaveMetaData meta = JsonConvert.DeserializeObject<SaveMetaData>(json);
-
-          if (meta != null)
-            metaDataList.Add(meta);
-          else
-            _logService.LogWarning(GetType(), $"Deserialization returned null for meta file: {filePath}");
-        }
-        catch (Exception ex)
-        {
-          _logService.LogWarning(GetType(), $"Failed to read or parse meta file: {filePath}. Error: {ex.Message}");
-        }
+        if (entered)
+          _readGate.Release();
       }
-
-      return metaDataList
-        .OrderByDescending(meta => meta.LastModifiedUtc)
-        .ToList();
     }
 
     public void ClearSlotManual(SaveSlot saveSlot)
     {
-      string baseName = GetFileKey(saveSlot);
+      string baseName = saveSlot.ToStringKey();
 
       foreach (string ext in new[] { JsonExtension, BakExtension, MetaExtension })
       {
@@ -194,6 +209,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
         try
         {
           File.Delete(path);
+          _savesMetaCache.Remove(saveSlot);
         }
         catch (Exception exception)
         {
@@ -204,15 +220,60 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
 
     public void Dispose()
     {
-      _semaphore?.Dispose();
+      _writeGate?.Dispose();
+      _readGate?.Dispose();
     }
 
-    private async UniTask SaveProgress(string json, string tempFilePath, string backupFilePath,
+    private async UniTask PreloadGameSavesMetaAsync(CancellationToken token = default)
+    {
+      _savesMetaCache.Clear();
+
+      bool entered = false;
+      try
+      {
+        entered = await _readGate.WaitAsync(GateTimeoutMs, cancellationToken: token);
+
+        if (!entered)
+          throw new TimeoutException("Read gate timeout");
+
+        await UniTask.RunOnThreadPool(() =>
+        {
+          foreach (string filePath in Directory.EnumerateFiles(_saveRootPath, "*.meta"))
+          {
+            using FileStream fileStream = new FileStream(
+              filePath, FileMode.Open, FileAccess.Read,
+              FileShare.Read, 4 * 1024, FileOptions.SequentialScan);
+
+            using StreamReader streamReader = new StreamReader(
+              fileStream, new UTF8Encoding(false), true, 4 * 1024);
+
+            using JsonReader reader = new JsonTextReader(streamReader);
+
+            SaveMetaData meta = _readSerializer.Deserialize<SaveMetaData>(reader);
+            _savesMetaCache.Add(meta.SaveSlot, meta);
+          }
+        }, cancellationToken: token).ContinueOnMainThread();
+      }
+      finally
+      {
+        if (entered)
+          _readGate.Release();
+      }
+    }
+
+    private async UniTask SaveProgress(GameStateData data, string tempFilePath, string backupFilePath,
       string tempBackupFilePath, string saveFilePath, CancellationToken token)
     {
       await UniTask.RunOnThreadPool(() =>
         {
-          File.WriteAllText(tempFilePath, json);
+          {
+            using FileStream fileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write,
+              FileShare.None, 32 * 1024, false);
+            using StreamWriter streamWriter = new StreamWriter(fileStream, new UTF8Encoding(false), 32 * 1024, false);
+            using JsonTextWriter jsonWriter = new JsonTextWriter(streamWriter);
+
+            _writeSerializer.Serialize(jsonWriter, data, typeof(GameStateData));
+          }
 
           ReplaceFile(backupFilePath, tempBackupFilePath);
           ReplaceFile(saveFilePath, backupFilePath);
@@ -230,19 +291,26 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
         Difficulty = data.SessionInfo.Difficulty,
         DisplayName = data.SessionInfo.ColonyName,
         InGameTime = TimeSpan.FromSeconds(data.SessionInfo.Playtime),
-        LastModifiedUtc = DateTime.Now,
+        LastModifiedUtc = DateTime.UtcNow,
         BuildVersion = _applicationVersion
       };
 
-      string metaJson = JsonConvert.SerializeObject(saveMetaData, _settings);
-
       await UniTask.RunOnThreadPool(() =>
         {
-          File.WriteAllText(tempMetaFilePath, metaJson);
+          {
+            using FileStream fileStream = new FileStream(tempMetaFilePath, FileMode.Create, FileAccess.Write,
+              FileShare.None, 4 * 1024, false);
+            using StreamWriter streamWriter = new StreamWriter(fileStream, new UTF8Encoding(false), 4 * 1024, false);
+            using JsonTextWriter jsonWriter = new JsonTextWriter(streamWriter);
+
+            _writeSerializer.Serialize(jsonWriter, saveMetaData, typeof(SaveMetaData));
+          }
+
           ReplaceFile(tempMetaFilePath, metaFilePath);
         }, cancellationToken: token, configureAwait: false)
         .ContinueOnMainThread();
 
+      _savesMetaCache[saveSlot] = saveMetaData;
       token.ThrowIfCancellationRequested();
     }
 
@@ -291,23 +359,6 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
 
       return types;
     }
-
-    private string GetFileKey(SaveSlot slot) => slot switch
-    {
-      SaveSlot.Auto => "auto",
-      SaveSlot.Quick => "quick",
-      SaveSlot.Manual1 => "manual1",
-      SaveSlot.Manual2 => "manual2",
-      SaveSlot.Manual3 => "manual3",
-      SaveSlot.Manual4 => "manual4",
-      SaveSlot.Manual5 => "manual5",
-      SaveSlot.Manual6 => "manual6",
-      SaveSlot.Manual7 => "manual7",
-      SaveSlot.Manual8 => "manual8",
-      SaveSlot.Manual9 => "manual9",
-      SaveSlot.Manual10 => "manual10",
-      _ => throw new ArgumentOutOfRangeException(nameof(slot))
-    };
 
     private List<Type> FindConcreteTypesImplementing<TInterface>()
     {

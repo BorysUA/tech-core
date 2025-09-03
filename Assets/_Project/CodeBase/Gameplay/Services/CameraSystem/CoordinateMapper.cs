@@ -8,12 +8,12 @@ namespace _Project.CodeBase.Gameplay.Services.CameraSystem
   public class CoordinateMapper
   {
     private readonly ILogService _logService;
-    private readonly CameraRigAgent _cameraRigAgent;
+    private readonly ICameraProvider _cameraRigAgent;
 
     private readonly Vector2 _centerScreen = new(width / 2f, height / 2f);
     private Plane _groundPlane = new(Vector3.up, Vector3.zero);
 
-    public CoordinateMapper(ILogService logService, CameraRigAgent cameraRigAgent)
+    public CoordinateMapper(ILogService logService, ICameraProvider cameraRigAgent)
     {
       _logService = logService;
       _cameraRigAgent = cameraRigAgent;

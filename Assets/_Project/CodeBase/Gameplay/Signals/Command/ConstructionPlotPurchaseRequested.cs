@@ -2,9 +2,9 @@
 
 namespace _Project.CodeBase.Gameplay.Signals.Command
 {
-  public class ConstructionPlotPurchaseRequested
+  public readonly struct ConstructionPlotPurchaseRequested
   {
-    public ConstructionPlotType Type { get; private set; }
+    public ConstructionPlotType Type { get; }
 
     public ConstructionPlotPurchaseRequested(ConstructionPlotType type)
     {

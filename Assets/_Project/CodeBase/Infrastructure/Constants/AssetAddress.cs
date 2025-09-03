@@ -24,6 +24,6 @@
     public const string ProductionBoostEventIndicator = "UI_InGame/ProductionBoostEventIndicator";
     public const string BuildingsShopWindow = "UI_InGame/BuildingsShopWindow";
     public const string PlotsShopWindow = "UI_InGame/PlotsShopWindow";
-    public const string CoreAtlas = "UI_InGame/CoreAtlas";
+    public const string CoreAtlas = "Configs/CoreAtlas";
   }
 }

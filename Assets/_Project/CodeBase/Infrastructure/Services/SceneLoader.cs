@@ -11,13 +11,13 @@ namespace _Project.CodeBase.Infrastructure.Services
   public class SceneLoader : ISceneLoader
   {
     private readonly LoadScreen _loadScreen;
-    private readonly ICoroutineRunner _coroutineRunner;
+    private readonly ICoroutineProvider _coroutineProvider;
     private readonly ILogService _logService;
 
-    public SceneLoader(LoadScreen loadScreen, ICoroutineRunner coroutineRunner, ILogService logService)
+    public SceneLoader(LoadScreen loadScreen, ICoroutineProvider coroutineProvider, ILogService logService)
     {
       _loadScreen = loadScreen;
-      _coroutineRunner = coroutineRunner;
+      _coroutineProvider = coroutineProvider;
       _logService = logService;
     }
 
@@ -40,7 +40,7 @@ namespace _Project.CodeBase.Infrastructure.Services
         completed?.Invoke();
       };
 
-      _coroutineRunner.ExecuteCoroutine(TrackProgress(loadSceneOperation, sceneName));
+      _coroutineProvider.ExecuteCoroutine(TrackProgress(loadSceneOperation, sceneName));
     }
 
     private IEnumerator TrackProgress(AsyncOperation asyncOperation, string sceneName)

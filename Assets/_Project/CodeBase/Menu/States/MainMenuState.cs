@@ -13,15 +13,13 @@ namespace _Project.CodeBase.Menu.States
     private readonly GameStateMachine _gameStateMachine;
     private readonly IDataTransferService _dataTransferService;
     private readonly SignalBus _signalBus;
-    private readonly IAssetProvider _assetProvider;
 
     public MainMenuState(GameStateMachine gameStateMachine, SignalBus signalBus,
-      IDataTransferService dataTransferService, IAssetProvider assetProvider)
+      IDataTransferService dataTransferService)
     {
       _gameStateMachine = gameStateMachine;
       _signalBus = signalBus;
       _dataTransferService = dataTransferService;
-      _assetProvider = assetProvider;
     }
 
     public void Enter()
@@ -37,7 +35,6 @@ namespace _Project.CodeBase.Menu.States
     private void OnLoadGameplayState(GameplaySceneLoadRequested args)
     {
       _dataTransferService.SetData(args.GameplaySettings);
-      _assetProvider.CleanUp();
       _gameStateMachine.Enter<LoadSceneState, string>(SceneName.Gameplay);
     }
   }

@@ -4,6 +4,7 @@ using _Project.CodeBase.Gameplay.Meteorite.VFX;
 using _Project.CodeBase.Gameplay.Services.Pool;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -23,6 +24,8 @@ namespace _Project.CodeBase.Gameplay.Services.Factories
     private readonly ObjectPool<TrailEffect, Transform> _trailPool = new();
 
     private Transform _vfxRoot;
+
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public VFXFactory(IStaticDataProvider staticDataProvider, IAssetProvider assetProvider, IInstantiator instantiator)
     {

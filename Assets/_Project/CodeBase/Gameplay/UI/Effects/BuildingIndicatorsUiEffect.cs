@@ -3,6 +3,7 @@ using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Services.Buildings;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.UI.Services;
 using R3;
 
@@ -12,8 +13,9 @@ namespace _Project.CodeBase.Gameplay.UI.Effects
   {
     private readonly IBuildingRepository _buildingRepository;
     private readonly IPopUpService _popUpService;
-
     private readonly CompositeDisposable _subscriptions = new();
+
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public BuildingIndicatorsUiEffect(IPopUpService popUpService, IBuildingRepository buildingRepository)
     {

@@ -35,21 +35,19 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
       return new Vector3(snappedX + halfW, 0, snappedY + halfH);
     }
 
-    public static Vector3 GetWorldPivot(IEnumerable<Vector2Int> cells)
+    public static Vector3 GetWorldPivot(IReadOnlyList<Vector2Int> cells)
     {
       float sumX = 0;
       float sumY = 0;
-      int count = 0;
 
-      foreach (Vector2Int cell in cells)
+      for (int i = 0; i < cells.Count; i++)
       {
-        sumX += cell.x;
-        sumY += cell.y;
-        count++;
+        sumX += cells[i].x;
+        sumY += cells[i].y;
       }
 
-      float centerX = sumX / count + (float)CellSize / 2;
-      float centerY = sumY / count + (float)CellSize / 2;
+      float centerX = sumX / cells.Count + (float)CellSize / 2;
+      float centerY = sumY / cells.Count + (float)CellSize / 2;
 
       return new Vector3(centerX, 0, centerY);
     }

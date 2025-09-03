@@ -1,4 +1,5 @@
-﻿using _Project.CodeBase.Data.Progress.ResourceData;
+﻿using System;
+using _Project.CodeBase.Data.Progress.ResourceData;
 using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.Models.Session;
@@ -7,8 +8,8 @@ using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.Services.Resource.Commands;
 using _Project.CodeBase.Gameplay.Services.Resource.Results;
 using _Project.CodeBase.Gameplay.States;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using R3;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ namespace _Project.CodeBase.Gameplay.Services.Resource
     private readonly ReactiveProperty<ResourceDropCollectedArgs> _resourceDropCollected = new();
 
     public ReadOnlyReactiveProperty<ResourceDropCollectedArgs> ResourceDropCollected => _resourceDropCollected;
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public ResourceService(IProgressReader progressReader, ICommandBroker commandBroker,
       ResourceBehaviourMap resourceBehaviourMap, ISessionProgress sessionStateModel)
@@ -91,11 +93,23 @@ namespace _Project.CodeBase.Gameplay.Services.Resource
       return false;
     }
 
-    public ReadOnlyReactiveProperty<int> ObserveResource(ResourceKind kind) =>
-      TryGetBehaviour(kind, out IResourceBehaviour resource) ? resource.TotalAmount : null;
+    public ReadOnlyReactiveProperty<int> ObserveResource(ResourceKind kind)
+    {
+      if (TryGetBehaviour(kind, out IResourceBehaviour resource) && resource.TotalAmount != null)
+        return resource.TotalAmount;
 
-    public ReadOnlyReactiveProperty<int> ObserveCapacity(ResourceKind kind) =>
-      TryGetBehaviour(kind, out IResourceBehaviour resource) ? resource.TotalCapacity : null;
+      throw new InvalidOperationException(
+        $"ObserveResource({kind}) called before Initialize or resource does not exist");
+    }
+
+    public ReadOnlyReactiveProperty<int> ObserveCapacity(ResourceKind kind)
+    {
+      if (TryGetBehaviour(kind, out IResourceBehaviour resource) && resource.TotalCapacity != null)
+        return resource.TotalCapacity;
+
+      throw new InvalidOperationException(
+        $"ObserveCapacity({kind}) called before Initialize or resource does not exist");
+    }
 
     public void AddResourceDrop(ResourceDropType resourceDropType, Vector3 spawnPoint, Vector3 position)
     {

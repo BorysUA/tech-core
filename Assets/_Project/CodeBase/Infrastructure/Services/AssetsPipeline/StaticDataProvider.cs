@@ -36,6 +36,7 @@ namespace _Project.CodeBase.Infrastructure.Services.AssetsPipeline
 
     private readonly Dictionary<(BuildingType, Type), BuildingModuleConfig> _indexedBuildingModules = new();
 
+    private ActionButtonsOrderConfig _actionsOrder;
     private GameMap _gameMap;
     private MeteoriteSpawnerConfig _meteoriteSpawner;
     private BuildingsShopCatalog _buildingsShopCatalog;
@@ -64,6 +65,9 @@ namespace _Project.CodeBase.Infrastructure.Services.AssetsPipeline
 
     public BuildingConfig GetBuildingConfig(BuildingType buildingType) =>
       _buildings.GetValueOrDefault(buildingType);
+
+    public IReadOnlyList<ActionType> GetActionButtonsOrder() =>
+      _actionsOrder.Order;
 
     public IEnumerable<MapEntityData> GetMapEntities()
       => _gameMap.Entities;
@@ -158,7 +162,12 @@ namespace _Project.CodeBase.Infrastructure.Services.AssetsPipeline
 
       _meteoriteSpawner =
         await _assetProvider.LoadAssetAsync<MeteoriteSpawnerConfig>(StaticDataAddress.MeteoriteSpawner);
+
       _gameMap = await _assetProvider.LoadAssetAsync<GameMap>(StaticDataAddress.GameMap);
+
+      _actionsOrder =
+        await _assetProvider.LoadAssetAsync<ActionButtonsOrderConfig>(StaticDataAddress.ActionButtonsOrder);
+
       _buildingsShopCatalog =
         await _assetProvider.LoadAssetAsync<BuildingsShopCatalog>(StaticDataAddress.BuildingsShopCatalog);
     }

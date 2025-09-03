@@ -6,6 +6,7 @@ using _Project.CodeBase.Gameplay.Resource;
 using _Project.CodeBase.Gameplay.Services.Pool;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -28,6 +29,8 @@ namespace _Project.CodeBase.Gameplay.Services.Factories
     private Transform _meteoritesRoot;
     private Transform _resourcesRoot;
 
+    public InitPhase InitPhase => InitPhase.Preparation;
+
     public GameplayFactory(IInstantiator instantiator, IAssetProvider assetProvider,
       IStaticDataProvider staticDataProvider)
     {
@@ -35,6 +38,7 @@ namespace _Project.CodeBase.Gameplay.Services.Factories
       _assetProvider = assetProvider;
       _staticDataProvider = staticDataProvider;
     }
+
 
     public void Initialize()
     {

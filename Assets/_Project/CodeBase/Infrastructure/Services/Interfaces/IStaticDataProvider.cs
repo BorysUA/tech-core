@@ -30,5 +30,6 @@ namespace _Project.CodeBase.Infrastructure.Services.Interfaces
     BuildingsShopCatalog GetBuildingsShopCatalog();
     T GetModuleConfig<T>(BuildingType buildingType) where T : BuildingModuleConfig;
     GameStartProfile GetGameStartProfile(GameDifficulty gameDifficulty);
+    IReadOnlyList<ActionType> GetActionButtonsOrder();
   }
 }

@@ -33,8 +33,15 @@ namespace _Project.CodeBase.Gameplay.UI.HUD
     public void Initialize()
     {
       _buildingService.CurrentSelectedBuilding
-        .Skip(1)
-        .Subscribe(OnBuildingSelectionChanged)
+        .CombineLatest(_windowsService.AnyWindowOpen,
+          (selected, anyOpen) => anyOpen ? null : selected)
+        .Subscribe(selectedId =>
+        {
+          if (selectedId != null)
+            ShowBuildingActionPanel(_buildingService.GetActionsForBuilding(selectedId.Value));
+          else
+            HideBuildingActionPanel();
+        })
         .AddTo(_subscriptions);
     }
 
@@ -54,14 +61,6 @@ namespace _Project.CodeBase.Gameplay.UI.HUD
 
     public void Dispose() =>
       _subscriptions.Dispose();
-
-    private void OnBuildingSelectionChanged(IBuildingActionReader buildingActionReader)
-    {
-      if (buildingActionReader != null)
-        ShowBuildingActionPanel(buildingActionReader);
-      else
-        HideBuildingActionPanel();
-    }
 
     private void ShowBuildingActionPanel(IBuildingActionReader buildingActionReader) =>
       _buildingActionBar.Show(buildingActionReader);

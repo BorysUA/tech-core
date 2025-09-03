@@ -15,6 +15,9 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.BuildingAction
     private readonly Subject<Unit> _deactivated = new();
     public Observable<Unit> Deactivated => _deactivated;
 
+    public void Initialize(int index) =>
+      transform.SetSiblingIndex(index);
+
     public void Setup(string title, Sprite icon)
     {
       _title.text = title;

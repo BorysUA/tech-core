@@ -6,12 +6,12 @@ namespace _Project.CodeBase.Gameplay.Buildings.VFX
 {
   public abstract class SimpleEffect : MonoBehaviour
   {
-    private CameraRigAgent _cameraRigAgent;
+    private ICameraProvider _cameraRigAgent;
     private bool _isPaused; 
     private bool _isActive; 
 
     [Inject]
-    public void Construct(CameraRigAgent cameraRigAgent)
+    public void Construct(ICameraProvider cameraRigAgent)
       => _cameraRigAgent = cameraRigAgent;
     
     public void Play()

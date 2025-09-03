@@ -4,6 +4,7 @@ using _Project.CodeBase.Gameplay.ConstructionPlot;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -21,6 +22,8 @@ namespace _Project.CodeBase.Gameplay.Services.BuildingPlots
     private Transform _constructionPlotsRoot;
 
     private ConstructionPlotPreview _preview;
+
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public ConstructionPlotFactory(IAssetProvider assetProvider, IStaticDataProvider staticDataProvider,
       IInstantiator instantiator)

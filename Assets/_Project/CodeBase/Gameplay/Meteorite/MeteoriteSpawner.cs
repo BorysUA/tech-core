@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using _Project.CodeBase.Data.StaticData.Meteorite;
+using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Services.LogService;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Meteorite
@@ -13,7 +16,7 @@ namespace _Project.CodeBase.Gameplay.Meteorite
   {
     private readonly IGameplayFactory _gameplayFactory;
     private readonly IStaticDataProvider _staticDataProvider;
-    private readonly ICoroutineRunner _coroutineRunner;
+    private readonly ICoroutineProvider _coroutineProvider;
     private readonly ILogService _logService;
 
     private WaitForSeconds _waitSpawnInterval;
@@ -22,11 +25,11 @@ namespace _Project.CodeBase.Gameplay.Meteorite
     private Coroutine _spawnMeteoritesCoroutine;
 
     public MeteoriteSpawner(IGameplayFactory gameplayFactory, IStaticDataProvider staticDataProvider,
-      ICoroutineRunner coroutineRunner, ILogService logService)
+      ICoroutineProvider coroutineProvider, ILogService logService)
     {
       _gameplayFactory = gameplayFactory;
       _staticDataProvider = staticDataProvider;
-      _coroutineRunner = coroutineRunner;
+      _coroutineProvider = coroutineProvider;
       _logService = logService;
     }
 
@@ -39,24 +42,25 @@ namespace _Project.CodeBase.Gameplay.Meteorite
 
     public void Start()
     {
-      _spawnMeteoritesCoroutine = _coroutineRunner.ExecuteCoroutine(SpawnMeteorites());
+      _spawnMeteoritesCoroutine = _coroutineProvider.ExecuteCoroutine(SpawnMeteorites());
     }
 
     public void Stop()
     {
-      _coroutineRunner.TerminateCoroutine(_spawnMeteoritesCoroutine);
+      _coroutineProvider.TerminateCoroutine(_spawnMeteoritesCoroutine);
     }
+
 
     private IEnumerator SpawnMeteorites()
     {
       while (true)
       {
         yield return _waitSpawnInterval;
-        SpawnMeteorite();
+        SpawnMeteorite().Forget();
       }
     }
 
-    private async void SpawnMeteorite()
+    private async UniTaskVoid SpawnMeteorite()
     {
       if (_config.PossibleMeteorites == null || _config.PossibleMeteorites.Count == 0)
       {

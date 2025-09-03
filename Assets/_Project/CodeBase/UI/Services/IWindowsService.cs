@@ -8,6 +8,7 @@ namespace _Project.CodeBase.UI.Services
   public interface IWindowsService
   {
     Observable<BaseWindowViewModel> WindowOpened { get; }
+    ReadOnlyReactiveProperty<bool> AnyWindowOpen { get; }
 
 
     UniTask OpenWindow<TWindow, TViewModel>(bool loadFromCache = true, CancellationToken token = default)

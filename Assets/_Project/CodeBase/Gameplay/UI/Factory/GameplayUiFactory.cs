@@ -106,13 +106,11 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
     {
       BuildingIndicatorConfig itemConfig = _staticDataProvider.GetBuildingIndicatorConfig(indicatorType);
 
-      GameObject itemPrefab =
-        await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.BuildingIndicatorItem);
+      Sprite icon = await _assetProvider.LoadAssetAsync<Sprite>(itemConfig.Icon);
+      GameObject itemPrefab = await _assetProvider.LoadAssetAsync<GameObject>(AssetAddress.BuildingIndicatorItem);
 
       BuildingIndicatorView item =
         _instantiator.InstantiatePrefabForComponent<BuildingIndicatorView>(itemPrefab, itemsContainer);
-
-      Sprite icon = await _assetProvider.LoadAssetAsync<Sprite>(itemConfig.Icon);
 
       item.Setup(icon);
 

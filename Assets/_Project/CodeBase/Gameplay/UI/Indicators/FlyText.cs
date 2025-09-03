@@ -12,6 +12,10 @@ namespace _Project.CodeBase.Gameplay.UI.Indicators
 {
   public class FlyText : MonoBehaviour, IResettablePoolItem<PoolUnit>
   {
+    private const string POS_FMT = "+{0}";
+    private const string NEG_FMT = "{0}";
+    private const string ZERO_FMT = "0";
+
     private ITweenFactory _tweenFactory;
     private Sequence _contentSequence;
     private RectTransform _rectTransform;
@@ -51,7 +55,8 @@ namespace _Project.CodeBase.Gameplay.UI.Indicators
     public void Initialize(Vector3 worldPosition, int amount)
     {
       WorldSpawnPoint = worldPosition;
-      _title.SetText("{0:+#;-#;0}", amount);
+
+      _title.SetText(amount > 0 ? "+{0}" : "{0}", amount);
 
       _contentSequence.Play();
     }

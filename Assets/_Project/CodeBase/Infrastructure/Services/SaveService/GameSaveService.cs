@@ -7,6 +7,7 @@ using _Project.CodeBase.Gameplay.Services.Timers;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -15,7 +16,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
 {
   public class GameSaveService : IGameSaveService, IGameplayInit, IDisposable
   {
-    private const float SaveInterval = 10f;
+    private const float SaveInterval = 30f;
 
     private readonly SaveSlot[] _manualSaveSlotsOrder =
     {
@@ -32,6 +33,8 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
     private bool _isSaving;
     private float _lastSaveTime;
 
+    public InitPhase InitPhase => InitPhase.Preparation;
+
     public GameSaveService(ISaveStorageService saveStorageService, IProgressSaver progressService,
       ILogService logService, ISessionTimer sessionTimer)
     {
@@ -42,11 +45,6 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
     }
 
     public void Initialize()
-    {
-      InitializeAutosave();
-    }
-
-    private void InitializeAutosave()
     {
       _sessionTimer.SessionPlaytime
         .Subscribe(sessionTime => SaveAutoAsync(sessionTime).Forget())
@@ -61,7 +59,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
       _isSaving = true;
       try
       {
-        SaveSlot slot = await PickManualSlot();
+        SaveSlot slot = PickManualSlot();
         await _saveStorageService.SaveGameAsync(_progressService.GameStateModel.GameStateData, slot, token);
       }
       catch (OperationCanceledException)
@@ -70,7 +68,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
       }
       catch (Exception exception)
       {
-        _logService.LogError(GetType(), $"Manual save to slot failed", exception);
+        _logService.LogError(GetType(), "Manual save to slot failed", exception);
         throw;
       }
       finally
@@ -93,6 +91,7 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
         return;
 
       _isSaving = true;
+
       try
       {
         await _saveStorageService.SaveGameAsync(_progressService.GameStateModel.GameStateData, SaveSlot.Auto);
@@ -108,11 +107,13 @@ namespace _Project.CodeBase.Infrastructure.Services.SaveService
       }
     }
 
-    private async UniTask<SaveSlot> PickManualSlot()
+    private SaveSlot PickManualSlot()
     {
-      List<SaveMetaData> manualSaves = (await _saveStorageService.GetAllSavesMeta())
+      List<SaveMetaData> manualSaves = _saveStorageService.GetSavedGamesMeta()
         .Where(meta => IsManual(meta.SaveSlot))
         .ToList();
+
+      _saveStorageService.GetSavedGamesMeta();
 
       HashSet<SaveSlot> occupiedSlots = new HashSet<SaveSlot>(manualSaves.Select(meta => meta.SaveSlot));
 

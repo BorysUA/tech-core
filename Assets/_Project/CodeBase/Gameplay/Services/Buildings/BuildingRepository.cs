@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using _Project.CodeBase.Gameplay.Buildings;
 using _Project.CodeBase.Gameplay.Models.Persistent.Interfaces;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Gameplay.States;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using R3;
-using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
 namespace _Project.CodeBase.Gameplay.Services.Buildings
@@ -20,7 +20,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     private readonly IProgressReader _progressService;
     private readonly ILogService _logService;
 
-    private readonly CompositeDisposable _disposable = new();
+    private readonly CompositeDisposable _subscriptions = new();
 
     private readonly Subject<BuildingViewModel> _buildingAdded = new();
     private readonly Subject<BuildingViewModel> _buildingRemoved = new();
@@ -30,6 +30,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
     public IEnumerable<BuildingViewModel> GetAll => _currentBuildings.Values;
     public Observable<BuildingViewModel> BuildingsAdded => _buildingAdded;
     public Observable<BuildingViewModel> BuildingsRemoved => _buildingRemoved;
+    public InitPhase InitPhase => InitPhase.Creation;
 
     public BuildingRepository(IProgressReader progressService, IBuildingFactory buildingFactory, ILogService logService)
     {
@@ -46,12 +47,12 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
       _progressService.GameStateModel.ReadOnlyBuildings
         .ObserveAdd()
         .Subscribe(addEvent => CreateView(addEvent.Value).Forget())
-        .AddTo(_disposable);
+        .AddTo(_subscriptions);
 
       _progressService.GameStateModel.ReadOnlyBuildings
         .ObserveRemove()
         .Subscribe(removeEvent => DestroyView(removeEvent.Value))
-        .AddTo(_disposable);
+        .AddTo(_subscriptions);
     }
 
     public BuildingViewModel GetBuildingById(int id)
@@ -65,7 +66,10 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
     public void Dispose()
     {
-      _disposable?.Dispose();
+      _subscriptions?.Dispose();
+
+      foreach (BuildingViewModel viewModel in _currentBuildings.Values)
+        viewModel.Dispose();
     }
 
     private async UniTaskVoid CreateView(IBuildingDataReader buildingData)

@@ -8,7 +8,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.Conditions
 {
   public class OperationalConditionTracer : IDisposable
   {
-    private readonly CompositeDisposable _disposable = new();
+    private readonly CompositeDisposable _subscriptions = new();
     private readonly List<OperationalCondition> _conditions = new();
     private readonly ReactiveProperty<bool> _allSatisfied = new(true);
 
@@ -25,7 +25,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.Conditions
           .Select(c => c.IsSatisfied))
         .Select(values => values.All(x => x))
         .Subscribe(value => _allSatisfied.OnNext(value))
-        .AddTo(_disposable);
+        .AddTo(_subscriptions);
     }
 
     public void AddConditions(IEnumerable<OperationalCondition> conditions)
@@ -36,10 +36,13 @@ namespace _Project.CodeBase.Gameplay.Buildings.Conditions
 
     public void Dispose()
     {
+      _subscriptions.Dispose();
+      _allSatisfied.Dispose();
+
       foreach (OperationalCondition condition in _conditions)
         condition.Dispose();
 
-      _disposable.Dispose();
+      _conditions.Clear();
     }
   }
 }

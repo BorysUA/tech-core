@@ -14,14 +14,14 @@ namespace _Project.CodeBase.Gameplay.Meteorite.VFX
 
     private readonly Subject<Unit> _deactivated = new();
 
-    private CameraRigAgent _cameraRigAgent;
+    private ICameraProvider _cameraRigAgent;
     private ShakePreset _shakePreset;
 
     public float Progress => _vfx.totalTime > 0f ? Mathf.Clamp01(_vfx.time / _vfx.totalTime) : 0f;
     public Observable<Unit> Deactivated => _deactivated;
 
     [Inject]
-    public void Construct(CameraRigAgent cameraRigAgent)
+    public void Construct(ICameraProvider cameraRigAgent)
     {
       _cameraRigAgent = cameraRigAgent;
     }

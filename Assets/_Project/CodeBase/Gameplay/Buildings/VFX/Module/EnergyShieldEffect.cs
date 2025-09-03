@@ -24,6 +24,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.VFX.Module
     [SerializeField] private float _cutoffYInvisible = 5;
     [SerializeField] private float _fadeAnimationDuration = 1;
 
+    private bool _isVisible;
     private EnergyShieldModule _energyShieldModule;
     private Renderer _shieldRenderer;
     private Collider _shieldCollider;
@@ -43,7 +44,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.VFX.Module
     {
       _energyShieldModule = (EnergyShieldModule)module;
 
-      _shieldModel.transform.localScale = UnityEngine.Vector3.one * Mathf.Max(0.01f, _energyShieldModule.Radius);
+      _shieldModel.transform.localScale = Vector3.one * Mathf.Max(0.01f, _energyShieldModule.Radius);
       _shieldMpb = new MaterialPropertyBlock();
       _shieldRenderer = _shieldModel.GetComponent<Renderer>();
       _shieldCollider = _shieldModel.GetComponent<Collider>();
@@ -52,6 +53,9 @@ namespace _Project.CodeBase.Gameplay.Buildings.VFX.Module
 
       _originalColor = _shieldRenderer.sharedMaterial.GetColor(ShieldColor);
       _originalVisibility = _shieldRenderer.sharedMaterial.GetFloat(ShieldVisibility);
+
+      bool initial = _energyShieldModule.IsModuleWorking.CurrentValue;
+      SetVisibleImmediate(initial);
 
       _energyShieldModule.IsModuleWorking
         .Subscribe(OnModuleActivityChanged)
@@ -62,18 +66,6 @@ namespace _Project.CodeBase.Gameplay.Buildings.VFX.Module
         .AddTo(this);
     }
 
-    private void PlayHitEffect()
-    {
-      _shieldHitTween?.Kill();
-
-      _shieldHitTween = DOTween.To(() => 0f, t =>
-      {
-        _shieldMpb.SetFloat(ShieldVisibility, Mathf.Lerp(_onHitVisibility, _originalVisibility, t));
-        _shieldMpb.SetColor(ShieldColor, Color.Lerp(_onHitColor, _originalColor, t));
-        _shieldRenderer.SetPropertyBlock(_shieldMpb);
-      }, 1f, _hitAnimationDuration);
-    }
-
     private void OnModuleActivityChanged(bool isActive)
     {
       if (isActive)
@@ -82,11 +74,47 @@ namespace _Project.CodeBase.Gameplay.Buildings.VFX.Module
         Hide();
     }
 
+    private void SetVisibleImmediate(bool visible)
+    {
+      _isVisible = visible;
+
+      if (visible)
+      {
+        _shieldModel.SetActive(true);
+        _shieldCollider.enabled = true;
+        _shieldMpb.SetFloat(ShieldCutOffY, _cutoffYVisible);
+      }
+      else
+      {
+        _shieldCollider.enabled = false;
+        _shieldModel.SetActive(false);
+        _shieldMpb.SetFloat(ShieldCutOffY, _cutoffYInvisible);
+      }
+
+      _shieldRenderer.SetPropertyBlock(_shieldMpb);
+    }
+
+    private void PlayHitEffect()
+    {
+      _shieldHitTween?.Kill();
+
+      _shieldHitTween = DOTween.To(() => 0f, t =>
+        {
+          _shieldMpb.SetFloat(ShieldVisibility, Mathf.Lerp(_onHitVisibility, _originalVisibility, t));
+          _shieldMpb.SetColor(ShieldColor, Color.Lerp(_onHitColor, _originalColor, t));
+          _shieldRenderer.SetPropertyBlock(_shieldMpb);
+        }, 1f, _hitAnimationDuration)
+        .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
+    }
+
     private void Show()
     {
+      if (_isVisible)
+        return;
+
+      _isVisible = true;
       _shieldModel.SetActive(true);
       _shieldCollider.enabled = true;
-
       _shieldOnTween?.Kill();
 
       _shieldOnTween = DOTween.To(() => _cutoffYInvisible, currentCutoffY =>
@@ -94,22 +122,28 @@ namespace _Project.CodeBase.Gameplay.Buildings.VFX.Module
           _shieldMpb.SetFloat(ShieldCutOffY, currentCutoffY);
           _shieldRenderer.SetPropertyBlock(_shieldMpb);
         }, _cutoffYVisible, _fadeAnimationDuration)
-        .SetEase(Ease.OutQuad);
+        .SetEase(Ease.OutQuad)
+        .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
     }
 
     private void Hide()
     {
+      if (!_isVisible)
+        return;
+
+      _isVisible = false;
       _shieldCollider.enabled = false;
+      _shieldOffTween?.Kill();
+      _shieldHitTween?.Kill();
 
-      _shieldOnTween?.Kill();
-
-      _shieldOnTween = DOTween.To(() => _cutoffYVisible, currentCutoffY =>
+      _shieldOffTween = DOTween.To(() => _cutoffYVisible, currentCutoffY =>
         {
           _shieldMpb.SetFloat(ShieldCutOffY, currentCutoffY);
           _shieldRenderer.SetPropertyBlock(_shieldMpb);
         }, _cutoffYInvisible, _fadeAnimationDuration)
         .SetEase(Ease.InQuad)
-        .OnComplete(() => _shieldModel.SetActive(false));
+        .OnComplete(() => _shieldModel.SetActive(false))
+        .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
     }
   }
 }

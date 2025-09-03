@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using _Project.CodeBase.Infrastructure.StateMachine;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.CodeBase.Gameplay.States
 {

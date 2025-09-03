@@ -1,12 +1,14 @@
 ﻿using System;
 using _Project.CodeBase.Infrastructure.Guards;
 using _Project.CodeBase.Infrastructure.StateMachine;
+using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 
 namespace _Project.CodeBase.Services.RemoteConfigsService
 {
   public class RemoteConfigsProxy : IBootstrapInitAsync, IRemoteConfigService
   {
+    private readonly ILogService _logService;
     private readonly FirebaseRemoteConfigService _firebase;
     private readonly NoneRemoteConfigService _none;
     private readonly UniTaskCompletionSource _whenReadyTcs = new();
@@ -15,10 +17,12 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
     public UniTask WhenReady => _whenReadyTcs.Task.WithCycleGuard(this);
     public DateTime LastFetchTime => _current.LastFetchTime;
 
-    public RemoteConfigsProxy(FirebaseRemoteConfigService firebase, NoneRemoteConfigService noneRemoteConfigService)
+    public RemoteConfigsProxy(FirebaseRemoteConfigService firebase, NoneRemoteConfigService noneRemoteConfigService,
+      ILogService logService)
     {
       _firebase = firebase;
       _none = noneRemoteConfigService;
+      _logService = logService;
 
       _current = noneRemoteConfigService;
     }

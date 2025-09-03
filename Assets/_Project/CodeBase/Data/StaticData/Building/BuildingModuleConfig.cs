@@ -19,6 +19,7 @@ namespace _Project.CodeBase.Data.StaticData.Building
       Func<Type, OperationalCondition> conditionInstantiator, BuildingConfig buildingConfig, ILogService logService)
     {
       BuildingModule module = InstantiateModule(moduleInstantiator);
+
       SetupModule(module, buildingConfig);
 
       if (OperationalConditions is null)

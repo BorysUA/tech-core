@@ -21,7 +21,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
 
     private readonly ActionFactory _actionFactory;
     private readonly ICommandBroker _commandBroker;
-    private readonly ICoroutineRunner _coroutineRunner;
+    private readonly ICoroutineProvider _coroutineProvider;
     private readonly IBuildingAction[] _actions = new IBuildingAction[1];
     private readonly WaitForEndOfFrame _waitForEndOfFrame = new();
 
@@ -30,7 +30,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
 
     private TradeConfig _tradeConfig;
     private CancellationTokenSource _lifetimeCts;
-    
+
     private Coroutine _closeOfferCoroutine;
     private Coroutine _generateOfferCoroutine;
     private Coroutine _snapshotCoroutine;
@@ -44,11 +44,11 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
     public event Action TradeOfferOpened;
     public event Action TradeOfferClosed;
 
-    public TradeModule(ActionFactory actionFactory, ILogService logService, ICoroutineRunner coroutineRunner,
+    public TradeModule(ActionFactory actionFactory, ILogService logService, ICoroutineProvider coroutineProvider,
       ICommandBroker commandBroker) : base(logService)
     {
       _actionFactory = actionFactory;
-      _coroutineRunner = coroutineRunner;
+      _coroutineProvider = coroutineProvider;
       _commandBroker = commandBroker;
     }
 
@@ -74,7 +74,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
       if (_commandBroker.ExecuteCommand<FulfillTradeOfferCommand, bool>(
             new FulfillTradeOfferCommand(BuildingId)))
       {
-        _coroutineRunner.TerminateCoroutine(_closeOfferCoroutine);
+        _coroutineProvider.TerminateCoroutine(_closeOfferCoroutine);
         CloseCurrentOffer();
       }
     }
@@ -86,15 +86,15 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
       if (_offerCloseCountdown.CurrentValue > CountdownEpsilon)
       {
         TradeOfferOpened?.Invoke();
-        _closeOfferCoroutine = _coroutineRunner.ExecuteCoroutine(CloseCurrentOfferAfterCountdown());
+        _closeOfferCoroutine = _coroutineProvider.ExecuteCoroutine(CloseCurrentOfferAfterCountdown());
       }
       else
       {
         TradeOfferClosed?.Invoke();
-        _generateOfferCoroutine = _coroutineRunner.ExecuteCoroutine(GenerateTradeOfferAfterCountdown());
+        _generateOfferCoroutine = _coroutineProvider.ExecuteCoroutine(GenerateTradeOfferAfterCountdown());
       }
 
-      _snapshotCoroutine = _coroutineRunner.ExecuteCoroutine(SnapshotLoop());
+      _snapshotCoroutine = _coroutineProvider.ExecuteCoroutine(SnapshotLoop());
     }
 
     protected override void Deactivate()
@@ -104,7 +104,6 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
       _lifetimeCts = null;
 
       TerminateCoroutines();
-      SnapshotOnce();
     }
 
     public override void Dispose()
@@ -147,7 +146,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
       TradeOfferOpened?.Invoke();
       UpdateCountdowns();
 
-      _closeOfferCoroutine = _coroutineRunner.ExecuteCoroutine(CloseCurrentOfferAfterCountdown());
+      _closeOfferCoroutine = _coroutineProvider.ExecuteCoroutine(CloseCurrentOfferAfterCountdown());
     }
 
     private void CloseCurrentOffer()
@@ -158,7 +157,7 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
       UpdateCountdowns();
 
       if (IsModuleWorking.CurrentValue)
-        _generateOfferCoroutine = _coroutineRunner.ExecuteCoroutine(GenerateTradeOfferAfterCountdown());
+        _generateOfferCoroutine = _coroutineProvider.ExecuteCoroutine(GenerateTradeOfferAfterCountdown());
     }
 
     private void CreateActions()
@@ -195,9 +194,9 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules.Trade
 
     private void TerminateCoroutines()
     {
-      _coroutineRunner.TerminateCoroutine(_closeOfferCoroutine);
-      _coroutineRunner.TerminateCoroutine(_generateOfferCoroutine);
-      _coroutineRunner.TerminateCoroutine(_snapshotCoroutine);
+      _coroutineProvider.TerminateCoroutine(_closeOfferCoroutine);
+      _coroutineProvider.TerminateCoroutine(_generateOfferCoroutine);
+      _coroutineProvider.TerminateCoroutine(_snapshotCoroutine);
     }
   }
 }

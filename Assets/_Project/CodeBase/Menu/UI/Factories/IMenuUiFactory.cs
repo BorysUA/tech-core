@@ -8,6 +8,6 @@ namespace _Project.CodeBase.Menu.UI.Factories
 {
   public interface IMenuUiFactory
   {
-    public UniTask<SaveSlotItem> CreateSaveSlot(SaveMetaData data, Transform saveSlotsContainer);
+    public SaveSlotItem CreateSaveSlot(SaveMetaData data, Transform saveSlotsContainer);
   }
 }

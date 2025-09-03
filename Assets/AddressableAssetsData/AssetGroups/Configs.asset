@@ -21,6 +21,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - BuildingActionButtonConfigs
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 274c1c168e5361548910c80999d716f1
+    m_Address: Configs/CoreAtlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2e506dcea822b2b418585890ab08f3be
     m_Address: Configs/Buildings
     m_ReadOnly: 0
@@ -73,6 +78,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BuildingConfigs
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c122a72b1f8432744a5454e59126ee55
+    m_Address: Configs/ActionButtonsOrder
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: daa9a669b387d0d4b98a8ba4a35e3375
     m_Address: Configs/MeteoriteVFX

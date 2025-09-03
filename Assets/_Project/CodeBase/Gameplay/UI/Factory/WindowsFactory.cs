@@ -83,9 +83,6 @@ namespace _Project.CodeBase.Gameplay.UI.Factory
 
       TViewModel viewModel = _instantiator.Instantiate<TViewModel>();
 
-      if (viewModel is IAsyncInitializable initializable)
-        await initializable.InitializeAsync();
-
       string address = _addressMap.GetAddress<TWindow>();
       GameObject windowPrefab = await _assetProvider.LoadAssetAsync<GameObject>(address, token);
       TWindow window = _instantiator.InstantiatePrefabForComponent<TWindow>(windowPrefab, _windowsCanvas.Root);

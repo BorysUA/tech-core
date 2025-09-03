@@ -24,6 +24,7 @@ namespace _Project.CodeBase.Data.StaticData.Building.Conditions
       base.SetupCondition(condition, module);
       SpendPerTickCondition spendPerTickCondition =
         (SpendPerTickCondition)condition;
+      
       spendPerTickCondition.Setup(RequiredResources, ResourceFlow);
     }
   }

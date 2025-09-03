@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using _Project.CodeBase.Gameplay.Services;
 using _Project.CodeBase.Gameplay.States.GameplayStates;
 using _Project.CodeBase.Gameplay.States.GameplayStates.Placement;
@@ -61,8 +63,8 @@ namespace _Project.CodeBase.Gameplay.States.GameStates
         initializationTasks.Add(initializable.InitializeAsync());
 
       await UniTask.WhenAll(initializationTasks);
-
-      foreach (IGameplayInit initializable in _onLoadInit)
+      
+      foreach (IGameplayInit initializable in _onLoadInit.OrderBy(init => init.InitPhase))
         initializable.Initialize();
     }
   }

@@ -6,6 +6,7 @@ using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -19,6 +20,8 @@ namespace _Project.CodeBase.Gameplay.Services.Resource
     private readonly Dictionary<int, ResourceDropViewModel> _resourceDrops = new();
     private readonly IProgressReader _progressReader;
     private readonly CompositeDisposable _compositeDisposable = new();
+
+    public InitPhase InitPhase => InitPhase.Creation;
 
     public ResourceDropRepository(ILogService logService, IGameplayFactory gameplayFactory,
       IProgressReader progressReader)

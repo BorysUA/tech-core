@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using R3;
 using UnityEngine;
@@ -12,18 +13,20 @@ namespace _Project.CodeBase.Services.InputService
   public class InputService : IInputService, IDisposable, IGameplayInit
   {
     private readonly InputSystemActions _inputActions;
-    private readonly ICoroutineRunner _coroutineRunner;
+    private readonly ICoroutineProvider _coroutineProvider;
     private readonly ILogService _logService;
     private readonly IDisposable _disposable;
 
     private readonly Dictionary<Type, PlayerInputHandler> _playerInputHandlers = new();
     private readonly List<InputHandler> _inputHandlers = new();
 
-    public InputService(InputSystemActions inputActions, ICoroutineRunner coroutineRunner, ILogService logService,
+    public InitPhase InitPhase => InitPhase.Preparation;
+
+    public InputService(InputSystemActions inputActions, ICoroutineProvider coroutineProvider, ILogService logService,
       TapDetector tapDetector)
     {
       _inputActions = inputActions;
-      _coroutineRunner = coroutineRunner;
+      _coroutineProvider = coroutineProvider;
       _logService = logService;
 
       _disposable = tapDetector.OnTapDetected.Subscribe(FireTap);
@@ -55,7 +58,7 @@ namespace _Project.CodeBase.Services.InputService
         return;
 
       InputHandlerWithUiFilter inputHandlerWithUiFilter =
-        new InputHandlerWithUiFilter(playerInputHandler, _coroutineRunner);
+        new InputHandlerWithUiFilter(playerInputHandler, _coroutineProvider);
 
       _playerInputHandlers.Add(playerInputHandler.GetType(), inputHandlerWithUiFilter);
       playerInputHandler.OnActivated();

@@ -9,20 +9,20 @@ namespace _Project.CodeBase.Services.InputService
   public class InputHandlerWithUiFilter : PlayerInputHandler
   {
     private readonly PlayerInputHandler _inputHandler;
-    private readonly ICoroutineRunner _coroutineRunner;
+    private readonly ICoroutineProvider _coroutineProvider;
     private readonly WaitForEndOfFrame _waitForEndOfFrame = new();
 
     private bool _isTouchValid;
 
-    public InputHandlerWithUiFilter(PlayerInputHandler inputHandler, ICoroutineRunner coroutineRunner)
+    public InputHandlerWithUiFilter(PlayerInputHandler inputHandler, ICoroutineProvider coroutineProvider)
     {
       _inputHandler = inputHandler;
-      _coroutineRunner = coroutineRunner;
+      _coroutineProvider = coroutineProvider;
     }
 
     public override void OnTouchStarted(Vector2 inputPoint)
     {
-      _coroutineRunner.ExecuteCoroutine(InvokeIfNotOverUIOnNextFrame(() =>
+      _coroutineProvider.ExecuteCoroutine(InvokeIfNotOverUIOnNextFrame(() =>
       {
         _isTouchValid = true;
         _inputHandler.OnTouchStarted(inputPoint);
@@ -31,7 +31,7 @@ namespace _Project.CodeBase.Services.InputService
 
     public override void OnTap(Vector2 inputPoint)
     {
-      _coroutineRunner.ExecuteCoroutine(InvokeIfNotOverUIOnNextFrame(() => _inputHandler.OnTap(inputPoint)));
+      _coroutineProvider.ExecuteCoroutine(InvokeIfNotOverUIOnNextFrame(() => _inputHandler.OnTap(inputPoint)));
     }
 
     public override void OnTouchMoved(Vector2 inputPoint)

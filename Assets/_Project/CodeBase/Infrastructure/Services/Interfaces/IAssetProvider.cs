@@ -20,5 +20,7 @@ namespace _Project.CodeBase.Infrastructure.Services.Interfaces
 
     UniTask<IList<T>> LoadAssetsAsync<T>(string address, CancellationToken token = default, int retryCount = 1)
       where T : class;
+
+    void ReleaseAsset(string address);
   }
 }

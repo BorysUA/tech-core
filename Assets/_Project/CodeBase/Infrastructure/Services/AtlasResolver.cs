@@ -1,53 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.StateMachine;
+using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using UnityEngine.U2D;
 
 namespace _Project.CodeBase.Infrastructure.Services
 {
-  public class AtlasResolver : IBootstrapInitAsync, IDisposable
+  public class AtlasResolver : IBootstrapInit, IDisposable
   {
+    private static readonly Dictionary<string, string> NameToAddressMap = new()
+    {
+      { "Core", AssetAddress.CoreAtlas }
+    };
+
     private readonly IAssetProvider _assetProvider;
+    private readonly ILogService _logService;
     private readonly Dictionary<string, SpriteAtlas> _spriteAtlases = new();
 
-    private bool _isInitialized;
-
-    public AtlasResolver(IAssetProvider assetProvider)
+    public AtlasResolver(IAssetProvider assetProvider, ILogService logService)
     {
       _assetProvider = assetProvider;
+      _logService = logService;
+    }
 
+    public void Initialize()
+    {
       SpriteAtlasManager.atlasRequested += OnAtlasRequested;
     }
 
-    public async UniTask InitializeAsync()
+    private void OnAtlasRequested(string atlasName, Action<SpriteAtlas> callback)
     {
-      await LoadSpriteAtlas(AssetAddress.CoreAtlas);
-      _isInitialized = true;
+      UniTask.Void(async () =>
+      {
+        try
+        {
+          await _assetProvider.WhenReady;
+
+          if (_spriteAtlases.TryGetValue(atlasName, out SpriteAtlas spriteAtlas))
+          {
+            callback?.Invoke(spriteAtlas);
+            return;
+          }
+
+          if (!NameToAddressMap.TryGetValue(atlasName, out string address))
+          {
+            _logService.LogError(GetType(), $"Unknown atlas requested: {atlasName}");
+            return;
+          }
+
+          SpriteAtlas atlas = await _assetProvider.LoadAssetAsync<SpriteAtlas>(address);
+          _spriteAtlases[atlasName] = atlas;
+
+          callback?.Invoke(atlas);
+        }
+        catch (Exception exception)
+        {
+          _logService.LogError(GetType(), $"Failed to load atlas {atlasName}", exception);
+        }
+      });
     }
 
-    private async UniTask LoadSpriteAtlas(string address)
-    {
-      SpriteAtlas atlas = await _assetProvider.LoadAssetAsync<SpriteAtlas>(address);
-      _spriteAtlases.Add(atlas.name, atlas);
-    }
-
-    private async void OnAtlasRequested(string atlasName, Action<SpriteAtlas> callback)
-    {
-      await UniTask.WaitUntil(() => _isInitialized);
-
-      if (_spriteAtlases.TryGetValue(atlasName, out SpriteAtlas spriteAtlas))
-        callback?.Invoke(spriteAtlas);
-      else
-        throw new NullReferenceException("Atlas not found");
-    }
-
-    public void Dispose()
-    {
+    public void Dispose() =>
       SpriteAtlasManager.atlasRequested -= OnAtlasRequested;
-    }
   }
 }

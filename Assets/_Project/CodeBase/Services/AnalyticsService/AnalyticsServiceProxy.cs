@@ -30,7 +30,7 @@ namespace _Project.CodeBase.Services.AnalyticsService
     public async UniTask InitializeAsync()
     {
       ServiceInitializationStatus status = await _firebaseAnalytics.InitializeAsync();
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && !DEVELOPMENT_BUILD
       if (status == ServiceInitializationStatus.Succeeded)
       {
         _current = _firebaseAnalytics;

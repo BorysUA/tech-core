@@ -5,6 +5,7 @@ using _Project.CodeBase.Data.Remote;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Gameplay.States.PhaseFlow;
 using _Project.CodeBase.Infrastructure.Constants;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.DateTimeService;
 using _Project.CodeBase.Services.RemoteConfigsService;
 using Cysharp.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
     private readonly IRemoteConfigService _remoteConfigService;
     private readonly IDateTimeService _dateTimeService;
     private readonly EventsFactory _eventsFactory;
-    private readonly CompositeDisposable _disposable = new();
+    private readonly CompositeDisposable _subscriptions = new();
     private readonly IGameplayPhaseFlow _gameplayPhaseFlow;
 
     private readonly Dictionary<(string, Type), Type> _eventRegistry = new()
@@ -34,6 +35,7 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
 
     public ReadOnlyReactiveProperty<IGameEvent> CurrentEvent => _currentEvent;
     public ReadOnlyReactiveProperty<IGameEvent> NextEvent => _nextEvent;
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public LiveEventsService(IRemoteConfigService remoteConfigService, IDateTimeService dateTimeService,
       EventsFactory eventsFactory, IGameplayPhaseFlow gameplayPhaseFlow)
@@ -56,6 +58,8 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
 
     public void Dispose()
     {
+      _subscriptions.Dispose();
+
       foreach (GameEventBase gameEvent in _gameEventsTimeline)
         gameEvent.Dispose();
 
@@ -73,7 +77,7 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
           UpdateEventsState(dateTime);
           SelectCurrentAndNextEvents(dateTime);
         })
-        .AddTo(_disposable);
+        .AddTo(_subscriptions);
 
       return true;
     }

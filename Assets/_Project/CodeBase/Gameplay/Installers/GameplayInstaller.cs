@@ -29,6 +29,7 @@ using _Project.CodeBase.Gameplay.UI.PopUps.ConfirmPlace;
 using _Project.CodeBase.Gameplay.UI.Root;
 using _Project.CodeBase.Gameplay.UI.Windows.Settings;
 using _Project.CodeBase.Gameplay.UI.Windows.Shop.ViewModels;
+using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.AnalyticsService.Trackers;
@@ -56,7 +57,6 @@ namespace _Project.CodeBase.Gameplay.Installers
       BindViewModels();
       BindUiRepositories();
       BindUiFactories();
-      BindCamera();
       BindSignals();
       BindInputHandlers();
       BindInputService();
@@ -107,16 +107,12 @@ namespace _Project.CodeBase.Gameplay.Installers
     {
       Container.DeclareSignal<BuildingPurchaseRequested>();
       Container.DeclareSignal<ConstructionPlotPurchaseRequested>();
+      Container.DeclareSignal<ExitToMenuRequested>();
       Container.DeclareSignal<ResourcesGained>();
       Container.DeclareSignal<ResourcesSpent>();
       Container.DeclareSignal<BuildingPlaced>();
       Container.DeclareSignal<ConstructionPlotPlaced>();
       Container.DeclareSignal<BuildingDestroyed>();
-    }
-
-    private void BindCamera()
-    {
-      Container.Bind<CameraRigAgent>().FromInstance(_cameraRigAgent).AsSingle();
     }
 
     private void BindUiRoot()
@@ -139,9 +135,9 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.Bind<ConfirmPlaceViewModel>().AsTransient();
       Container.Bind<ResourceBarViewModel>().AsSingle();
       Container.Bind<HudViewModel>().AsSingle();
-      Container.Bind<BuildingActionBarViewModel>().AsSingle();
       Container.Bind<SettingsViewModel>().AsSingle();
       Container.Bind<GameEventsViewModel>().AsSingle();
+      Container.BindInterfacesAndSelfTo<BuildingActionBarViewModel>().AsSingle();
       Container.BindInterfacesAndSelfTo<NotificationViewModel>().AsSingle();
     }
 
@@ -150,12 +146,13 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.BindInterfacesTo<WindowsFactory>().AsSingle();
       Container.BindInterfacesTo<PopUpFactory>().AsSingle();
     }
-    
+
     private void BindSessionServices()
     {
       Container.BindInterfacesAndSelfTo<GameplayPhaseFlow>().AsSingle();
       Container.BindInterfacesTo<GameSaveService>().AsSingle();
       Container.BindInterfacesTo<SessionTimer>().AsSingle();
+      Container.BindInterfacesTo<PersistentProgressProvider>().AsSingle();
     }
 
     private void BindUiServices()
@@ -172,6 +169,7 @@ namespace _Project.CodeBase.Gameplay.Installers
 
     private void BindDomainServices()
     {
+      Container.BindInterfacesTo<ConstructionPlotRepository>().AsSingle();
       Container.BindInterfacesTo<BuildingRepository>().AsSingle();
       Container.BindInterfacesTo<ResourceDropRepository>().AsSingle();
 
@@ -195,6 +193,17 @@ namespace _Project.CodeBase.Gameplay.Installers
       Container.BindInterfacesAndSelfTo<CommandBroker>().AsSingle();
       Container.Bind<ModuleContextResolver>().AsSingle();
       Container.Bind<ContractToModuleRegistry>().AsSingle();
+
+      Container.BindInterfacesTo<CameraProvider>()
+        .FromSubContainerResolve()
+        .ByMethod(InstallCamera)
+        .AsSingle();
+    }
+
+    private void InstallCamera(DiContainer subContainer)
+    {
+      subContainer.Bind<CameraProvider>().AsSingle();
+      subContainer.Bind<CameraRigAgent>().FromInstance(_cameraRigAgent).AsSingle();
     }
 
     private void BindSpawners()

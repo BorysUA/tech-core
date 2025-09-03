@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using Firebase;
 using Firebase.RemoteConfig;
@@ -12,6 +13,7 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
 {
   public class FirebaseRemoteConfigService : IRemoteConfigServiceInternal
   {
+    private readonly ILogService _logService;
     private readonly IFirebaseBootstrap _firebaseBootstrap;
     private readonly IAssetProvider _assetProvider;
     private FirebaseRemoteConfig _remoteConfig;
@@ -28,33 +30,35 @@ namespace _Project.CodeBase.Services.RemoteConfigsService
 
     public DateTime LastFetchTime => FirebaseRemoteConfig.DefaultInstance.Info.FetchTime;
 
-    public FirebaseRemoteConfigService(IFirebaseBootstrap firebaseBootstrap, IAssetProvider assetProvider)
+    public FirebaseRemoteConfigService(IFirebaseBootstrap firebaseBootstrap, IAssetProvider assetProvider,
+      ILogService logService)
     {
       _firebaseBootstrap = firebaseBootstrap;
       _assetProvider = assetProvider;
+      _logService = logService;
     }
 
     public async UniTask<ServiceInitializationStatus> InitializeAsync()
     {
       DependencyStatus status = await _firebaseBootstrap.WhenReady;
 
-      if (status == DependencyStatus.Available)
-      {
-        _remoteConfig = FirebaseRemoteConfig.DefaultInstance;
-        TextAsset asset = await _assetProvider.LoadAssetAsyncFromResources<TextAsset>(AssetPath.RemoteConfigDefaults);
-        Dictionary<string, object> defaults = JsonConvert.DeserializeObject<Dictionary<string, object>>(asset.text);
+      if (status != DependencyStatus.Available)
+        return ServiceInitializationStatus.Failed;
 
-        await _remoteConfig.SetDefaultsAsync(defaults);
-        await _remoteConfig.FetchAsync(TimeSpan.Zero);
+      _remoteConfig = FirebaseRemoteConfig.DefaultInstance;
 
-        bool isActive = await _remoteConfig.ActivateAsync();
+      TextAsset asset = await _assetProvider.LoadAssetAsyncFromResources<TextAsset>(AssetPath.RemoteConfigDefaults);
+      Dictionary<string, object> defaults = JsonConvert.DeserializeObject<Dictionary<string, object>>(asset.text);
 
-        if (isActive)
-          return ServiceInitializationStatus.Succeeded;
-      }
+      await _remoteConfig.SetDefaultsAsync(defaults);
+      await _remoteConfig.FetchAndActivateAsync();
 
-      return ServiceInitializationStatus.Failed;
+      _logService.LogInfo(GetType(),
+        $"FetchAsync done, status={_remoteConfig.Info.LastFetchStatus}, failure={_remoteConfig.Info.LastFetchFailureReason}, time={_remoteConfig.Info.FetchTime:g}");
+
+      return ServiceInitializationStatus.Succeeded;
     }
+
 
     public T GetValue<T>(string key) =>
       (T)GetValue(key, typeof(T));

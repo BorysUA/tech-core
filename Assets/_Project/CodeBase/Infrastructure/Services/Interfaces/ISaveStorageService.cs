@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using _Project.CodeBase.Data.Progress;
 using _Project.CodeBase.Data.Progress.Meta;
@@ -12,7 +14,8 @@ namespace _Project.CodeBase.Infrastructure.Services.Interfaces
   {
     public UniTask SaveGameAsync(GameStateData data, SaveSlot saveSlot, CancellationToken token = default);
     public UniTask<LoadResult> LoadGameAsync(SaveSlot saveSlot, CancellationToken token = default);
-    public UniTask<IEnumerable<SaveMetaData>> GetAllSavesMeta();
+    public IEnumerable<SaveMetaData> GetSavedGamesMeta();
     public void ClearSlotManual(SaveSlot saveSlot);
+    bool TryGetSaveMeta(SaveSlot saveSlot, out SaveMetaData saveMeta);
   }
 }

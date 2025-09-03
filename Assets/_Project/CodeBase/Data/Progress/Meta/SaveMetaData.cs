@@ -6,7 +6,7 @@ using _Project.CodeBase.Menu.UI.DifficultySelection;
 namespace _Project.CodeBase.Data.Progress.Meta
 {
   [Serializable]
-  public record SaveMetaData
+  public readonly struct SaveMetaData
   {
     public SaveSlot SaveSlot { get; init; }
     public GameDifficulty Difficulty { get; init; }

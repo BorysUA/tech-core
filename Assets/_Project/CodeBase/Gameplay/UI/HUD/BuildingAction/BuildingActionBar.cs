@@ -18,6 +18,8 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.BuildingAction
     private IGameplayUiFactory _gameplayUiFactory;
     private DisposableBag _disposable;
 
+    private Action _onShow;
+
     [Inject]
     public void Setup(IGameplayUiFactory gameplayUiFactory, BuildingActionBarViewModel barViewModel)
     {
@@ -28,11 +30,14 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.BuildingAction
       _barViewModel.Hidden += Hide;
     }
 
-    private async void Show()
+    private void Show()
     {
-      foreach (IBuildingAction action in _barViewModel.BuildingActions)
+      int index = 0;
+
+      foreach (IBuildingAction action in _barViewModel.GetActionsInOrder())
       {
-        await CreateActionButton(action);
+        CreateActionButton(action, index).Forget();
+        index++;
       }
 
       gameObject.SetActive(true);
@@ -55,9 +60,11 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.BuildingAction
       _barViewModel.Hidden -= Hide;
     }
 
-    private async UniTask CreateActionButton(IBuildingAction action)
+    private async UniTaskVoid CreateActionButton(IBuildingAction action, int index)
     {
       BuildingActionButton button = await _gameplayUiFactory.CreateBuildingActionButton(action.Type, _buttonsContainer);
+
+      button.Initialize(index);
 
       button.OnClick
         .Subscribe(_ => action.Execute())

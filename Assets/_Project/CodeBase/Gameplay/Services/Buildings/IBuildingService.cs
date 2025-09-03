@@ -10,10 +10,11 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
   public interface IBuildingService
   {
     IReadOnlyDictionary<BuildingCategory, IEnumerable<BuildingInfo>> AvailableSortedBuildings { get; }
-    ReadOnlyReactiveProperty<IBuildingActionReader> CurrentSelectedBuilding { get; }
+    ReadOnlyReactiveProperty<int?> CurrentSelectedBuilding { get; }
     void PlaceBuilding(BuildingType buildingType, List<Vector2Int> position);
     void DestroyBuilding(int buildingId);
     void SelectBuilding(int id);
     void UnselectCurrent();
+    IBuildingActionReader GetActionsForBuilding(int buildingId);
   }
 }

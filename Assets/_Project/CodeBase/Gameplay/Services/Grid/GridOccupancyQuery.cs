@@ -11,6 +11,7 @@ using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
 using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using R3;
 using UnityEngine;
 
@@ -23,6 +24,7 @@ namespace _Project.CodeBase.Gameplay.Services.Grid
     private readonly CompositeDisposable _disposable = new();
 
     private Dictionary<Vector2Int, CellData> OccupiedCells { get; } = new();
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public GridOccupancyQuery(IProgressReader progressService, IStaticDataProvider staticDataProvider)
     {

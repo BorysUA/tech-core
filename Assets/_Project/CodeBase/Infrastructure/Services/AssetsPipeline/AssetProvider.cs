@@ -54,6 +54,12 @@ namespace _Project.CodeBase.Infrastructure.Services.AssetsPipeline
       => await InternalLoadAssetAsync(MakeKey(address, typeof(T)), () => Addressables.LoadAssetsAsync<T>(address),
         token, retryCount);
 
+    public void ReleaseAsset(string address)
+    {
+      if (_cachedAssets.Remove(address, out AsyncOperationHandle cachedAsset))
+        cachedAsset.Release();
+    }
+
     public async UniTask PreloadAssetsAsync(string label)
     {
       string key = MakeKey(label, typeof(IList<object>));

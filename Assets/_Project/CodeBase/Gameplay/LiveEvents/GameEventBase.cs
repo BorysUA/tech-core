@@ -52,6 +52,8 @@ namespace _Project.CodeBase.Gameplay.LiveEvents
 
     public virtual void Dispose()
     {
+      if (_isActive.CurrentValue)
+        OnDeactivate();
     }
 
     protected abstract void OnActivate();

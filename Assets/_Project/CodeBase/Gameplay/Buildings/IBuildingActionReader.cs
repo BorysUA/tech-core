@@ -6,8 +6,6 @@ namespace _Project.CodeBase.Gameplay.Buildings
 {
   public interface IBuildingActionReader
   {
-    public int Id { get; }
     public IEnumerable<IBuildingActionsProvider> Actions { get; }
-    public Observable<Unit> Destroyed { get; }
   }
 }

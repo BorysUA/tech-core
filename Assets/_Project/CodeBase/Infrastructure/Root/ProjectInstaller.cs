@@ -1,6 +1,7 @@
 ﻿using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.AssetsPipeline;
+using _Project.CodeBase.Infrastructure.Services.CoroutineProvider;
 using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.Signals;
@@ -13,6 +14,7 @@ using _Project.CodeBase.Services.DateTimeService;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Services.RemoteConfigsService;
 using _Project.CodeBase.Services.TimeCounter;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.CodeBase.Infrastructure.Root
@@ -33,7 +35,7 @@ namespace _Project.CodeBase.Infrastructure.Root
       BindSignals();
       BindTrackers();
       BindCoreMonoComponents();
-      BindProgressServices();
+      BindServices();
       BindUtilityServices();
     }
 
@@ -41,7 +43,7 @@ namespace _Project.CodeBase.Infrastructure.Root
     {
       SignalBusInstaller.Install(Container);
 
-      Container.DeclareSignal<AppLifecycleChanged>();
+      Container.DeclareSignal<AppLifecycleChanged>().OptionalSubscriber();
     }
 
     private void BindTrackers() =>
@@ -70,9 +72,8 @@ namespace _Project.CodeBase.Infrastructure.Root
     }
 
 
-    private void BindProgressServices()
+    private void BindServices()
     {
-      Container.BindInterfacesAndSelfTo<PersistentProgressProvider>().AsSingle();
       Container.BindInterfacesTo<JsonSaveStorageService>().AsSingle();
       Container.BindInterfacesTo<DateTimeService>().AsSingle();
     }
@@ -87,7 +88,7 @@ namespace _Project.CodeBase.Infrastructure.Root
 
     private void BindInfrastructureServices()
     {
-      Container.BindInterfacesTo<AtlasResolver>().AsSingle();
+      Container.BindInterfacesAndSelfTo<AtlasResolver>().AsSingle();
       Container.BindInterfacesTo<SceneLoader>().AsSingle();
       Container.BindInterfacesTo<AssetProvider>().AsSingle();
       Container.BindInterfacesTo<StaticDataProvider>().AsSingle();
@@ -97,18 +98,28 @@ namespace _Project.CodeBase.Infrastructure.Root
 
     private void BindCoreMonoComponents()
     {
-      Container.BindInterfacesAndSelfTo<CoroutineRunner>()
-        .FromNewComponentOnNewGameObject()
-        .WithGameObjectName("COROUTINE RUNNER")
-        .UnderTransform(transform)
-        .AsSingle();
-
       Container.Bind<UnityAppLifecycleBroadcaster>()
         .FromNewComponentOnNewGameObject()
-        .WithGameObjectName("GAME LIFECYCLE")
+        .WithGameObjectName("Game lifecycle")
         .UnderTransform(transform)
         .AsSingle()
         .NonLazy();
+
+      Container.BindInterfacesTo<CoroutineProvider>()
+        .FromSubContainerResolve()
+        .ByNewGameObjectMethod(InstallCoroutine)
+        .WithGameObjectName("Coroutine runner")
+        .UnderTransform(transform)
+        .AsSingle();
+    }
+
+    private void InstallCoroutine(DiContainer subContainer)
+    {
+      subContainer.Bind<CoroutineProvider>().AsSingle();
+
+      subContainer.Bind<CoroutineRunner>()
+        .FromNewComponentOnRoot()
+        .AsSingle();
     }
 
     private void BindEntryPoint() =>

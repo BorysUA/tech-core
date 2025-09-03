@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
+using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Gameplay.UI.Factory;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.UI.Core;
 using Cysharp.Threading.Tasks;
@@ -8,21 +10,30 @@ using R3;
 
 namespace _Project.CodeBase.UI.Services
 {
-  public class WindowsService : IWindowsService
+  public class WindowsService : IWindowsService, IGameplayInit
   {
     private readonly IWindowsFactory _windowsFactory;
     private readonly Subject<BaseWindowViewModel> _windowOpened = new();
+    private readonly ReactiveProperty<int> _openWindowCount = new(0);
     private readonly ILogService _logService;
 
     private BaseWindowViewModel _currentWindow;
     private DisposableBag _disposable;
 
+    public ReadOnlyReactiveProperty<bool> AnyWindowOpen { get; private set; }
     public Observable<BaseWindowViewModel> WindowOpened => _windowOpened;
+
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public WindowsService(IWindowsFactory windowsFactory, ILogService logService)
     {
       _windowsFactory = windowsFactory;
       _logService = logService;
+    }
+
+    public void Initialize()
+    {
+      AnyWindowOpen = _openWindowCount.Select(x => x > 0).ToReadOnlyReactiveProperty();
     }
 
     public async UniTask OpenWindow<TWindow, TViewModel>(bool loadFromCache = true, CancellationToken token = default)
@@ -74,11 +85,16 @@ namespace _Project.CodeBase.UI.Services
 
         _currentWindow = viewModel;
         viewModel.WindowClosed
-          .Subscribe(_ => CleanupWindow())
+          .Subscribe(_ =>
+          {
+            _openWindowCount.Value = Math.Max(0, _openWindowCount.Value - 1);
+            CleanupWindow();
+          })
           .AddTo(ref _disposable);
 
         _windowOpened.OnNext(_currentWindow);
         _currentWindow.Open();
+        _openWindowCount.Value++;
       }
       catch (OperationCanceledException)
       {

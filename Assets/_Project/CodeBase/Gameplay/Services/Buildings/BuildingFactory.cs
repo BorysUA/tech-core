@@ -8,6 +8,7 @@ using _Project.CodeBase.Gameplay.Constants;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Infrastructure.Constants;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.LogService;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -31,6 +32,8 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 
     private Transform _buildingsRoot;
     private BuildingPreview _buildingPreview;
+    
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public BuildingFactory(IAssetProvider assetProvider, IInstantiator instantiator,
       IStaticDataProvider staticDataProvider, ContractToModuleRegistry contractToModuleRegistry, ILogService logService)

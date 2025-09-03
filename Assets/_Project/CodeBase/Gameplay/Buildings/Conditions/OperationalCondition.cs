@@ -8,12 +8,13 @@ namespace _Project.CodeBase.Gameplay.Buildings.Conditions
   public abstract class OperationalCondition : IDisposable
   {
     private readonly CompositeDisposable _subscriptions = new();
+    private ConditionFailureIndicator _failureIndicator;
 
     private ReadOnlyReactiveProperty<bool> _moduleIsOperational;
     private BuildingIndicatorType _indicatorType;
 
     public ReadOnlyReactiveProperty<bool> IsSatisfied { get; private set; }
-    public IBuildingIndicatorSource Indicator { get; private set; }
+    public IBuildingIndicatorSource Indicator => _failureIndicator;
 
     public void Setup(ReadOnlyReactiveProperty<bool> moduleIsOperational, BuildingIndicatorType indicatorType)
     {
@@ -31,14 +32,16 @@ namespace _Project.CodeBase.Gameplay.Buildings.Conditions
         .ToReadOnlyReactiveProperty()
         .AddTo(_subscriptions);
 
-      Indicator = new ConditionFailureIndicator(_indicatorType, IsSatisfied);
+      _failureIndicator = new ConditionFailureIndicator(_indicatorType, IsSatisfied);
     }
+
 
     protected abstract (Observable<bool> sustainCondition, Observable<bool> activationCondition) CreateStreams();
 
     public virtual void Dispose()
     {
       _subscriptions.Dispose();
+      _failureIndicator.Dispose();
     }
   }
 }

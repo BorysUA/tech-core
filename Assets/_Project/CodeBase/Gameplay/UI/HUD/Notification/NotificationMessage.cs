@@ -55,6 +55,7 @@ namespace _Project.CodeBase.Gameplay.UI.HUD.Notification
       _contentSequence = DOTween.Sequence();
       _contentSequence.Join(yMovementTween);
       _contentSequence.Join(fadeTween);
+      _contentSequence.SetLink(gameObject);
 
       _contentSequence.OnComplete(() => Destroy(gameObject));
     }

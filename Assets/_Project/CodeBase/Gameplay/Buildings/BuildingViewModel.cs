@@ -16,7 +16,7 @@ using Vector3 = _Project.CodeBase.Gameplay.Models.Vector3;
 namespace _Project.CodeBase.Gameplay.Buildings
 {
   public class BuildingViewModel : IBuildingViewInteractor, IGameplayStartedListener, IBuildingIndicatorReader,
-    IBuildingActionReader
+    IBuildingActionReader, IDisposable
   {
     private readonly ContractToModuleRegistry _contractToModuleRegistry;
     private readonly ILogService _logService;
@@ -90,10 +90,14 @@ namespace _Project.CodeBase.Gameplay.Buildings
 
     public void Destroy()
     {
+      Dispose();
+      _destroyed.OnNext(Unit.Default);
+    }
+
+    public void Dispose()
+    {
       foreach (BuildingModule module in _modules.Values)
         module.Dispose();
-
-      _destroyed.OnNext(Unit.Default);
     }
 
     public bool TryGetPublicModuleContract<TContract>(out TContract result) where TContract : class

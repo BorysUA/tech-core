@@ -9,9 +9,7 @@ namespace _Project.CodeBase.Gameplay.Services.Buildings
 {
   public interface IBuildingFactory
   {
-    void Initialize();
     UniTask<BuildingPreview> CreateBuildingPreview(BuildingType buildingType);
-
     UniTask<BuildingViewModel> CreateBuilding(BuildingType buildingType, Vector3 position);
   }
 }

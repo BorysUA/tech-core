@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using _Project.CodeBase.Gameplay.Buildings.Conditions;
 using _Project.CodeBase.Gameplay.UI.PopUps.BuildingStatus;
 using R3;
+using UnityEngine;
 
 namespace _Project.CodeBase.Gameplay.Buildings.Modules
 {
@@ -82,14 +83,17 @@ namespace _Project.CodeBase.Gameplay.Buildings.Modules
 
     public virtual void Dispose()
     {
+      if (_isModuleWorking.CurrentValue)
+        Deactivate();
+
+      _localConditionsTracer.Dispose();
+      _globalConditionsTracer.Dispose();
+
       _subscriptions?.Dispose();
 
       foreach (IBuildingIndicatorSource indicator in _indicators)
         if (indicator is IDisposable disposable)
           disposable.Dispose();
-
-      _localConditionsTracer.Dispose();
-      _globalConditionsTracer.Dispose();
     }
 
     protected void GuardActive([CallerMemberName] string method = null)

@@ -2,6 +2,7 @@
 using _Project.CodeBase.Gameplay.Services.Command;
 using _Project.CodeBase.Gameplay.States;
 using _Project.CodeBase.Gameplay.States.PhaseFlow;
+using _Project.CodeBase.Infrastructure.StateMachine;
 using _Project.CodeBase.Services.TimeCounter;
 using R3;
 
@@ -21,6 +22,7 @@ namespace _Project.CodeBase.Gameplay.Services.Timers
     private float _lastSavedPlaytime;
 
     public ReadOnlyReactiveProperty<float> SessionPlaytime => _sessionPlaytime;
+    public InitPhase InitPhase => InitPhase.Preparation;
 
     public SessionTimer(ITimerFactory timerFactory, ICommandBroker commandBroker)
     {

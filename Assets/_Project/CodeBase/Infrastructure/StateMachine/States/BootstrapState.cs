@@ -10,15 +10,17 @@ namespace _Project.CodeBase.Infrastructure.StateMachine.States
   public class BootstrapState : IEnterState
   {
     private readonly GameStateMachine _gameStateMachine;
-    private readonly List<IBootstrapInitAsync> _onLoadInitializables;
+    private readonly List<IBootstrapInitAsync> _onLoadInitAsync;
+    private readonly List<IBootstrapInit> _onLoadInit;
     private readonly ILogService _logService;
 
-    public BootstrapState(GameStateMachine gameStateMachine, List<IBootstrapInitAsync> onLoadInitializables,
-      ILogService logService)
+    public BootstrapState(GameStateMachine gameStateMachine, List<IBootstrapInitAsync> onLoadInitAsync,
+      ILogService logService, List<IBootstrapInit> onLoadInit)
     {
       _gameStateMachine = gameStateMachine;
-      _onLoadInitializables = onLoadInitializables;
+      _onLoadInitAsync = onLoadInitAsync;
       _logService = logService;
+      _onLoadInit = onLoadInit;
     }
 
     public void Enter()
@@ -43,7 +45,10 @@ namespace _Project.CodeBase.Infrastructure.StateMachine.States
     {
       List<UniTask> loadingTasks = new List<UniTask>();
 
-      foreach (IBootstrapInitAsync service in _onLoadInitializables)
+      foreach (IBootstrapInit service in _onLoadInit)
+        service.Initialize();
+
+      foreach (IBootstrapInitAsync service in _onLoadInitAsync)
         loadingTasks.Add(service.InitializeAsync());
 
       await UniTask.WhenAll(loadingTasks);

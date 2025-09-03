@@ -2,9 +2,9 @@
 
 namespace _Project.CodeBase.Gameplay.Signals.Command
 {
-  public class BuildingPurchaseRequested
+  public readonly struct BuildingPurchaseRequested
   {
-    public BuildingType Type { get; private set; }
+    public BuildingType Type { get; }
 
     public BuildingPurchaseRequested(BuildingType type)
     {

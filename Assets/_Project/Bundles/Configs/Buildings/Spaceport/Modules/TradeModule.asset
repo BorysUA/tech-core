@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TradeModule
   m_EditorClassIdentifier: 
   OperationalConditions:
-  - {fileID: 11400000, guid: 325f617f58f5394488dcdeb164c7dc59, type: 2}
   - {fileID: 11400000, guid: ac3e4d73ca3d9e544956053c18d92024, type: 2}
+  - {fileID: 11400000, guid: 325f617f58f5394488dcdeb164c7dc59, type: 2}
   IgnoreGlobalConditions: 0
   TradeConfig:
     PurchaseResources:

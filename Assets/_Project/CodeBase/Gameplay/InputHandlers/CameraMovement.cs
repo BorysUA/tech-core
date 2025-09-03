@@ -1,16 +1,14 @@
-﻿using _Project.CodeBase.Gameplay.Services;
-using _Project.CodeBase.Gameplay.Services.CameraSystem;
+﻿using _Project.CodeBase.Gameplay.Services.CameraSystem;
 using _Project.CodeBase.Services.InputService;
 using R3;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.CodeBase.Gameplay.InputHandlers
 {
   public class CameraMovement : PlayerInputHandler, ICameraMovement
   {
     private readonly CoordinateMapper _coordinateMapper;
-    private readonly CameraRigAgent _cameraRigAgent;
+    private readonly ICameraProvider _cameraRigAgent;
 
     private readonly ReactiveProperty<Vector3> _movementDelta = new();
 
@@ -20,7 +18,7 @@ namespace _Project.CodeBase.Gameplay.InputHandlers
 
     public ReadOnlyReactiveProperty<Vector3> MovementDelta => _movementDelta;
 
-    public CameraMovement(CoordinateMapper coordinateMapper, CameraRigAgent cameraRigAgent)
+    public CameraMovement(CoordinateMapper coordinateMapper, ICameraProvider cameraRigAgent)
     {
       _coordinateMapper = coordinateMapper;
       _cameraRigAgent = cameraRigAgent;
