@@ -3,6 +3,8 @@
 > Core systems and architecture for city-building strategy concept (work‑in‑progress)
 
 > Tech Stack: Zenject, UniRx, UniTask, Addressables, Firebase (Analytics, Remote configs), DOTween, Newtonsoft.Json
+
+> 📁 **Scripts path**: `Assets/_Project/CodeBase/`
 ---
 
 ## About
