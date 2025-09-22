@@ -12,6 +12,8 @@ namespace _Project.CodeBase.Infrastructure.UI
     [SerializeField] private CanvasGroup _screen;
     [SerializeField] private Slider _slider;
 
+    private readonly WaitForEndOfFrame _waitForEndOfFrame = new();
+
     public void Open()
     {
       _slider.value = 0f;
@@ -34,7 +36,7 @@ namespace _Project.CodeBase.Infrastructure.UI
       while (_screen.alpha > 0f)
       {
         _screen.alpha -= Time.deltaTime;
-        yield return null;
+        yield return _waitForEndOfFrame;
       }
 
       gameObject.SetActive(false);

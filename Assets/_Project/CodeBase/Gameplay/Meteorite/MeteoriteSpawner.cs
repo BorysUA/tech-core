@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using _Project.CodeBase.Data.StaticData.Meteorite;
-using _Project.CodeBase.Extensions;
 using _Project.CodeBase.Gameplay.Services.Factories;
 using _Project.CodeBase.Gameplay.Services.Grid;
 using _Project.CodeBase.Infrastructure.Services.Interfaces;

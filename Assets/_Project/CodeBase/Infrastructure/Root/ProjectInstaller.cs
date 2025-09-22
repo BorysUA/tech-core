@@ -2,7 +2,6 @@
 using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.AssetsPipeline;
 using _Project.CodeBase.Infrastructure.Services.CoroutineProvider;
-using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 using _Project.CodeBase.Infrastructure.Services.SaveService;
 using _Project.CodeBase.Infrastructure.Signals;
 using _Project.CodeBase.Infrastructure.StateMachine;
@@ -14,7 +13,6 @@ using _Project.CodeBase.Services.DateTimeService;
 using _Project.CodeBase.Services.LogService;
 using _Project.CodeBase.Services.RemoteConfigsService;
 using _Project.CodeBase.Services.TimeCounter;
-using UnityEngine;
 using Zenject;
 
 namespace _Project.CodeBase.Infrastructure.Root

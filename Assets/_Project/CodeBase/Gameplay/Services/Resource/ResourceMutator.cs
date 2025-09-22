@@ -1,6 +1,5 @@
 ﻿using System;
 using _Project.CodeBase.Data.Progress.ResourceData;
-using _Project.CodeBase.Infrastructure.Services;
 using _Project.CodeBase.Infrastructure.Services.ProgressProvider;
 
 namespace _Project.CodeBase.Gameplay.Services.Resource
